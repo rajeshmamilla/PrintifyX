@@ -1,10 +1,11 @@
 const TopBar = () => {
   return (
     <div className="topbar">
-      <span>📞 +91-XXXXXXXXXX</span>
+      <span></span>
       <a href="/register">Register</a>
     </div>
   );
 };
 
 export default TopBar;
+
