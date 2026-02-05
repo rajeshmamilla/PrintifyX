@@ -23,7 +23,7 @@ a {
 }
 .header {
   background-color: #ffffff;
-  padding: 30px 40px;
+  padding: 38px 100px;
   display: flex;
   align-items: center;
   gap: 40px;
@@ -31,8 +31,9 @@ a {
 }
 
 .logo {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
+  
 }
 
 .search {
@@ -52,13 +53,15 @@ a {
   display: flex;
   justify-content: center; /* 👈 THIS is the key */
   gap: 30px;
-  padding: 18px 40px;
+  padding: 21px 40px;
 }
 
 .navbar li {
   color: white;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .navbar li:hover {
@@ -121,7 +124,8 @@ main {
 
 .search-box input {
   width: 50%;
-  padding: 10px 44px 10px 18px;
+  
+  padding: 14px 48px 14px 20px;
   border: 1px solid #ccc;
   border-radius: 20px;
 }
@@ -133,12 +137,16 @@ main {
   transform: translate(50%, -50%);
   cursor: pointer;
   opacity: 0.6;
+  font-size: 18px;
+  
+
 }
 
 .header-actions {
   display: flex;
-  gap: 20px;
-  font-size: 14px;
+  gap: 24px;
+  font-size: 25px;
+  font-weight: 600;
 }
 .hero-btn {
   margin-top: 20px;
