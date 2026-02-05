@@ -5,6 +5,8 @@ import com.printifyx.backend.entity.User;
 import com.printifyx.backend.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
