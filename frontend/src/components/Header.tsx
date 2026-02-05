@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Header = () => {
   return (
     <header className="header">
@@ -10,7 +12,9 @@ const Header = () => {
 
       <div className="header-actions">
         <span>📞 214 432 0563</span>
-        <span>👤 Login</span>
+        <Link to="/login" className="login-link"> 👤 Login </Link>
+
+
         <span>🛒 Cart</span>
       </div>
     </header>
