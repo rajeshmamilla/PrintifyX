@@ -48,6 +48,7 @@ a {
 .navbar ul {
   list-style: none;
   display: flex;
+  justify-content: center; /* 👈 THIS is the key */
   gap: 30px;
   padding: 12px 40px;
 }
