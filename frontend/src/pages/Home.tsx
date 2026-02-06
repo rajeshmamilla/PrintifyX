@@ -1,35 +1,43 @@
-// import TopBar from "../components/TopBar";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Hero from "../components/Hero";
 
 const Home = () => {
   return (
     <>
-      {/* <TopBar /> */} 
-      {/* /* Temporarily removed TopBar for cleaner UI */ }
       <Header />
       <Navbar />
 
-      <main>
-       <section className="hero">
-            <h2>High Quality Printing Services</h2>
-            <p>Business cards, banners, posters & more</p>
-            <button className="hero-btn">Shop Now</button>
-       </section>
+      <main className="min-h-[70vh]">
+        {/* HERO */}
+        <Hero />
 
-
-        <section className="categories">
-          <div className="category">Business Cards</div>
-          <div className="category">Flyers</div>
-          <div className="category">Banners</div>
-          <div className="category">Posters</div>
+        {/* CATEGORIES */}
+        <section className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5 p-10">
+          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
+            Marketing
+          </div>
+          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
+            Flyers
+          </div>
+          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
+            Banners
+          </div>
+          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
+            Posters
+          </div>
         </section>
-        <section className="trust">
-            <h3>Trusted by 10,000+ Businesses</h3>
-            <p>Fast turnaround • Premium quality • Affordable pricing</p>
-        </section>
 
+        {/* TRUST */}
+        <section className="bg-white px-10 py-10 text-center">
+          <h3 className="mb-2 text-[20px] font-semibold">
+            Join the 10,000+ Happy Customers
+          </h3>
+          <p className="text-gray-600">
+            Fast turnaround • Premium quality • Affordable pricing
+          </p>
+        </section>
       </main>
 
       <Footer />
