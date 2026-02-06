@@ -2,6 +2,11 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
+import CategoryCard from "../components/CategoryCard";
+import businessCards from "../assets/categories/business-cards.jpg";
+import postcards from "../assets/categories/post-cards.jpg";
+import banners from "../assets/categories/banner-cards.jpg";
+import flyers from "../assets/categories/flyer-card.jpg";
 
 const Home = () => {
   return (
@@ -13,19 +18,22 @@ const Home = () => {
         {/* HERO */}
         <Hero />
 
-        {/* CATEGORIES */}
-        <section className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5 p-10">
-          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
-            Marketing
+        
+        <section className="bg-[#f5f8fb] py-16">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Shop Our Top Categories
+            </h2>
+            <p className="text-gray-600 mt-2">
+              Our best selling products great for any occasion
+            </p>
           </div>
-          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
-            Flyers
-          </div>
-          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
-            Banners
-          </div>
-          <div className="cursor-pointer rounded bg-white p-[30px] text-center shadow transition-all hover:-translate-y-1 hover:shadow-lg">
-            Posters
+
+          <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-6 sm:grid-cols-2 md:grid-cols-4">
+            <CategoryCard title="Business Cards" image={businessCards} />
+            <CategoryCard title="Postcards" image={postcards} />
+            <CategoryCard title="Banners" image={banners} />
+            <CategoryCard title="Brochures & Flyers" image={flyers} />
           </div>
         </section>
 
