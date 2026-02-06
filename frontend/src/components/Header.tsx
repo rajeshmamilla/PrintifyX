@@ -12,7 +12,9 @@ const Header = () => {
   return (
     <header className="flex items-center gap-10 bg-white px-[100px] py-[38px] border-b border-gray-200">
       {/* Logo */}
-      <h1 className="text-[30px] font-bold">PrintifyX</h1>
+      <Link to="/" className="cursor-pointer">
+        <h1 className="text-[30px] font-bold">PrintifyX</h1>
+      </Link>
 
       {/* Search */}
       <div className="relative flex flex-1 justify-center">
