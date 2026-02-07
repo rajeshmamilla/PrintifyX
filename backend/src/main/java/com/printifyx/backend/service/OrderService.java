@@ -44,7 +44,7 @@ public class OrderService {
         for (CreateOrderItemRequest itemReq : request.getItems()) {
         	
             OrderItem item = new OrderItem();
-            item.setOrderId(savedOrder.getId());
+            item.setOrder(savedOrder);
             item.setProductId(itemReq.getProductId());
             item.setProductName(itemReq.getProductName());
             item.setUnitPrice(itemReq.getUnitPrice());
@@ -71,6 +71,18 @@ public class OrderService {
     public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
     }
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+    public Order updateOrderStatus(Long orderId, String status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(status);
+        return orderRepository.save(order);
+    }
+
+
 
 
 }

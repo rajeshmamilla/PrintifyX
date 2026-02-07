@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.printifyx.backend.dto.CreateOrderRequest;
+import com.printifyx.backend.dto.UpdateOrderStatusRequest;
 import com.printifyx.backend.entity.Order;
 import com.printifyx.backend.service.OrderService;
 
@@ -36,4 +38,18 @@ public class OrderController {
     public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
     }
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Order> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateOrderStatusRequest request) {
+
+        Order updatedOrder = orderService.updateOrderStatus(id, request.getStatus());
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+
 }
