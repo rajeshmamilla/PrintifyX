@@ -50,6 +50,4 @@ public class OrderController {
         Order updatedOrder = orderService.updateOrderStatus(id, request.getStatus());
         return ResponseEntity.ok(updatedOrder);
     }
-
-
 }

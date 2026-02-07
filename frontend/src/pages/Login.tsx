@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import { loginUser } from "../services/api";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,6 +22,7 @@ const Login = () => {
       localStorage.setItem("token", data.token);
 
       // later → redirect
+      navigate("/");
     } catch {
       setError("Invalid email or password");
     }
@@ -67,9 +70,9 @@ const Login = () => {
 
           <p className="mt-4 text-center text-sm">
             Don’t have an account?{" "}
-            <span className="cursor-pointer text-orange-500 hover:underline">
+            <Link to="/register" className="text-orange-500 hover:underline">
               Register
-            </span>
+            </Link>
           </p>
         </div>
       </main>

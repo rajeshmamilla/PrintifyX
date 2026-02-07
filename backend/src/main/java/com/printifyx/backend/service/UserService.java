@@ -1,6 +1,5 @@
 package com.printifyx.backend.service;
 
-import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerUser(String name, String email, String password) {
+    public User registerUser(String email, String password) {
 
         // check if email already exists
 //        userRepository.findByEmail(email).ifPresent(u -> {
@@ -30,14 +29,17 @@ public class UserService {
 
 
         User user = new User();
-        user.setName(name);
+       
         user.setEmail(email);
         user.setPassword(password); // ⚠️ plain text for now
-        user.setRole("USER");
-        user.setIsActive(true);
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+      
 
         return userRepository.save(user);
+    }
+
+    public User loginUser(String email, String password) {
+        return userRepository.findByEmail(email)
+                .filter(user -> user.getPassword().equals(password))
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
     }
 }

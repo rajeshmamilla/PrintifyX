@@ -1,5 +1,6 @@
 package com.printifyx.backend.controller;
 
+import com.printifyx.backend.dto.LoginRequest;
 import com.printifyx.backend.dto.RegisterRequest;
 import com.printifyx.backend.entity.User;
 import com.printifyx.backend.service.UserService;
@@ -19,8 +20,18 @@ public class AuthController {
 
     @PostMapping("/register")
     public User register(@RequestBody RegisterRequest request) {
+    	
+    	
         return userService.registerUser(
-                request.getName(),
+              
+                request.getEmail(),
+                request.getPassword()
+        );
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestBody LoginRequest request) {
+        return userService.loginUser(
                 request.getEmail(),
                 request.getPassword()
         );
