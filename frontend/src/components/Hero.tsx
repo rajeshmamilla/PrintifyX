@@ -46,9 +46,12 @@ const Hero = () => {
           Business cards, banners, posters & more
         </p>
 
-        <button className="mt-6 rounded bg-black px-6 py-3 text-white transition hover:bg-gray-900">
+        <a
+          href="#categories"
+          className="mt-6 rounded bg-black px-6 py-3 text-white transition hover:bg-gray-900 inline-block"
+        >
           Order Now
-        </button>
+        </a>
       </div>
     </section>
   );

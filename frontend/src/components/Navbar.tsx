@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 const MENU_DATA: Record<
   Exclude<MenuType, null>,
   {
@@ -104,7 +105,7 @@ const Navbar = () => {
           onMouseEnter={() => setActiveMenu("business")}
           className="cursor-pointer hover:underline"
         >
-          Business Cards
+          <Link to="/categories/business-cards">Business Cards</Link>
         </li>
         <li
           onMouseEnter={() => setActiveMenu("flyers")}
