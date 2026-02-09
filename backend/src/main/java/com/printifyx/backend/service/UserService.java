@@ -32,6 +32,7 @@ public class UserService {
        
         user.setEmail(email);
         user.setPassword(password); // ⚠️ plain text for now
+        user.setRole("USER");
       
 
         return userRepository.save(user);

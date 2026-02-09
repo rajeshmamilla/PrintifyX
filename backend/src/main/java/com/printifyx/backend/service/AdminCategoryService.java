@@ -5,6 +5,7 @@ import com.printifyx.backend.entity.Category;
 import com.printifyx.backend.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 public class AdminCategoryService {
@@ -30,5 +31,10 @@ public class AdminCategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         category.setIsActive(!category.getIsActive());
         categoryRepository.save(category);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }

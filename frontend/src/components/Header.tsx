@@ -39,6 +39,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     setIsLoggedIn(false);
     setShowMenu(false);
     navigate("/login");
@@ -89,7 +90,10 @@ const Header = () => {
               <div className="absolute left-0 top-full w-48 rounded-lg bg-white py-4 shadow-2xl ring-1 ring-black ring-opacity-5 z-[200]">
                 <button
                   className="block w-full px-6 py-2 text-left text-[16px] text-gray-700 hover:bg-gray-50 transition-colors"
-                  onClick={() => setShowMenu(false)}
+                  onClick={() => {
+                    setShowMenu(false);
+                    navigate("/profile");
+                  }}
                 >
                   Profile
                 </button>

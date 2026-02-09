@@ -7,6 +7,7 @@ import com.printifyx.backend.repository.CategoryRepository;
 import com.printifyx.backend.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 public class AdminProductService {
@@ -41,5 +42,10 @@ public class AdminProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         product.setIsActive(!product.getIsActive());
         productRepository.save(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 }

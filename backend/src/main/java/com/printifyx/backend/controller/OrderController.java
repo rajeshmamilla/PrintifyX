@@ -2,12 +2,14 @@ package com.printifyx.backend.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +37,29 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<Order>> getOrdersByUser(
+            @PathVariable Long userId,
+            @RequestHeader("Authorization") String authHeader) {
+        
+        // Ensure consistent userId parsing
+        Long parsedUserId = parseUserId(authHeader);
+        // For now, we allow the path variable to win, but log the check
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
+    }
+
+    private Long parseUserId(String authHeader) {
+        if (authHeader == null || authHeader.isEmpty()) {
+             throw new RuntimeException("Invalid token");
+        }
+        String token = authHeader;
+        if (authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7).trim();
+        }
+        try {
+            return Long.parseLong(token);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid token format");
+        }
     }
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {

@@ -5,7 +5,9 @@ import com.printifyx.backend.service.AdminCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 import java.util.Map;
+import com.printifyx.backend.entity.Category;
 
 @RestController
 @RequestMapping("/api/admin/categories")
@@ -15,6 +17,11 @@ public class AdminCategoryController {
 
     public AdminCategoryController(AdminCategoryService adminCategoryService) {
         this.adminCategoryService = adminCategoryService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Category>> getAllCategories() {
+        return ResponseEntity.ok(adminCategoryService.getAllCategories());
     }
 
     @PostMapping
