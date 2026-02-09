@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductImageGallery from "../components/ProductImageGallery";
 import ProductOptionSelect from "../components/ProductOptionSelect";
 import PriceSummary from "../components/PriceSummary";
+import { cartService } from "../services/cart.service";
 
 // Import images
 import plasticBusinessCardsImg from "../assets/products/plastic business cards.png";
@@ -42,6 +43,7 @@ const PRODUCT_DATA: Record<string, any> = {
 };
 
 const ProductCustomizerPage = () => {
+    const navigate = useNavigate();
     const { productId } = useParams<{ productId: string }>();
     const product = productId ? PRODUCT_DATA[productId] : null;
 
@@ -85,6 +87,38 @@ const ProductCustomizerPage = () => {
             total += 200;
         }
         return total;
+    };
+
+    const handleAddToCart = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const totalPrice = calculatePrice();
+            await cartService.addItem({
+                productId: productId === "plastic-business-cards" ? 1 : 2, // Mock IDs
+                productName: product.title,
+                unitPrice: product.basePrice,
+                quantity: parseInt(selections["Quantity"] || "100"),
+                totalPrice: totalPrice,
+                customization: selections
+            });
+
+            // Dispatch event to update header
+            window.dispatchEvent(new Event("cartUpdated"));
+            alert("Added to cart!");
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            alert("Failed to add to cart");
+        }
+    };
+
+    const handleBuyNow = async () => {
+        await handleAddToCart();
+        navigate("/cart");
     };
 
     return (
@@ -143,8 +177,8 @@ const ProductCustomizerPage = () => {
 
                             <PriceSummary
                                 price={calculatePrice()}
-                                onAddToCart={() => alert("Added to cart!")}
-                                onBuyNow={() => alert("Proceeding to checkout...")}
+                                onAddToCart={handleAddToCart}
+                                onBuyNow={handleBuyNow}
                             />
                         </div>
 

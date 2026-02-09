@@ -18,13 +18,17 @@ const Login = () => {
       const data = await loginUser(email, password);
       console.log("Login success:", data);
 
-      // TEMP: store token
-      localStorage.setItem("token", data.token);
+      // store user id as token
+      localStorage.setItem("token", data.id);
 
       // later → redirect
       navigate("/");
-    } catch {
-      setError("Invalid email or password");
+    } catch (err: any) {
+      if (err.message === "Failed to fetch") {
+        setError("Connection refused. Please check if the backend is running on port 8081.");
+      } else {
+        setError(err.message || "Invalid email or password");
+      }
     }
   };
 

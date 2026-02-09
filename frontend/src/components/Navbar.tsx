@@ -1,84 +1,133 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 const MENU_DATA: Record<
   Exclude<MenuType, null>,
   {
     title: string;
-    items: string[];
+    items: { name: string; path?: string }[];
   }[]
 > = {
   business: [
     {
       title: "Business Cards",
-      items: ["Standard Business Cards", "Plastic Business Cards"],
+      items: [
+        { name: "Standard Business Cards", path: "/products/standard-business-cards" },
+        { name: "Plastic Business Cards", path: "/products/plastic-business-cards" },
+      ],
     },
     {
       title: "Postcards",
-      items: ["Standard Postcards", "EDDM Postcards"],
+      items: [
+        { name: "Standard Postcards" },
+        { name: "EDDM Postcards" }
+      ],
     },
     {
       title: "Flyers & Brochures",
-      items: ["Business Flyers", "Club Flyers"],
+      items: [
+        { name: "Business Flyers" },
+        { name: "Club Flyers" }
+      ],
     },
   ],
 
   flyers: [
     {
       title: "Flyers",
-      items: ["Standard Flyers", "Premium Flyers", "Club Flyers"],
+      items: [
+        { name: "Standard Flyers" },
+        { name: "Premium Flyers" },
+        { name: "Club Flyers" }
+      ],
     },
     {
       title: "Brochures",
-      items: ["Bi-Fold", "Tri-Fold", "Z-Fold"],
+      items: [
+        { name: "Bi-Fold" },
+        { name: "Tri-Fold" },
+        { name: "Z-Fold" }
+      ],
     },
     {
       title: "Menus",
-      items: ["Restaurant Menus", "Takeout Menus"],
+      items: [
+        { name: "Restaurant Menus" },
+        { name: "Takeout Menus" }
+      ],
     },
   ],
 
   banners: [
     {
       title: "Banners",
-      items: ["Vinyl Banners", "Mesh Banners", "Fabric Banners"],
+      items: [
+        { name: "Vinyl Banners" },
+        { name: "Mesh Banners" },
+        { name: "Fabric Banners" }
+      ],
     },
     {
       title: "Displays",
-      items: ["Roll-Up Banners", "X-Stand Displays"],
+      items: [
+        { name: "Roll-Up Banners" },
+        { name: "X-Stand Displays" }
+      ],
     },
     {
       title: "Outdoor",
-      items: ["Fence Banners", "Pole Banners"],
+      items: [
+        { name: "Fence Banners" },
+        { name: "Pole Banners" }
+      ],
     },
   ],
 
   posters: [
     {
       title: "Posters",
-      items: ["Paper Posters", "Photo Posters"],
+      items: [
+        { name: "Paper Posters" },
+        { name: "Photo Posters" }
+      ],
     },
     {
       title: "Large Format",
-      items: ["Foam Board", "Mounted Posters"],
+      items: [
+        { name: "Foam Board" },
+        { name: "Mounted Posters" }
+      ],
     },
     {
       title: "Events",
-      items: ["Movie Posters", "Event Posters"],
+      items: [
+        { name: "Movie Posters" },
+        { name: "Event Posters" }
+      ],
     },
   ],
 
   stickers: [
     {
       title: "Stickers",
-      items: ["Die-Cut Stickers", "Kiss-Cut Stickers"],
+      items: [
+        { name: "Die-Cut Stickers" },
+        { name: "Kiss-Cut Stickers" }
+      ],
     },
     {
       title: "Labels",
-      items: ["Product Labels", "Bottle Labels"],
+      items: [
+        { name: "Product Labels" },
+        { name: "Bottle Labels" }
+      ],
     },
     {
       title: "Decals",
-      items: ["Window Decals", "Wall Decals"],
+      items: [
+        { name: "Window Decals" },
+        { name: "Wall Decals" }
+      ],
     },
   ],
 };
@@ -152,12 +201,23 @@ const Navbar = () => {
                   {section.title}
                 </h4>
                 {section.items.map((item) => (
-                  <p
-                    key={item}
-                    className="cursor-pointer text-[14px] hover:text-orange-500"
-                  >
-                    {item}
-                  </p>
+                  item.path ? (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className="block cursor-pointer text-[14px] hover:text-orange-500 mb-1"
+                      onClick={() => setActiveMenu(null)}
+                    >
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <p
+                      key={item.name}
+                      className="cursor-pointer text-[14px] hover:text-orange-500 mb-1"
+                    >
+                      {item.name}
+                    </p>
+                  )
                 ))}
               </div>
             ))}

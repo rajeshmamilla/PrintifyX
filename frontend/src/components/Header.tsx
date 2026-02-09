@@ -1,17 +1,37 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { Search, Phone, User, ShoppingCart } from "lucide-react";
+import { cartService } from "../services/cart.service";
 
 const Header = () => {
   const navigate = useNavigate();
   const searchRef = useRef<HTMLInputElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
+
+    if (token) {
+      fetchCartCount();
+    }
+
+    // Listen for cart updates (simple custom event)
+    const handleCartUpdate = () => fetchCartCount();
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, []);
+
+  const fetchCartCount = async () => {
+    try {
+      const count = await cartService.getCount();
+      setCartCount(count);
+    } catch (error) {
+      console.error("Error fetching cart count:", error);
+    }
+  };
 
   const focusSearch = () => {
     searchRef.current?.focus();
@@ -94,8 +114,18 @@ const Header = () => {
           </Link>
         )}
 
-        <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
-          <ShoppingCart size={20} />
+        <div
+          onClick={() => navigate(isLoggedIn ? "/cart" : "/login")}
+          className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors relative"
+        >
+          <div className="relative">
+            <ShoppingCart size={20} />
+            {isLoggedIn && cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </div>
           <span>Cart</span>
         </div>
       </div>
