@@ -97,12 +97,15 @@ const ProductCustomizerPage = () => {
         }
 
         try {
+            const quantity = parseInt(selections["Quantity"] || "100");
             const totalPrice = calculatePrice();
+            const unitPrice = totalPrice / quantity;
+
             await cartService.addItem({
                 productId: productId === "plastic-business-cards" ? 1 : 2, // Mock IDs
                 productName: product.title,
-                unitPrice: product.basePrice,
-                quantity: parseInt(selections["Quantity"] || "100"),
+                unitPrice: unitPrice,
+                quantity: quantity,
                 totalPrice: totalPrice,
                 customization: selections
             });

@@ -105,7 +105,7 @@ const AdminDashboard = () => {
                 </div>
                 <button
                     onClick={fetchData}
-                    className="bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2"
+                    className="bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2"
                 >
                     <Clock size={16} />
                     Refresh Data
@@ -118,13 +118,13 @@ const AdminDashboard = () => {
                     <div
                         key={card.name}
                         onClick={() => navigate(card.path)}
-                        className="group bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-5 cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        className="group bg-white rounded-lg p-6 border border-gray-200 flex items-center gap-5 cursor-pointer hover:border-gray-300 transition-all duration-300"
                     >
-                        <div className={`${card.color} h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                        <div className={`${card.color} h-14 w-14 rounded-lg flex items-center justify-center text-white group-hover:bg-opacity-90 transition-all`}>
                             <card.icon size={26} />
                         </div>
                         <div>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{card.name}</p>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{card.name}</p>
                             <h3 className="text-3xl font-black text-gray-900">{card.value}</h3>
                         </div>
                     </div>
@@ -133,12 +133,12 @@ const AdminDashboard = () => {
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 {/* Recent Orders Table */}
-                <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
+                <div className="xl:col-span-2 bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
                         <h3 className="text-lg font-black text-gray-900">Recent Orders</h3>
                         <button
                             onClick={() => navigate("/admin/orders")}
-                            className="text-orange-500 text-sm font-bold hover:underline flex items-center gap-1"
+                            className="text-gray-900 text-sm font-bold hover:underline flex items-center gap-1"
                         >
                             View Full Report <ArrowRight size={16} />
                         </button>
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
                                     <th className="px-8 py-4 text-center">Action</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-50">
+                            <tbody className="divide-y divide-gray-100">
                                 {recentOrders.map((order) => (
                                     <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                                         <td className="px-8 py-5">
@@ -182,7 +182,7 @@ const AdminDashboard = () => {
                                             <div className="flex items-center justify-center">
                                                 <select
                                                     disabled={updatingId === order.id}
-                                                    className="bg-gray-100 border-none rounded-lg px-2 py-1 text-[10px] font-black focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
+                                                    className="bg-gray-50 border border-gray-200 rounded px-2 py-1 text-[10px] font-black focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
                                                     value={order.status}
                                                     onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                                                 >
@@ -191,7 +191,7 @@ const AdminDashboard = () => {
                                                     <option value="SHIPPED">SHIPPED</option>
                                                     <option value="CANCELLED">CANCELLED</option>
                                                 </select>
-                                                {updatingId === order.id && <Loader2 className="animate-spin ml-2 text-orange-500" size={14} />}
+                                                {updatingId === order.id && <Loader2 className="animate-spin ml-2 text-gray-400" size={14} />}
                                             </div>
                                         </td>
                                     </tr>
@@ -203,20 +203,20 @@ const AdminDashboard = () => {
 
                 {/* Catalog Highlights */}
                 <div className="space-y-8">
-                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                    <div className="bg-white rounded-lg p-6 border border-gray-200">
                         <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
                             Newest Products
                             <button
                                 onClick={() => navigate("/admin/products")}
-                                className="text-xs font-bold text-orange-500 hover:underline"
+                                className="text-xs font-bold text-gray-900 hover:underline"
                             >
                                 All Products
                             </button>
                         </h3>
                         <div className="space-y-4">
                             {recentProducts.map(p => (
-                                <div key={p.id} className="flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                    <div className="h-10 w-10 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center font-black">
+                                <div key={p.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
+                                    <div className="h-10 w-10 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-black">
                                         {p.name.charAt(0)}
                                     </div>
                                     <div className="flex-1">
@@ -231,20 +231,20 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                    <div className="bg-white rounded-lg p-6 border border-gray-200">
                         <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
                             Recent Categories
                             <button
                                 onClick={() => navigate("/admin/categories")}
-                                className="text-xs font-bold text-orange-500 hover:underline"
+                                className="text-xs font-bold text-gray-900 hover:underline"
                             >
                                 All Categories
                             </button>
                         </h3>
                         <div className="space-y-4">
                             {recentCategories.map(c => (
-                                <div key={c.id} className="flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                    <div className="h-10 w-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center font-black">
+                                <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
+                                    <div className="h-10 w-10 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-black">
                                         {c.name.charAt(0)}
                                     </div>
                                     <div className="flex-1">

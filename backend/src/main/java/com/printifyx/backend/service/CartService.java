@@ -77,7 +77,8 @@ public class CartService {
             item.setProductName(request.getProductName());
             item.setUnitPrice(request.getUnitPrice());
             item.setQuantity(request.getQuantity());
-            item.setTotalPrice(request.getTotalPrice());
+            // Use server-side calculation for total price
+            item.setTotalPrice(request.getUnitPrice().multiply(new BigDecimal(request.getQuantity())));
             item.setCustomization(request.getCustomization());
             cart.getItems().add(item);
         }

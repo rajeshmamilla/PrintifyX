@@ -88,11 +88,11 @@ const AdminOrders: React.FC = () => {
                 </div>
 
                 <div className="relative group w-full md:w-80">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-orange-500 transition-colors" size={20} />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={20} />
                     <input
                         type="text"
                         placeholder="Search order or email..."
-                        className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-2xl shadow-sm outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700 placeholder:text-gray-400"
+                        className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-gray-900 transition-all font-bold text-gray-700 placeholder:text-gray-400"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -100,7 +100,7 @@ const AdminOrders: React.FC = () => {
             </div>
 
             {error && (
-                <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-red-700 flex items-center gap-4">
+                <div className="bg-red-50 border border-red-100 rounded-lg p-6 text-red-700 flex items-center gap-4">
                     <AlertCircle size={24} />
                     <div>
                         <p className="font-bold tracking-tight">Failed to synchronize data</p>
@@ -118,7 +118,7 @@ const AdminOrders: React.FC = () => {
             )}
 
             {/* Orders Table */}
-            <div className="bg-white rounded-[2rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
@@ -178,10 +178,10 @@ const AdminOrders: React.FC = () => {
                                                 <select
                                                     disabled={updatingId === order.id}
                                                     className={`appearance-none font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
-                                                            order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
-                                                                order.status === 'PAID' ? 'bg-blue-50 border-blue-100 text-blue-700' :
-                                                                    order.status === 'PENDING' ? 'bg-orange-50 border-orange-100 text-orange-700' :
-                                                                        'bg-orange-50 border-orange-100 text-orange-700'
+                                                        order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
+                                                            order.status === 'PAID' ? 'bg-blue-50 border-blue-100 text-blue-700' :
+                                                                order.status === 'PENDING' ? 'bg-orange-50 border-orange-100 text-orange-700' :
+                                                                    'bg-orange-50 border-orange-100 text-orange-700'
                                                         }`}
                                                     value={order.status}
                                                     onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
@@ -199,7 +199,7 @@ const AdminOrders: React.FC = () => {
                                             <div className="flex justify-center">
                                                 <button
                                                     onClick={() => setSelectedOrderId(order.id)}
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-black hover:shadow-lg hover:-translate-y-1 active:translate-y-0 transition-all"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-black transition-all"
                                                 >
                                                     <Eye size={14} />
                                                     Details
@@ -215,14 +215,14 @@ const AdminOrders: React.FC = () => {
             </div>
 
             {/* Footer Info */}
-            <div className="bg-orange-500 rounded-[2rem] p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="bg-gray-900 rounded-lg p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="text-center md:text-left">
                     <h4 className="text-2xl font-black mb-2">Inventory Sync Active</h4>
-                    <p className="text-orange-100 text-sm font-medium max-w-md">Your dashboard is currently monitoring {orders.length} unique transactions. Shipments should be processed within 24 hours of payment status.</p>
+                    <p className="text-gray-400 text-sm font-medium max-w-md">Your dashboard is currently monitoring {orders.length} unique transactions. Shipments should be processed within 24 hours of payment status.</p>
                 </div>
                 <button
                     onClick={fetchOrders}
-                    className="px-10 py-4 bg-white text-orange-600 rounded-2xl font-black text-sm hover:bg-orange-50 transition-all shadow-xl active:scale-95 whitespace-nowrap"
+                    className="px-10 py-4 bg-white text-gray-900 rounded-lg font-black text-sm hover:bg-gray-50 transition-all active:scale-95 whitespace-nowrap"
                 >
                     Force Manual Refresh
                 </button>

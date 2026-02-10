@@ -21,6 +21,7 @@ const Login = () => {
       // store user id as token
       localStorage.setItem("token", data.id);
       localStorage.setItem("role", data.role);
+      localStorage.setItem("email", email);
 
       // later → redirect
       navigate("/");

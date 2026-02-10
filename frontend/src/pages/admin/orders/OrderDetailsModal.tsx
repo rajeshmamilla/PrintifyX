@@ -56,9 +56,9 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
 
     if (loading) {
         return (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
-                <div className="bg-white rounded-3xl p-12 flex flex-col items-center">
-                    <Loader2 className="animate-spin text-orange-500 mb-4" size={48} />
+            <div className="fixed inset-0 bg-black/50 z-[1000] flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg p-12 flex flex-col items-center">
+                    <Loader2 className="animate-spin text-gray-900 mb-4" size={48} />
                     <p className="font-bold text-gray-600">Loading Order Details...</p>
                 </div>
             </div>
@@ -68,17 +68,17 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
     if (error || !order) {
         return (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
-                <div className="bg-white rounded-3xl p-8 max-w-sm w-full">
+                <div className="bg-white rounded-xl p-8 max-w-sm w-full">
                     <p className="text-red-500 font-bold mb-4">Error: {error || 'Order not found'}</p>
-                    <button onClick={onClose} className="w-full bg-gray-100 py-3 rounded-xl font-bold">Close</button>
+                    <button onClick={onClose} className="w-full bg-gray-100 py-3 rounded-lg font-bold">Close</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in duration-300">
+        <div className="fixed inset-0 bg-black/50 z-[1000] flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 animate-in fade-in duration-300">
                 {/* Header */}
                 <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
                     <div>
@@ -93,15 +93,15 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto p-8 space-y-8">
                     {/* Customer Info */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-orange-50/30 p-6 rounded-2xl border border-orange-100">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
                         <div>
-                            <h3 className="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">Customer Information</h3>
+                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Customer Information</h3>
                             <p className="font-bold text-gray-900">{order.customerName}</p>
                             <p className="text-sm text-gray-600">{order.customerEmail}</p>
                             <p className="text-sm text-gray-600">{order.customerPhone}</p>
                         </div>
                         <div>
-                            <h3 className="text-xs font-black text-orange-600 uppercase tracking-widest mb-3">Order Summary</h3>
+                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Order Summary</h3>
                             <p className="text-sm text-gray-600 font-medium">Status: <span className="font-black text-gray-900">{order.status}</span></p>
                             <p className="text-lg font-black text-gray-900 mt-1">Total: ₹{order.totalAmount.toLocaleString()}</p>
                         </div>
@@ -110,7 +110,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                     {/* Items Table */}
                     <div>
                         <h3 className="text-lg font-black text-gray-900 mb-4">Order Items</h3>
-                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                        <div className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
                             <OrderItemsTable items={order.items || []} />
                         </div>
                     </div>
@@ -123,9 +123,9 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                                 <button
                                     key={item.id}
                                     onClick={() => fetchProductDetails(item.productId)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-bold transition-all ${selectedProduct?.id === item.productId
-                                        ? "bg-orange-500 text-white border-orange-500 shadow-lg shadow-orange-200"
-                                        : "bg-white text-gray-600 border-gray-100 hover:border-orange-200"
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-bold transition-all ${selectedProduct?.id === item.productId
+                                        ? "bg-gray-900 text-white border-gray-900"
+                                        : "bg-white text-gray-600 border-gray-100 hover:border-gray-300"
                                         }`}
                                 >
                                     <Package size={16} />
@@ -142,7 +142,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                         )}
 
                         {selectedProduct && !productLoading && (
-                            <div className="bg-gray-50/80 rounded-2xl p-6 border border-gray-100 animate-in slide-in-from-top-4 duration-300">
+                            <div className="bg-gray-50/80 rounded-xl p-6 border border-gray-100 animate-in slide-in-from-top-4 duration-300">
                                 <div className="flex items-center justify-between mb-4">
                                     <h4 className="text-xl font-black text-gray-900">{selectedProduct.name}</h4>
                                     <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${selectedProduct.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
@@ -175,7 +175,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                 <div className="px-8 py-6 border-t border-gray-100 flex justify-end bg-gray-50/50">
                     <button
                         onClick={onClose}
-                        className="px-8 py-3 bg-gray-900 text-white rounded-xl font-black text-sm hover:bg-black transition-all shadow-lg active:scale-95"
+                        className="px-8 py-3 bg-gray-900 text-white rounded-lg font-black text-sm hover:bg-black transition-all shadow-lg active:scale-95"
                     >
                         Close Details
                     </button>

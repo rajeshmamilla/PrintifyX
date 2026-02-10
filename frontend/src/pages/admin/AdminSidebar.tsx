@@ -26,13 +26,13 @@ const AdminSidebar = () => {
                             to={item.path}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                    ? "bg-orange-500 text-white shadow-lg"
-                                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                                    ? "bg-gray-800 text-white"
+                                    : "text-gray-400 hover:bg-gray-800/50 hover:text-white"
                                 }`
                             }
                         >
                             <item.icon size={20} />
-                            <span className="font-medium">{item.name}</span>
+                            <span className="text-sm font-semibold">{item.name}</span>
                         </NavLink>
                     ))}
                 </nav>

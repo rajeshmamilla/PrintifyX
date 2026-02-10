@@ -24,6 +24,22 @@ const Header = () => {
     return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, []);
 
+  const getUserName = () => {
+    const firstName = localStorage.getItem("firstName");
+    if (firstName) return firstName;
+
+    const fullName = localStorage.getItem("name");
+    if (fullName) return fullName.split(" ")[0];
+
+    const email =
+      localStorage.getItem("email") || localStorage.getItem("userEmail");
+    if (email) return email.split("@")[0];
+
+    return "";
+  };
+
+  const userName = getUserName();
+
   const fetchCartCount = async () => {
     try {
       const count = await cartService.getCount();
@@ -57,7 +73,7 @@ const Header = () => {
         <input
           ref={searchRef}
           placeholder="Product and something awesome..."
-          className="w-1/2 rounded-[20px] border border-gray-300 px-5 py-3 pr-12 focus:outline-none focus:ring-1 focus:ring-orange-400"
+          className="w-1/2 rounded-lg border border-gray-300 px-5 py-3 pr-12 focus:outline-none focus:ring-1 focus:ring-gray-900"
         />
         <span
           onClick={focusSearch}
@@ -71,7 +87,7 @@ const Header = () => {
       <div className="flex items-center gap-8">
         <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
           <Phone size={20} />
-          <span>214 432 0563</span>
+          <span>+91 994 879 1267</span>
         </div>
 
         {isLoggedIn ? (
@@ -80,9 +96,10 @@ const Header = () => {
             onMouseEnter={() => setShowMenu(true)}
             onMouseLeave={() => setShowMenu(false)}
           >
-            <div
-              className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors"
-            >
+            <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
+              {userName && (
+                <span className="text-sm font-medium">{userName}</span>
+              )}
               <User size={20} />
             </div>
 
@@ -100,7 +117,7 @@ const Header = () => {
                 <div className="px-6 mt-4">
                   <button
                     onClick={handleLogout}
-                    className="w-full rounded-full bg-[#ff6000] py-3 text-[16px] font-bold text-white transition-all hover:bg-[#e55600] active:scale-95 shadow-md"
+                    className="w-full rounded-lg bg-gray-900 py-3 text-[16px] font-bold text-white transition-all hover:bg-black active:scale-95"
                   >
                     Logout
                   </button>
