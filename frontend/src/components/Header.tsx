@@ -117,7 +117,7 @@ const Header = () => {
                 <div className="px-6 mt-4">
                   <button
                     onClick={handleLogout}
-                    className="w-full rounded-lg bg-gray-900 py-3 text-[16px] font-bold text-white transition-all hover:bg-black active:scale-95"
+                    className="w-full rounded-lg bg-white border border-gray-200 py-3 text-[16px] font-bold text-gray-900 transition-all hover:bg-gray-50 active:scale-95"
                   >
                     Logout
                   </button>

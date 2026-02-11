@@ -199,7 +199,7 @@ const AdminOrders: React.FC = () => {
                                             <div className="flex justify-center">
                                                 <button
                                                     onClick={() => setSelectedOrderId(order.id)}
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-black transition-all"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-900 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
                                                 >
                                                     <Eye size={14} />
                                                     Details

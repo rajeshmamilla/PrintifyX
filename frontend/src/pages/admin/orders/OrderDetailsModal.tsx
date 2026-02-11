@@ -175,7 +175,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                 <div className="px-8 py-6 border-t border-gray-100 flex justify-end bg-gray-50/50">
                     <button
                         onClick={onClose}
-                        className="px-8 py-3 bg-gray-900 text-white rounded-lg font-black text-sm hover:bg-black transition-all shadow-lg active:scale-95"
+                        className="px-8 py-3 bg-white border border-gray-200 text-gray-900 rounded-lg font-black text-sm hover:bg-gray-50 transition-all active:scale-95"
                     >
                         Close Details
                     </button>
