@@ -52,16 +52,8 @@ const CartPage = () => {
     }
   };
 
-  const handleCheckout = async () => {
-    try {
-      await cartService.checkout();
-      window.dispatchEvent(new Event("cartUpdated"));
-      alert("Order placed successfully!");
-      navigate("/"); // Or to orders page if available
-    } catch (err) {
-      console.error(err);
-      alert("Checkout failed");
-    }
+  const handleCheckout = () => {
+    navigate("/payment");
   };
 
   const calculateSubtotal = () => {

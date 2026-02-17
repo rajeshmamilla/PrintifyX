@@ -89,7 +89,7 @@ const ProductCustomizerPage = () => {
         return total;
     };
 
-    const handleAddToCart = async () => {
+    const handleAddToCart = async (showAlert = true) => {
         const token = localStorage.getItem("token");
         if (!token) {
             navigate("/login");
@@ -112,7 +112,7 @@ const ProductCustomizerPage = () => {
 
             // Dispatch event to update header
             window.dispatchEvent(new Event("cartUpdated"));
-            alert("Added to cart!");
+            if (showAlert) alert("Added to cart!");
         } catch (error) {
             console.error("Error adding to cart:", error);
             alert("Failed to add to cart");
@@ -120,8 +120,8 @@ const ProductCustomizerPage = () => {
     };
 
     const handleBuyNow = async () => {
-        await handleAddToCart();
-        navigate("/cart");
+        await handleAddToCart(false);
+        navigate("/payment");
     };
 
     return (

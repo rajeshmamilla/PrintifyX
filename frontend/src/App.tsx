@@ -15,6 +15,7 @@ import Orders from "./pages/profile/Orders";
 import OrderDetails from "./pages/profile/OrderDetails";
 import Addresses from "./pages/profile/Addresses";
 import Logout from "./pages/profile/Logout";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/categories/business-cards" element={<BusinessCardsCategory />} />
         <Route path="/products/:productId" element={<ProductCustomizerPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
 
         {/* User Profile Routes */}
         <Route path="/profile" element={<ProfileLayout />}>
