@@ -16,6 +16,7 @@ import OrderDetails from "./pages/profile/OrderDetails";
 import Addresses from "./pages/profile/Addresses";
 import Logout from "./pages/profile/Logout";
 import PaymentPage from "./pages/PaymentPage";
+import TrackOrderPage from "./pages/TrackOrderPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/products/:productId" element={<ProductCustomizerPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/track-order" element={<TrackOrderPage />} />
 
         {/* User Profile Routes */}
         <Route path="/profile" element={<ProfileLayout />}>

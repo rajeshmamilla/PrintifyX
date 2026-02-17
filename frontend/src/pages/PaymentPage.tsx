@@ -36,19 +36,42 @@ const PaymentPage: React.FC = () => {
     const userId = localStorage.getItem('token');
 
     useEffect(() => {
-        const fetchTotal = async () => {
+        const fetchData = async () => {
             try {
+                // Fetch Cart Total
                 const cart = await cartService.getCart();
                 if (cart && cart.items) {
                     const total = cart.items.reduce((acc: number, item: any) => acc + item.totalPrice, 0);
                     setCartTotal(total);
                 }
+
+                // Fetch Saved Addresses for Auto-fill
+                if (userId) {
+                    const res = await fetch('http://localhost:8081/api/addresses', {
+                        headers: { 'Authorization': userId }
+                    });
+                    if (res.ok) {
+                        const addresses = await res.json();
+                        if (addresses.length > 0) {
+                            const defaultAddr = addresses.find((a: any) => a.isDefault) || addresses[0];
+                            setFormData({
+                                name: defaultAddr.name || '',
+                                phone: defaultAddr.phone || '',
+                                addressLine1: defaultAddr.addressLine1 || '',
+                                addressLine2: defaultAddr.addressLine2 || '',
+                                city: defaultAddr.city || '',
+                                state: defaultAddr.state || '',
+                                pincode: defaultAddr.pincode || ''
+                            });
+                        }
+                    }
+                }
             } catch (err) {
-                console.error("Failed to fetch cart total:", err);
+                console.error("Failed to fetch data:", err);
             }
         };
-        fetchTotal();
-    }, []);
+        fetchData();
+    }, [userId]);
 
     const handleAddressSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,6 +82,7 @@ const PaymentPage: React.FC = () => {
 
         try {
             setLoading(true);
+            // Save address (if user modified it or for the first time)
             const res = await fetch('http://localhost:8081/api/addresses', {
                 method: 'POST',
                 headers: {
@@ -70,12 +94,11 @@ const PaymentPage: React.FC = () => {
 
             if (!res.ok) throw new Error('Failed to save address');
 
-            setNotification({ message: 'Address saved and proceeding to payment...', type: 'success' });
+            setNotification({ message: 'Order processing...', type: 'success' });
             setTimeout(() => {
                 setNotification(null);
-                // Here we would typically trigger the payment process
-                alert(`Redirecting to ${selectedMethod} payment...`);
-            }, 2000);
+                navigate('/track-order');
+            }, 1500);
         } catch (err: any) {
             setNotification({ message: err.message, type: 'error' });
             setTimeout(() => setNotification(null), 3000);
