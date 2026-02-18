@@ -68,7 +68,10 @@ const AdminDashboard = () => {
             setUpdatingId(id);
             const res = await fetch(`http://localhost:8081/api/orders/${id}/status`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
                 body: JSON.stringify({ status: newStatus }),
             });
             if (res.ok) {

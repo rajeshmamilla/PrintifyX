@@ -33,7 +33,8 @@ const PaymentPage: React.FC = () => {
         pincode: ''
     });
 
-    const userId = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,9 +47,9 @@ const PaymentPage: React.FC = () => {
                 }
 
                 // Fetch Saved Addresses for Auto-fill
-                if (userId) {
+                if (token) {
                     const res = await fetch('http://localhost:8081/api/addresses', {
-                        headers: { 'Authorization': userId }
+                        headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (res.ok) {
                         const addresses = await res.json();
@@ -75,7 +76,7 @@ const PaymentPage: React.FC = () => {
 
     const handleAddressSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!userId) {
+        if (!token) {
             navigate('/login');
             return;
         }
@@ -87,7 +88,7 @@ const PaymentPage: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': userId
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ ...formData, isDefault: false })
             });

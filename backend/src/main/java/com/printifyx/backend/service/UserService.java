@@ -1,6 +1,7 @@
 package com.printifyx.backend.service;
 
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.printifyx.backend.entity.User;
@@ -11,36 +12,33 @@ import com.printifyx.backend.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User registerUser(String email, String password) {
-
-        // check if email already exists
-//        userRepository.findByEmail(email).ifPresent(u -> {
-//            throw new RuntimeException("Email already registered");
-//        });
-        
         if (userRepository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException("Email already registered");
         }
 
-
         User user = new User();
-       
         user.setEmail(email);
-        user.setPassword(password); // ⚠️ plain text for now
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole("USER");
-      
 
         return userRepository.save(user);
     }
 
     public User loginUser(String email, String password) {
-        return userRepository.findByEmail(email)
-                .filter(user -> user.getPassword().equals(password))
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+        
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        throw new RuntimeException("Invalid email or password");
     }
 }

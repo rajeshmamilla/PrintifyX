@@ -143,6 +143,11 @@ type MenuType =
 const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState<MenuType>(null);
 
+  const handlePlaceholderClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    alert("This page is yet to develop, Try Business cards");
+  };
+
   return (
     <nav
       className="relative bg-[#2b2b2b] h-[58px]"
@@ -159,24 +164,28 @@ const Navbar = () => {
         <li
           onMouseEnter={() => setActiveMenu("flyers")}
           className="cursor-pointer hover:underline"
+          onClick={handlePlaceholderClick}
         >
           Flyers
         </li>
         <li
           onMouseEnter={() => setActiveMenu("banners")}
           className="cursor-pointer hover:underline"
+          onClick={handlePlaceholderClick}
         >
           Banners
         </li>
         <li
           onMouseEnter={() => setActiveMenu("posters")}
           className="cursor-pointer hover:underline"
+          onClick={handlePlaceholderClick}
         >
           Posters
         </li>
         <li
           onMouseEnter={() => setActiveMenu("stickers")}
           className="cursor-pointer hover:underline"
+          onClick={handlePlaceholderClick}
         >
           Stickers
         </li>
@@ -186,13 +195,13 @@ const Navbar = () => {
       {activeMenu && (
         <div
           className="
-      absolute left-1/2 top-full
-      -translate-x-1/2
-      w-[80%]
-      bg-white
-      shadow-xl
-      z-[100]
-    "
+          absolute left-1/2 top-full
+          -translate-x-1/2
+          w-[80%]
+          bg-white
+          shadow-xl
+          z-[100]
+        "
         >
           <div className="mx-auto grid max-w-[1100px] grid-cols-3 gap-10 px-10 py-8">
             {MENU_DATA[activeMenu].map((section) => (
@@ -200,8 +209,9 @@ const Navbar = () => {
                 <h4 className="mb-2 text-[16px] font-semibold">
                   {section.title}
                 </h4>
-                {section.items.map((item) => (
-                  item.path ? (
+                {section.items.map((item) => {
+                  const isBusinessCard = section.title === "Business Cards";
+                  return item.path && isBusinessCard ? (
                     <Link
                       key={item.name}
                       to={item.path}
@@ -214,11 +224,12 @@ const Navbar = () => {
                     <p
                       key={item.name}
                       className="cursor-pointer text-[14px] hover:text-orange-500 mb-1"
+                      onClick={handlePlaceholderClick}
                     >
                       {item.name}
                     </p>
-                  )
-                ))}
+                  );
+                })}
               </div>
             ))}
           </div>

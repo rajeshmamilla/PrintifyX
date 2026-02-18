@@ -18,8 +18,9 @@ const Login = () => {
       const data = await loginUser(email, password);
       console.log("Login success:", data);
 
-      // store user id as token
-      localStorage.setItem("token", data.id);
+      // store JWT token and user details
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.userId);
       localStorage.setItem("role", data.role);
       localStorage.setItem("email", email);
 
@@ -74,10 +75,16 @@ const Login = () => {
             <p className="mt-3 text-center text-sm text-red-500">{error}</p>
           )}
 
-          <p className="mt-4 text-center text-sm">
-            Don’t have an account?{" "}
-            <Link to="/register" className="text-orange-500 hover:underline">
-              Register
+          <p className="mt-4 text-center text-sm flex justify-center gap-4">
+            <span>
+              Don’t have an account?{" "}
+              <Link to="/register" className="text-orange-500 hover:underline">
+                Register
+              </Link>
+            </span>
+            <span className="text-gray-300">|</span>
+            <Link to="/forgot-password" university-id="forgot-password-link" className="text-orange-500 hover:underline">
+              Forgot Password?
             </Link>
           </p>
         </div>

@@ -17,6 +17,7 @@ import Addresses from "./pages/profile/Addresses";
 import Logout from "./pages/profile/Logout";
 import PaymentPage from "./pages/PaymentPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/track-order" element={<TrackOrderPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* User Profile Routes */}
         <Route path="/profile" element={<ProfileLayout />}>

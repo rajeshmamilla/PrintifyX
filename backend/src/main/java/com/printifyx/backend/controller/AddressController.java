@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.printifyx.backend.config.JwtUtil;
 import com.printifyx.backend.entity.Address;
 import com.printifyx.backend.service.AddressService;
 
@@ -19,9 +20,11 @@ import com.printifyx.backend.service.AddressService;
 public class AddressController {
 
     private final AddressService addressService;
+    private final JwtUtil jwtUtil;
 
-    public AddressController(AddressService addressService) {
+    public AddressController(AddressService addressService, JwtUtil jwtUtil) {
         this.addressService = addressService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -53,8 +56,8 @@ public class AddressController {
             token = authHeader.substring(7).trim();
         }
         try {
-            return Long.parseLong(token);
-        } catch (NumberFormatException e) {
+            return jwtUtil.extractUserId(token);
+        } catch (Exception e) {
             throw new RuntimeException("Invalid token format");
         }
     }

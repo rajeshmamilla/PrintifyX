@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.printifyx.backend.config.JwtUtil;
 import com.printifyx.backend.dto.CreateOrderRequest;
 import com.printifyx.backend.dto.UpdateOrderStatusRequest;
 import com.printifyx.backend.entity.Order;
@@ -23,9 +24,11 @@ import com.printifyx.backend.service.OrderService;
 public class OrderController {
 
     private final OrderService orderService;
+    private final JwtUtil jwtUtil;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, JwtUtil jwtUtil) {
         this.orderService = orderService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
@@ -56,8 +59,8 @@ public class OrderController {
             token = authHeader.substring(7).trim();
         }
         try {
-            return Long.parseLong(token);
-        } catch (NumberFormatException e) {
+            return jwtUtil.extractUserId(token);
+        } catch (Exception e) {
             throw new RuntimeException("Invalid token format");
         }
     }

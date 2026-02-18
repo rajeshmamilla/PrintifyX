@@ -21,7 +21,8 @@ const Orders: React.FC = () => {
     type: "success" | "error";
   } | null>(null);
 
-  const userId = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     if (userId) {
@@ -41,7 +42,7 @@ const Orders: React.FC = () => {
       const res = await fetch(url, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: userId || "",
+          Authorization: token ? `Bearer ${token}` : "",
         },
       });
 
@@ -56,10 +57,10 @@ const Orders: React.FC = () => {
       setOrders(
         Array.isArray(data)
           ? data.sort(
-              (a: any, b: any) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime(),
-            )
+            (a: any, b: any) =>
+              new Date(b.createdAt).getTime() -
+              new Date(a.createdAt).getTime(),
+          )
           : [],
       );
     } catch (err: any) {
@@ -86,7 +87,7 @@ const Orders: React.FC = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userId}`,
+            Authorization: token ? `Bearer ${token}` : "",
           },
           body: JSON.stringify({ status: "CANCELLED" }),
         },
@@ -160,11 +161,10 @@ const Orders: React.FC = () => {
 
       {notification && (
         <div
-          className={`fixed top-8 right-8 z-[2000] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-right-8 duration-300 ${
-            notification.type === "success"
+          className={`fixed top-8 right-8 z-[2000] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-right-8 duration-300 ${notification.type === "success"
               ? "bg-green-50 border-green-100 text-green-800"
               : "bg-red-50 border-red-100 text-red-800"
-          }`}
+            }`}
         >
           {notification.type === "success" ? (
             <CheckCircle2 size={24} />
@@ -226,15 +226,14 @@ const Orders: React.FC = () => {
                   </p>
 
                   <div
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase md:justify-self-end w-fit ${
-                      order.status === "SHIPPED"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase md:justify-self-end w-fit ${order.status === "SHIPPED"
                         ? "bg-green-50 text-green-700"
                         : order.status === "CANCELLED"
                           ? "bg-red-50 text-red-700"
                           : order.status === "PAID"
                             ? "bg-blue-50 text-blue-700"
                             : "bg-orange-50 text-orange-700"
-                    }`}
+                      }`}
                   >
                     {getStatusIcon(order.status)}
                     {order.status}
@@ -252,19 +251,19 @@ const Orders: React.FC = () => {
 
                   {(order.status === "CREATED" ||
                     order.status === "PENDING") && (
-                    <button
-                      disabled={cancellingId === order.id}
-                      onClick={() => handleCancelOrder(order.id)}
-                      className="flex items-center justify-center px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all disabled:opacity-50"
-                      title="Cancel Order"
-                    >
-                      {cancellingId === order.id ? (
-                        <Loader2 className="animate-spin" size={18} />
-                      ) : (
-                        <XCircle size={18} />
-                      )}
-                    </button>
-                  )}
+                      <button
+                        disabled={cancellingId === order.id}
+                        onClick={() => handleCancelOrder(order.id)}
+                        className="flex items-center justify-center px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all disabled:opacity-50"
+                        title="Cancel Order"
+                      >
+                        {cancellingId === order.id ? (
+                          <Loader2 className="animate-spin" size={18} />
+                        ) : (
+                          <XCircle size={18} />
+                        )}
+                      </button>
+                    )}
                 </div>
               </div>
 

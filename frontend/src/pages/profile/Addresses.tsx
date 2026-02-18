@@ -31,7 +31,7 @@ const Addresses: React.FC = () => {
         isDefault: false
     });
 
-    const userId = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchAddresses();
@@ -43,7 +43,7 @@ const Addresses: React.FC = () => {
             const res = await fetch('http://localhost:8081/api/addresses', {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': userId || ''
+                    'Authorization': token ? `Bearer ${token}` : ''
                 }
             });
             if (!res.ok) throw new Error('Failed to fetch addresses');
@@ -63,7 +63,7 @@ const Addresses: React.FC = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': userId || ''
+                    'Authorization': token ? `Bearer ${token}` : ''
                 },
                 body: JSON.stringify(formData)
             });
@@ -88,7 +88,7 @@ const Addresses: React.FC = () => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': userId || ''
+                    'Authorization': token ? `Bearer ${token}` : ''
                 }
             });
 

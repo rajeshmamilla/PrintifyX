@@ -9,7 +9,8 @@ const OrderDetails: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const userId = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
 
     useEffect(() => {
         fetchOrderDetails();
@@ -21,14 +22,14 @@ const OrderDetails: React.FC = () => {
             const res = await fetch(`http://localhost:8081/api/orders/${orderId}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': userId || ''
+                    'Authorization': token ? `Bearer ${token}` : ''
                 }
             });
             if (!res.ok) throw new Error('Failed to fetch order details');
             const data = await res.json();
 
             // Check if order belongs to user
-            if (data.userId.toString() !== userId) {
+            if (data.user && data.user.id.toString() !== userId) {
                 navigate('/profile/orders');
                 return;
             }

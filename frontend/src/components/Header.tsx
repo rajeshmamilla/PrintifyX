@@ -55,7 +55,9 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     localStorage.removeItem("role");
+    localStorage.removeItem("email");
     setIsLoggedIn(false);
     setShowMenu(false);
     navigate("/login");
