@@ -12,14 +12,22 @@ const Header = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    const isTokenValid = token && token !== "undefined" && token !== "null";
+    setIsLoggedIn(!!isTokenValid);
 
-    if (token) {
+    if (isTokenValid) {
       fetchCartCount();
     }
 
     // Listen for cart updates (simple custom event)
-    const handleCartUpdate = () => fetchCartCount();
+    const handleCartUpdate = () => {
+      const token = localStorage.getItem("token");
+      const isTokenValid = token && token !== "undefined" && token !== "null";
+      setIsLoggedIn(!!isTokenValid);
+      if (isTokenValid) {
+        fetchCartCount();
+      }
+    };
     window.addEventListener("cartUpdated", handleCartUpdate);
     return () => window.removeEventListener("cartUpdated", handleCartUpdate);
   }, []);

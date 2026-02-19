@@ -11,8 +11,14 @@ const CartPage = () => {
   const [cart, setCart] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const isTokenValid = token && token !== "undefined" && token !== "null";
+
+    if (!isTokenValid) {
+      setLoading(false);
+      return;
+    }
     fetchCart();
   }, []);
 
@@ -81,7 +87,19 @@ const CartPage = () => {
       <Header />
       <Navbar />
 
-      <main className="flex-grow max-w-[1200px] mx-auto px-6 py-12 w-full">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[60vh]">
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-8">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <Trash2 className="h-5 w-5 text-red-400" aria-hidden="true" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="flex items-center gap-4 mb-8">
           <Link
             to="/"

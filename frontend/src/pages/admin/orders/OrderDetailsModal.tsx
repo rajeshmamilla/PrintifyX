@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Package } from 'lucide-react';
 import OrderItemsTable from './OrderItemsTable';
+import { fetchWithAuth } from "../../../services/apiClient";
 
 interface OrderDetailsModalProps {
     orderId: number;
@@ -21,14 +22,20 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
     const fetchOrderDetails = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`http://localhost:8081/api/orders/${orderId}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            const res = await fetchWithAuth(`/orders/${orderId}`);
             if (!res.ok) throw new Error('Failed to fetch order details');
             const data = await res.json();
-            setOrder(data);
+
+            // For each item, fetch product details to get image
+            const fullItems = await Promise.all(
+                (data.items || []).map(async (item: any) => {
+                    const prodRes = await fetchWithAuth(`/products/${item.productId}`);
+                    const prodData = await prodRes.json();
+                    return { ...item, product: prodData };
+                })
+            );
+
+            setOrder({ ...data, items: fullItems });
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -39,11 +46,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
     const fetchProductDetails = async (productId: number) => {
         try {
             setProductLoading(true);
-            const res = await fetch(`http://localhost:8081/api/products/${productId}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            const res = await fetchWithAuth(`/products/${productId}`);
             if (!res.ok) throw new Error('Failed to fetch product details');
             const data = await res.json();
             setSelectedProduct(data);

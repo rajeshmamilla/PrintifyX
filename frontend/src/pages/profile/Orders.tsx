@@ -9,6 +9,7 @@ import {
   Clock,
   XCircle,
 } from "lucide-react";
+import { fetchWithAuth } from "../../services/apiClient";
 
 const Orders: React.FC = () => {
   const navigate = useNavigate();
@@ -21,30 +22,23 @@ const Orders: React.FC = () => {
     type: "success" | "error";
   } | null>(null);
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
+  const isUserValid = userId && userId !== "undefined" && userId !== "null";
 
   useEffect(() => {
-    if (userId) {
+    if (isUserValid) {
       fetchOrders();
     } else {
       setLoading(false);
       setError("User session not found. Please log in again.");
     }
-  }, [userId]);
+  }, [isUserValid]);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
       setError(null);
-      const url = `http://localhost:8081/api/orders/user/${userId}`;
-
-      const res = await fetch(url, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      });
+      const res = await fetchWithAuth(`/orders/user/${userId}`);
 
       if (!res.ok) {
         const errorText = await res.text();
@@ -81,17 +75,10 @@ const Orders: React.FC = () => {
 
     try {
       setCancellingId(orderId);
-      const res = await fetch(
-        `http://localhost:8081/api/orders/${orderId}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
-          body: JSON.stringify({ status: "CANCELLED" }),
-        },
-      );
+      const res = await fetchWithAuth(`/orders/${orderId}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status: "CANCELLED" }),
+      });
 
       if (!res.ok) throw new Error("Failed to cancel order");
 
@@ -162,8 +149,8 @@ const Orders: React.FC = () => {
       {notification && (
         <div
           className={`fixed top-8 right-8 z-[2000] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-right-8 duration-300 ${notification.type === "success"
-              ? "bg-green-50 border-green-100 text-green-800"
-              : "bg-red-50 border-red-100 text-red-800"
+            ? "bg-green-50 border-green-100 text-green-800"
+            : "bg-red-50 border-red-100 text-red-800"
             }`}
         >
           {notification.type === "success" ? (
@@ -227,12 +214,12 @@ const Orders: React.FC = () => {
 
                   <div
                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase md:justify-self-end w-fit ${order.status === "SHIPPED"
-                        ? "bg-green-50 text-green-700"
-                        : order.status === "CANCELLED"
-                          ? "bg-red-50 text-red-700"
-                          : order.status === "PAID"
-                            ? "bg-blue-50 text-blue-700"
-                            : "bg-orange-50 text-orange-700"
+                      ? "bg-green-50 text-green-700"
+                      : order.status === "CANCELLED"
+                        ? "bg-red-50 text-red-700"
+                        : order.status === "PAID"
+                          ? "bg-blue-50 text-blue-700"
+                          : "bg-orange-50 text-orange-700"
                       }`}
                   >
                     {getStatusIcon(order.status)}

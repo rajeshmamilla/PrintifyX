@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Loader2, Package, Tag, CreditCard, AlertCircle } from 'lucide-react';
+import { fetchWithAuth } from "../../services/apiClient";
 
 const OrderDetails: React.FC = () => {
     const { orderId } = useParams();
@@ -9,22 +10,21 @@ const OrderDetails: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const isUserValid = userId && userId !== "undefined" && userId !== "null";
 
     useEffect(() => {
+        if (!isUserValid) {
+            navigate('/login');
+            return;
+        }
         fetchOrderDetails();
-    }, [orderId]);
+    }, [orderId, isUserValid]);
 
     const fetchOrderDetails = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`http://localhost:8081/api/orders/${orderId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                }
-            });
+            const res = await fetchWithAuth(`/orders/${orderId}`);
             if (!res.ok) throw new Error('Failed to fetch order details');
             const data = await res.json();
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tag, Package, ShoppingBag, Clock, Loader2, ArrowRight } from "lucide-react";
+import { fetchWithAuth } from "../../services/apiClient";
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -23,13 +24,10 @@ const AdminDashboard = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const headers = {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            };
             const [categoriesRes, productsRes, ordersRes] = await Promise.all([
-                fetch("http://localhost:8081/api/admin/categories", { headers }),
-                fetch("http://localhost:8081/api/admin/products", { headers }),
-                fetch("http://localhost:8081/api/orders", { headers })
+                fetchWithAuth("/admin/categories"),
+                fetchWithAuth("/admin/products"),
+                fetchWithAuth("/orders")
             ]);
 
             const categories = await categoriesRes.json();
@@ -66,12 +64,8 @@ const AdminDashboard = () => {
     const handleStatusUpdate = async (id: number, newStatus: string) => {
         try {
             setUpdatingId(id);
-            const res = await fetch(`http://localhost:8081/api/orders/${id}/status`, {
+            const res = await fetchWithAuth(`/orders/${id}/status`, {
                 method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                },
                 body: JSON.stringify({ status: newStatus }),
             });
             if (res.ok) {

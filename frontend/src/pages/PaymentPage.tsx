@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { cartService } from '../services/cart.service';
+import { fetchWithAuth } from '../services/apiClient';
 import { CreditCard, Wallet, Truck, Landmark, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 interface AddressFormData {
@@ -33,11 +34,15 @@ const PaymentPage: React.FC = () => {
         pincode: ''
     });
 
-    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
+    const isUserValid = userId && userId !== "undefined" && userId !== "null";
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!isUserValid) {
+                navigate('/login');
+                return;
+            }
             try {
                 // Fetch Cart Total
                 const cart = await cartService.getCart();
@@ -47,24 +52,20 @@ const PaymentPage: React.FC = () => {
                 }
 
                 // Fetch Saved Addresses for Auto-fill
-                if (token) {
-                    const res = await fetch('http://localhost:8081/api/addresses', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    if (res.ok) {
-                        const addresses = await res.json();
-                        if (addresses.length > 0) {
-                            const defaultAddr = addresses.find((a: any) => a.isDefault) || addresses[0];
-                            setFormData({
-                                name: defaultAddr.name || '',
-                                phone: defaultAddr.phone || '',
-                                addressLine1: defaultAddr.addressLine1 || '',
-                                addressLine2: defaultAddr.addressLine2 || '',
-                                city: defaultAddr.city || '',
-                                state: defaultAddr.state || '',
-                                pincode: defaultAddr.pincode || ''
-                            });
-                        }
+                const res = await fetchWithAuth('/addresses');
+                if (res.ok) {
+                    const addresses = await res.json();
+                    if (addresses.length > 0) {
+                        const defaultAddr = addresses.find((a: any) => a.isDefault) || addresses[0];
+                        setFormData({
+                            name: defaultAddr.name || '',
+                            phone: defaultAddr.phone || '',
+                            addressLine1: defaultAddr.addressLine1 || '',
+                            addressLine2: defaultAddr.addressLine2 || '',
+                            city: defaultAddr.city || '',
+                            state: defaultAddr.state || '',
+                            pincode: defaultAddr.pincode || ''
+                        });
                     }
                 }
             } catch (err) {
@@ -76,29 +77,28 @@ const PaymentPage: React.FC = () => {
 
     const handleAddressSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!token) {
-            navigate('/login');
-            return;
-        }
 
         try {
             setLoading(true);
             // Save address (if user modified it or for the first time)
-            const res = await fetch('http://localhost:8081/api/addresses', {
+            const res = await fetchWithAuth('/addresses', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
                 body: JSON.stringify({ ...formData, isDefault: false })
             });
 
             if (!res.ok) throw new Error('Failed to save address');
 
-            setNotification({ message: 'Order processing...', type: 'success' });
+            setNotification({ message: 'Saving address...', type: 'success' });
+
+            // Now perform actual checkout to create the order
+            const orderRes = await cartService.checkout();
+
+            setNotification({ message: 'Order placed successfully!', type: 'success' });
             setTimeout(() => {
                 setNotification(null);
-                navigate('/track-order');
+                // Dispatch event to update cart count in header
+                window.dispatchEvent(new Event("cartUpdated"));
+                navigate('/track-order', { state: { orderId: orderRes.orderNumber } });
             }, 1500);
         } catch (err: any) {
             setNotification({ message: err.message, type: 'error' });

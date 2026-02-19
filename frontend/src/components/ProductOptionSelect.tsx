@@ -41,7 +41,7 @@ const ProductOptionSelect: React.FC<ProductOptionSelectProps> = ({
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="2"
-                            d="No content provided with the request."
+                            d="M19 9l-7 7-7-7"
                         />
                     </svg>
                 </div>

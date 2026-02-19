@@ -1,14 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { CheckCircle, Package, Truck, Box, ArrowRight, ShoppingBag } from 'lucide-react';
 
 const TrackOrderPage: React.FC = () => {
+    const location = useLocation();
+
     // Mock order data
     const orderDetails = {
-        orderId: `#PX${Math.floor(100000 + Math.random() * 900000)}`,
+        orderId: location.state?.orderId || `#PX${Math.floor(100000 + Math.random() * 900000)}`,
         status: 'Confirmed',
         estimatedDelivery: 'Feb 24, 2026',
         steps: [
@@ -57,8 +59,8 @@ const TrackOrderPage: React.FC = () => {
                             {orderDetails.steps.map((step, index) => (
                                 <div key={index} className="flex items-start gap-8">
                                     <div className={`p-3 rounded-full border-4 border-white shadow-sm flex items-center justify-center ${step.status === 'completed' ? 'bg-gray-900 text-white' :
-                                            step.status === 'active' ? 'bg-blue-600 text-white animate-pulse' :
-                                                'bg-gray-100 text-gray-400'
+                                        step.status === 'active' ? 'bg-blue-600 text-white animate-pulse' :
+                                            'bg-gray-100 text-gray-400'
                                         }`}>
                                         {step.icon}
                                     </div>

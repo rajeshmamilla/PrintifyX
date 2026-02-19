@@ -20,11 +20,12 @@ const Login = () => {
 
       // store JWT token and user details
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("userId", data.id);
       localStorage.setItem("role", data.role);
       localStorage.setItem("email", email);
 
       // later → redirect
+      window.dispatchEvent(new Event("cartUpdated"));
       navigate("/");
     } catch (err: any) {
       if (err.message === "Failed to fetch") {

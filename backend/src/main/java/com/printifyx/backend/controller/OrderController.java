@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import com.printifyx.backend.config.UserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,15 +25,13 @@ import com.printifyx.backend.service.OrderService;
 public class OrderController {
 
     private final OrderService orderService;
-    private final JwtUtil jwtUtil;
-
-    public OrderController(OrderService orderService, JwtUtil jwtUtil) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<Order> createOrder(@AuthenticationPrincipal UserPrincipal principal, @RequestBody CreateOrderRequest request) {
+        request.setUserId(principal.getUserId());
         return ResponseEntity.ok(orderService.createOrder(request));
     }
     @GetMapping("/{id}")
@@ -42,28 +41,20 @@ public class OrderController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Order>> getOrdersByUser(
             @PathVariable Long userId,
-            @RequestHeader("Authorization") String authHeader) {
+            @AuthenticationPrincipal UserPrincipal principal) {
         
-        // Ensure consistent userId parsing
-        Long parsedUserId = parseUserId(authHeader);
-        // For now, we allow the path variable to win, but log the check
+        // Security check: USER can only see their own orders. ADMIN can see any.
+        boolean isAdmin = principal.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        
+        if (!isAdmin && !principal.getUserId().equals(userId)) {
+            return ResponseEntity.status(403).build();
+        }
+        
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
     }
 
-    private Long parseUserId(String authHeader) {
-        if (authHeader == null || authHeader.isEmpty()) {
-             throw new RuntimeException("Invalid token");
-        }
-        String token = authHeader;
-        if (authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7).trim();
-        }
-        try {
-            return jwtUtil.extractUserId(token);
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid token format");
-        }
-    }
+
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());

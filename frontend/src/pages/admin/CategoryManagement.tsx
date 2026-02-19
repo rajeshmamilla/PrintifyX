@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, ToggleLeft, ToggleRight, Loader2 } from "lucide-react";
+import { fetchWithAuth } from "../../services/apiClient";
 
 const CategoryManagement = () => {
     const [categories, setCategories] = useState<any[]>([]);
@@ -15,7 +16,7 @@ const CategoryManagement = () => {
     const fetchCategories = async () => {
         try {
             setLoading(true);
-            const res = await fetch("http://localhost:8081/api/admin/categories");
+            const res = await fetchWithAuth("/admin/categories");
             const data = await res.json();
             setCategories(data);
         } catch (error) {
@@ -28,7 +29,7 @@ const CategoryManagement = () => {
     const handleToggleStatus = async (id: number) => {
         try {
             setProcessingId(id);
-            const res = await fetch(`http://localhost:8081/api/admin/categories/${id}/status`, {
+            const res = await fetchWithAuth(`/admin/categories/${id}/status`, {
                 method: "PATCH",
             });
             if (res.ok) {
@@ -44,9 +45,8 @@ const CategoryManagement = () => {
     const handleCreateCategory = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:8081/api/admin/categories", {
+            const res = await fetchWithAuth("/admin/categories", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newCategory),
             });
             if (res.ok) {

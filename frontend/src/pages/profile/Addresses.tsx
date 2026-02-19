@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Plus, Trash2, CheckCircle2, Loader2, AlertCircle, Home, Phone, User } from 'lucide-react';
+import { fetchWithAuth } from "../../services/apiClient";
 
 interface Address {
     id?: number;
@@ -31,21 +32,21 @@ const Addresses: React.FC = () => {
         isDefault: false
     });
 
-    const token = localStorage.getItem('token');
-
     useEffect(() => {
-        fetchAddresses();
+        const token = localStorage.getItem("token");
+        const isTokenValid = token && token !== "undefined" && token !== "null";
+
+        if (isTokenValid) {
+            fetchAddresses();
+        } else {
+            setLoading(false);
+        }
     }, []);
 
     const fetchAddresses = async () => {
         try {
             setLoading(true);
-            const res = await fetch('http://localhost:8081/api/addresses', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                }
-            });
+            const res = await fetchWithAuth('/addresses');
             if (!res.ok) throw new Error('Failed to fetch addresses');
             const data = await res.json();
             setAddresses(data);
@@ -59,12 +60,8 @@ const Addresses: React.FC = () => {
     const handleSaveAddress = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:8081/api/addresses', {
+            const res = await fetchWithAuth('/addresses', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                },
                 body: JSON.stringify(formData)
             });
 
@@ -84,12 +81,8 @@ const Addresses: React.FC = () => {
     const handleDeleteAddress = async (id: number) => {
         if (!window.confirm("Delete this address?")) return;
         try {
-            const res = await fetch(`http://localhost:8081/api/addresses/${id}`, {
+            const res = await fetchWithAuth(`/addresses/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                }
             });
 
             if (!res.ok) throw new Error('Failed to delete address');

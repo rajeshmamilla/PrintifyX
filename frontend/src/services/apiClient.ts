@@ -2,10 +2,11 @@ const BASE_URL = "http://localhost:8081/api";
 
 export const fetchWithAuth = async (path: string, options: RequestInit = {}) => {
     const token = localStorage.getItem("token");
+    const isTokenValid = token && token !== "undefined" && token !== "null";
 
     const headers = {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
+        ...(isTokenValid && { Authorization: `Bearer ${token}` }),
         ...options.headers,
     };
 

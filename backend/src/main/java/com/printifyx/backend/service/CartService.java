@@ -46,7 +46,7 @@ public class CartService {
                 });
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public CartResponse getCart(Long userId) {
         Cart cart = getOrCreateCart(userId);
         return mapToResponse(cart);

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, ToggleLeft, ToggleRight, Loader2, Filter } from "lucide-react";
+import { fetchWithAuth } from "../../services/apiClient";
 
 const ProductManagement = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -24,8 +25,8 @@ const ProductManagement = () => {
         try {
             setLoading(true);
             const [prodRes, catRes] = await Promise.all([
-                fetch("http://localhost:8081/api/admin/products"),
-                fetch("http://localhost:8081/api/admin/categories")
+                fetchWithAuth("/admin/products"),
+                fetchWithAuth("/admin/categories")
             ]);
             const [prodData, catData] = await Promise.all([prodRes.json(), catRes.json()]);
             setProducts(prodData);
@@ -40,7 +41,7 @@ const ProductManagement = () => {
     const handleToggleStatus = async (id: number) => {
         try {
             setProcessingId(id);
-            const res = await fetch(`http://localhost:8081/api/admin/products/${id}/status`, {
+            const res = await fetchWithAuth(`/admin/products/${id}/status`, {
                 method: "PATCH",
             });
             if (res.ok) {
@@ -56,9 +57,8 @@ const ProductManagement = () => {
     const handleCreateProduct = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:8081/api/admin/products", {
+            const res = await fetchWithAuth("/admin/products", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     ...newProduct,
                     basePrice: Number(newProduct.basePrice),

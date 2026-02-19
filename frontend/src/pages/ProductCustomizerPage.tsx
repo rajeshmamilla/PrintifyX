@@ -91,7 +91,9 @@ const ProductCustomizerPage = () => {
 
     const handleAddToCart = async (showAlert = true) => {
         const token = localStorage.getItem("token");
-        if (!token) {
+        const isTokenValid = token && token !== "undefined" && token !== "null";
+
+        if (!isTokenValid) {
             navigate("/login");
             return;
         }

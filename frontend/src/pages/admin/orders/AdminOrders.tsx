@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Loader2, Eye, CheckCircle2, AlertCircle, ShoppingBag, Calendar, User, CreditCard } from 'lucide-react';
 import OrderDetailsModal from './OrderDetailsModal';
+import { fetchWithAuth } from "../../../services/apiClient";
 
 const AdminOrders: React.FC = () => {
     const [orders, setOrders] = useState<any[]>([]);
@@ -19,11 +20,7 @@ const AdminOrders: React.FC = () => {
         try {
             setLoading(true);
             setError(null);
-            const res = await fetch('http://localhost:8081/api/orders', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            const res = await fetchWithAuth('/orders');
             if (!res.ok) throw new Error(`Error ${res.status}: Failed to fetch orders`);
             const data = await res.json();
             setOrders(Array.isArray(data) ? data : []);
@@ -38,11 +35,10 @@ const AdminOrders: React.FC = () => {
     const handleStatusUpdate = async (id: number, newStatus: string) => {
         try {
             setUpdatingId(id);
-            const res = await fetch(`http://localhost:8081/api/orders/${id}/status`, {
+            const res = await fetchWithAuth(`/orders/${id}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming token is stored
                 },
                 body: JSON.stringify({ status: newStatus }),
             });

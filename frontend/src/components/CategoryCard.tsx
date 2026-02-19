@@ -25,7 +25,8 @@ const CategoryCard = ({ title, image, link }: CategoryCardProps) => {
     </>
   );
 
-  const className = "group rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition cursor-pointer";
+  const className =
+    "group rounded-xl overflow-hidden bg-white shadow hover:shadow-lg transition cursor-pointer";
 
   if (link) {
     return (
@@ -35,11 +36,7 @@ const CategoryCard = ({ title, image, link }: CategoryCardProps) => {
     );
   }
 
-  return (
-    <div className={className}>
-      {CardContent}
-    </div>
-  );
+  return <div className={className}>{CardContent}</div>;
 };
 
 export default CategoryCard;

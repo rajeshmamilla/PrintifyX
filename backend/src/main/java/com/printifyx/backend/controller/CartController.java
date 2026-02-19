@@ -7,6 +7,8 @@ import com.printifyx.backend.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.printifyx.backend.config.UserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import java.util.Map;
 
 @RestController
@@ -20,13 +22,13 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<CartResponse> getCart(@RequestHeader("Authorization") String userId) {
-        return ResponseEntity.ok(cartService.getCart(Long.parseLong(userId)));
+    public ResponseEntity<CartResponse> getCart(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(cartService.getCart(principal.getUserId()));
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Void> addItem(@RequestHeader("Authorization") String userId, @RequestBody CartItemRequest request) {
-        cartService.addItemToCart(Long.parseLong(userId), request);
+    public ResponseEntity<Void> addItem(@AuthenticationPrincipal UserPrincipal principal, @RequestBody CartItemRequest request) {
+        cartService.addItemToCart(principal.getUserId(), request);
         return ResponseEntity.ok().build();
     }
 
@@ -43,12 +45,12 @@ public class CartController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Long> getCount(@RequestHeader("Authorization") String userId) {
-        return ResponseEntity.ok(cartService.getCartCount(Long.parseLong(userId)));
+    public ResponseEntity<Long> getCount(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(cartService.getCartCount(principal.getUserId()));
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<Order> checkout(@RequestHeader("Authorization") String userId) {
-        return ResponseEntity.ok(cartService.checkout(Long.parseLong(userId)));
+    public ResponseEntity<Order> checkout(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(cartService.checkout(principal.getUserId()));
     }
 }
