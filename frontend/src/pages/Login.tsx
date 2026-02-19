@@ -42,7 +42,7 @@ const Login = () => {
       <Navbar />
 
       <main className="min-h-[70vh]">
-        <div className="mx-auto mt-20 max-w-[400px] rounded bg-white p-10 shadow-lg">
+        <div className="mx-auto mt-20 max-w-[400px] rounded-xl bg-white p-10 shadow-lg border border-gray-100">
           <h2 className="mb-5 text-center text-2xl font-semibold">Login</h2>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -52,7 +52,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-orange-400"
+              className="rounded-xl border border-gray-300 px-3 py-3 focus:outline-none focus:ring-1 focus:ring-gray-900"
             />
 
             <input
@@ -61,12 +61,12 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-orange-400"
+              className="rounded-xl border border-gray-300 px-3 py-3 focus:outline-none focus:ring-1 focus:ring-gray-900"
             />
 
             <button
               type="submit"
-              className="rounded bg-orange-500 py-3 text-white transition-colors hover:bg-orange-600"
+              className="rounded-xl bg-black py-3 text-white transition-all hover:bg-gray-900 font-bold shadow-lg shadow-gray-100"
             >
               Login
             </button>
@@ -79,12 +79,12 @@ const Login = () => {
           <p className="mt-4 text-center text-sm flex justify-center gap-4">
             <span>
               Don’t have an account?{" "}
-              <Link to="/register" className="text-orange-500 hover:underline">
+              <Link to="/register" className="text-black font-bold hover:underline">
                 Register
               </Link>
             </span>
             <span className="text-gray-300">|</span>
-            <Link to="/forgot-password" university-id="forgot-password-link" className="text-orange-500 hover:underline">
+            <Link to="/forgot-password" university-id="forgot-password-link" className="text-black font-bold hover:underline">
               Forgot Password?
             </Link>
           </p>

@@ -18,8 +18,13 @@ const AdminDashboard = () => {
     const [updatingId, setUpdatingId] = useState<number | null>(null);
 
     useEffect(() => {
+        const role = localStorage.getItem("role");
+        if (role !== "ADMIN") {
+            navigate("/");
+            return;
+        }
         fetchData();
-    }, []);
+    }, [navigate]);
 
     const fetchData = async () => {
         try {
@@ -79,10 +84,10 @@ const AdminDashboard = () => {
     };
 
     const statCards = [
-        { name: "Total Categories", value: metrics.totalCategories, icon: Tag, color: "bg-blue-500", path: "/admin/categories" },
-        { name: "Active Products", value: metrics.activeProducts, icon: Package, color: "bg-green-500", path: "/admin/products" },
-        { name: "Total Orders", value: metrics.totalOrders, icon: ShoppingBag, color: "bg-purple-500", path: "/admin/orders" },
-        { name: "Pending Orders", value: metrics.pendingOrders, icon: Clock, color: "bg-orange-500", path: "/admin/orders" },
+        { name: "Total Categories", value: metrics.totalCategories, icon: Tag, color: "bg-gray-100 text-gray-900 border-gray-200", path: "/admin/categories" },
+        { name: "Active Products", value: metrics.activeProducts, icon: Package, color: "bg-gray-100 text-gray-900 border-gray-200", path: "/admin/products" },
+        { name: "Total Orders", value: metrics.totalOrders, icon: ShoppingBag, color: "bg-gray-100 text-gray-900 border-gray-200", path: "/admin/orders" },
+        { name: "Pending Orders", value: metrics.pendingOrders, icon: Clock, color: "bg-gray-100 text-gray-900 border-gray-200", path: "/admin/orders" },
     ];
 
     if (loading) {
@@ -115,9 +120,9 @@ const AdminDashboard = () => {
                     <div
                         key={card.name}
                         onClick={() => navigate(card.path)}
-                        className="group bg-white rounded-lg p-6 border border-gray-200 flex items-center gap-5 cursor-pointer hover:border-gray-300 transition-all duration-300"
+                        className="group bg-white rounded-xl p-6 border border-gray-200 flex items-center gap-5 cursor-pointer hover:border-gray-900 transition-all duration-300"
                     >
-                        <div className={`${card.color} h-14 w-14 rounded-lg flex items-center justify-center text-white group-hover:bg-opacity-90 transition-all`}>
+                        <div className={`${card.color} h-14 w-14 rounded-lg flex items-center justify-center border transition-all`}>
                             <card.icon size={26} />
                         </div>
                         <div>
@@ -130,7 +135,7 @@ const AdminDashboard = () => {
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 {/* Recent Orders Table */}
-                <div className="xl:col-span-2 bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div className="xl:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
                         <h3 className="text-lg font-black text-gray-900">Recent Orders</h3>
                         <button
@@ -200,7 +205,7 @@ const AdminDashboard = () => {
 
                 {/* Catalog Highlights */}
                 <div className="space-y-8">
-                    <div className="bg-white rounded-lg p-6 border border-gray-200">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200">
                         <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
                             Newest Products
                             <button
@@ -228,7 +233,7 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg p-6 border border-gray-200">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200">
                         <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
                             Recent Categories
                             <button

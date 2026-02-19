@@ -24,12 +24,14 @@ const ProfileLayout: React.FC = () => {
 
   const userName = getUserName();
 
-  // Redirect if not logged in
+  // Redirect if not logged in or if Admin tries to access user profile
   React.useEffect(() => {
     if (!token) {
       navigate("/login");
+    } else if (role === "ADMIN") {
+      navigate("/admin/dashboard");
     }
-  }, [token, navigate]);
+  }, [token, role, navigate]);
 
   const menuItems = [
     { name: "My Orders", path: "/profile/orders", icon: ShoppingBag },
@@ -48,9 +50,9 @@ const ProfileLayout: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
           <aside className="w-full md:w-64 shrink-0">
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="p-8 bg-gray-50 border-b border-gray-100 flex flex-col items-center text-center">
-                <div className="h-16 w-16 bg-white border border-gray-200 rounded-lg flex items-center justify-center text-gray-400 mb-4">
+                <div className="h-16 w-16 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 mb-4">
                   <User size={32} />
                 </div>
                 <h3 className="font-bold text-gray-900 leading-tight">
@@ -67,8 +69,8 @@ const ProfileLayout: React.FC = () => {
                     key={item.path}
                     to={item.path}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-semibold text-sm ${isActive
-                        ? "bg-gray-100 text-gray-900"
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold text-sm ${isActive
+                        ? "bg-gray-900 text-white"
                         : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                       }`
                     }
@@ -81,13 +83,13 @@ const ProfileLayout: React.FC = () => {
             </div>
 
             {role === "ADMIN" && (
-              <div className="mt-4 p-4 bg-white border border-gray-200 rounded-lg">
+              <div className="mt-4 p-4 bg-white border border-gray-200 rounded-xl">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
                   Admin Access
                 </p>
                 <button
                   onClick={() => navigate("/admin/dashboard")}
-                  className="w-full py-2 bg-white border border-gray-200 text-gray-900 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-colors"
+                  className="w-full py-2 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-gray-900 transition-colors"
                 >
                   Admin Panel
                 </button>

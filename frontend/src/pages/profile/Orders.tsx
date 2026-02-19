@@ -165,7 +165,7 @@ const Orders: React.FC = () => {
       )}
 
       {orders.length === 0 ? (
-        <div className="bg-white rounded-[2rem] p-16 flex flex-col items-center text-center border border-gray-100">
+        <div className="bg-white rounded-xl p-16 flex flex-col items-center text-center border border-gray-100">
           <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-6">
             <ShoppingBag size={40} />
           </div>
@@ -177,7 +177,7 @@ const Orders: React.FC = () => {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="px-8 py-3 bg-orange-500 text-white rounded-2xl font-black text-sm hover:bg-orange-600 transition-all shadow-xl shadow-orange-100"
+            className="px-8 py-3 bg-black text-white rounded-xl font-black text-sm hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
           >
             Browse Storefront
           </button>
@@ -187,7 +187,7 @@ const Orders: React.FC = () => {
           {orders.map((order) => (
             <div
               key={order.id}
-              className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative"
+              className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                 <div className="flex items-start gap-4">
@@ -214,12 +214,12 @@ const Orders: React.FC = () => {
 
                   <div
                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase md:justify-self-end w-fit ${order.status === "SHIPPED"
-                      ? "bg-green-50 text-green-700"
+                      ? "bg-gray-900 text-white"
                       : order.status === "CANCELLED"
-                        ? "bg-red-50 text-red-700"
+                        ? "bg-red-50 text-red-700 border border-red-100"
                         : order.status === "PAID"
-                          ? "bg-blue-50 text-blue-700"
-                          : "bg-orange-50 text-orange-700"
+                          ? "bg-blue-50 text-blue-700 border border-blue-100"
+                          : "bg-gray-100 text-gray-700 border border-gray-200"
                       }`}
                   >
                     {getStatusIcon(order.status)}
@@ -230,7 +230,7 @@ const Orders: React.FC = () => {
                 <div className="flex items-center gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-gray-50">
                   <button
                     onClick={() => navigate(`/profile/orders/${order.id}`)}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-gray-50 text-gray-900 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-100 transition-all border border-transparent hover:border-gray-100"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-lg shadow-gray-100"
                   >
                     Details
                     <ChevronRight size={14} />

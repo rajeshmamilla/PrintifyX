@@ -34,7 +34,7 @@ const Register = () => {
             <Navbar />
 
             <main className="min-h-[70vh]">
-                <div className="mx-auto mt-20 max-w-[400px] rounded bg-white p-10 shadow-lg">
+                <div className="mx-auto mt-20 max-w-[400px] rounded-xl bg-white p-10 shadow-lg border border-gray-100">
                     <h2 className="mb-5 text-center text-2xl font-semibold">Register</h2>
 
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -44,7 +44,7 @@ const Register = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-orange-400"
+                            className="rounded-xl border border-gray-300 px-3 py-3 focus:outline-none focus:ring-1 focus:ring-gray-900"
                         />
 
                         <input
@@ -53,12 +53,12 @@ const Register = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-orange-400"
+                            className="rounded-xl border border-gray-300 px-3 py-3 focus:outline-none focus:ring-1 focus:ring-gray-900"
                         />
 
                         <button
                             type="submit"
-                            className="rounded bg-orange-500 py-3 text-white transition-colors hover:bg-orange-600"
+                            className="rounded-xl bg-black py-3 text-white transition-all hover:bg-gray-900 font-bold shadow-lg shadow-gray-100"
                         >
                             Register
                         </button>
@@ -71,7 +71,7 @@ const Register = () => {
                     {success && (
                         <p className="mt-3 text-center text-sm text-green-500">
                             Registration successful! You can now{" "}
-                            <Link to="/login" className="text-orange-500 hover:underline">
+                            <Link to="/login" className="text-black font-bold hover:underline">
                                 Login
                             </Link>
                         </p>
@@ -80,7 +80,7 @@ const Register = () => {
                     {!success && (
                         <p className="mt-4 text-center text-sm">
                             Already have an account?{" "}
-                            <Link to="/login" className="text-orange-500 hover:underline">
+                            <Link to="/login" className="text-black font-bold hover:underline">
                                 Login
                             </Link>
                         </p>

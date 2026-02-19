@@ -113,7 +113,7 @@ const CartPage = () => {
         </div>
 
         {!cart || cart.items.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+          <div className="bg-white rounded-xl shadow-sm p-12 text-center border border-gray-100">
             <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShoppingBag size={40} className="text-gray-300" />
             </div>
@@ -125,7 +125,7 @@ const CartPage = () => {
             </p>
             <Link
               to="/"
-              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors"
+              className="inline-block bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
             >
               Start Shopping
             </Link>
@@ -134,7 +134,7 @@ const CartPage = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Cart Items Table */}
             <div className="lg:w-2/3">
-              <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
@@ -180,7 +180,7 @@ const CartPage = () => {
                           ₹{item.unitPrice.toLocaleString()}
                         </td>
                         <td className="px-6 py-6">
-                          <div className="flex items-center gap-3 bg-gray-100 w-fit rounded-lg px-2 py-1">
+                          <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 w-fit rounded-xl px-2 py-1">
                             <button
                               onClick={() =>
                                 handleUpdateQuantity(item.id, item.quantity - 1)
@@ -222,7 +222,7 @@ const CartPage = () => {
 
             {/* Summary Section */}
             <div className="lg:w-1/3">
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 sticky top-8">
+              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 sticky top-8">
                 <h2 className="text-xl font-bold text-gray-900 mb-6">
                   Order Summary
                 </h2>
@@ -250,7 +250,7 @@ const CartPage = () => {
                 </div>
                 <button
                   onClick={handleCheckout}
-                  className="w-full bg-blue-600 text-white h-14 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-100"
+                  className="w-full bg-black text-white h-14 rounded-xl font-bold text-lg hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
                 >
                   Place Order
                 </button>
