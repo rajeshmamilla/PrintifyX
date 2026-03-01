@@ -30,6 +30,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public List<ProductDto> searchProducts(String keyword) {
+        return productRepository.findByNameContainingIgnoreCaseAndIsActiveTrue(keyword).stream()
+                .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice()))
+                .collect(Collectors.toList());
+    }
+
     public ProductDetailDto getProductDetail(Long productId) {
         Product p = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));

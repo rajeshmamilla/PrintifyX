@@ -14,7 +14,7 @@ const ProductOptionSelect: React.FC<ProductOptionSelectProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center py-2 border-b border-gray-100 last:border-b-0">
+    <div className="flex flex-col md:flex-row md:items-center py-1.5 border-b border-gray-100 last:border-b-0">
       <label
         id={`label-${label}`}
         className="text-sm font-semibold text-gray-700 w-full md:w-1/3 mb-1 md:mb-0"
@@ -26,7 +26,7 @@ const ProductOptionSelect: React.FC<ProductOptionSelectProps> = ({
           aria-labelledby={`label-${label}`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full h-11 px-3 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800 cursor-pointer pr-10"
+          className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800 cursor-pointer pr-10"
         >
           {options.map((option) => (
             <option key={option} value={option}>

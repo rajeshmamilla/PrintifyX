@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -9,6 +11,15 @@ import banners from "../assets/categories/banner-cards.jpg";
 import flyers from "../assets/categories/flyer-card.jpg";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role === "ADMIN") {
+      navigate("/admin/dashboard");
+    }
+  }, [navigate]);
+
   return (
     <>
       <Header />

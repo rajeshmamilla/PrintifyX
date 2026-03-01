@@ -18,6 +18,8 @@ import Logout from "./pages/profile/Logout";
 import PaymentPage from "./pages/PaymentPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import ForgotPassword from "./pages/ForgotPassword";
+import BrowseDesignPage from "./pages/BrowseDesignPage";
+import CreateDesignPage from "./pages/CreateDesignPage";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/track-order" element={<TrackOrderPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/browse-design" element={<BrowseDesignPage />} />
+        <Route path="/create-design" element={<CreateDesignPage />} />
 
         {/* User Profile Routes */}
         <Route path="/profile" element={<ProfileLayout />}>

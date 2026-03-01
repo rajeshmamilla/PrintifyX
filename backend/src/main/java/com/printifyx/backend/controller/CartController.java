@@ -50,7 +50,9 @@ public class CartController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<Order> checkout(@AuthenticationPrincipal UserPrincipal principal) {
-        return ResponseEntity.ok(cartService.checkout(principal.getUserId()));
+    public ResponseEntity<Order> checkout(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestParam(required = false, defaultValue = "COD") String paymentMethod) {
+        return ResponseEntity.ok(cartService.checkout(principal.getUserId(), paymentMethod));
     }
 }

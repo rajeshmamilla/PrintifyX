@@ -35,7 +35,7 @@ public class OrderService {
         order.setCustomerEmail(request.getCustomerEmail());
         order.setCustomerPhone(request.getCustomerPhone());
         order.setTotalAmount(request.getTotalAmount());
-        order.setStatus(request.getStatus());
+        order.setStatus(request.getStatus() != null ? request.getStatus() : "CREATED");
         order.setUserId(request.getUserId());
         order.setCreatedAt(LocalDateTime.now());
 
@@ -74,12 +74,45 @@ public class OrderService {
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
-    public Order updateOrderStatus(Long orderId, String status) {
+    public Order updateOrderStatus(Long orderId, String newStatus) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        order.setStatus(status);
+        String currentStatus = order.getStatus();
+        
+        if (!isValidTransition(currentStatus, newStatus)) {
+            throw new RuntimeException("Invalid status transition from " + currentStatus + " to " + newStatus);
+        }
+
+        order.setStatus(newStatus);
         return orderRepository.save(order);
+    }
+
+    private boolean isValidTransition(String current, String next) {
+        if (current.equals(next)) return true;
+        if ("CANCELLED".equals(next)) {
+            // Cancellation allowed only before SHIPPED
+            return !"SHIPPED".equals(current) && !"DELIVERED".equals(current);
+        }
+
+        switch (current) {
+            case "DRAFT":
+                return "CREATED".equals(next) || "PAID".equals(next);
+            case "CREATED":
+                return "PAID".equals(next) || "PROCESSING".equals(next);
+            case "PAID":
+                return "PROCESSING".equals(next);
+            case "PROCESSING":
+                return "SHIPPED".equals(next);
+            case "SHIPPED":
+                return "DELIVERED".equals(next);
+            case "DELIVERED":
+            case "CANCELLED":
+                return false;
+            default:
+                // For unknown legacy statuses, allow moving to CREATED safely
+                return "CREATED".equals(next);
+        }
     }
 
 

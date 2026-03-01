@@ -112,7 +112,7 @@ public class CartService {
     }
 
     @Transactional
-    public Order checkout(Long userId) {
+    public Order checkout(Long userId, String paymentMethod) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         
@@ -129,7 +129,13 @@ public class CartService {
         orderRequest.setCustomerName(user.getEmail().split("@")[0]); // Fallback name
         orderRequest.setCustomerEmail(user.getEmail());
         orderRequest.setCustomerPhone("0000000000"); // Placeholder
-        orderRequest.setStatus("PENDING");
+        
+        // Initial status based on payment method
+        if ("cod".equalsIgnoreCase(paymentMethod)) {
+            orderRequest.setStatus("CREATED");
+        } else {
+            orderRequest.setStatus("PAID");
+        }
         
         BigDecimal total = cart.getItems().stream()
                 .map(CartItem::getTotalPrice)

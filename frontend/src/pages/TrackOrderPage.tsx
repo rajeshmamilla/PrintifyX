@@ -1,25 +1,115 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { CheckCircle, Package, Truck, Box, ArrowRight, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Package, Truck, Box, ArrowRight, CreditCard, Loader2 } from 'lucide-react';
+import { fetchWithAuth } from '../services/apiClient';
 
 const TrackOrderPage: React.FC = () => {
     const location = useLocation();
+    const [order, setOrder] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // Mock order data
-    const orderDetails = {
-        orderId: location.state?.orderId || `#PX${Math.floor(100000 + Math.random() * 900000)}`,
-        status: 'Confirmed',
-        estimatedDelivery: 'Feb 24, 2026',
-        steps: [
-            { name: 'Order Placed', status: 'completed', date: 'Feb 17, 2026', icon: <ShoppingBag size={20} /> },
-            { name: 'Processing', status: 'active', date: 'Feb 18, 2026', icon: <Box size={20} /> },
-            { name: 'Shipped', status: 'pending', date: 'Feb 20, 2026', icon: <Truck size={20} /> },
-            { name: 'Delivered', status: 'pending', date: 'Feb 24, 2026', icon: <Package size={20} /> },
-        ]
+    const orderId = location.state?.orderId;
+
+    useEffect(() => {
+        const fetchOrder = async () => {
+            if (!orderId) {
+                setLoading(false);
+                return;
+            }
+            try {
+                // We need to find the order by its orderNumber (which is PX... or whatever)
+                // Actually, the API might need the ID. Let's try fetching all user orders and finding this one
+                // Or better, if the backend supports fetching by orderNumber. 
+                // Given current endpoints, let's assume we can fetch by ID if orderId is numeric,
+                // or we search in the user's order list.
+                const res = await fetchWithAuth(`/orders`);
+                if (res.ok) {
+                    const orders = await res.json();
+                    const foundOrder = orders.find((o: any) => o.orderNumber === orderId || o.id.toString() === orderId.toString());
+                    if (foundOrder) {
+                        setOrder(foundOrder);
+                    } else {
+                        setError("Order not found");
+                    }
+                } else {
+                    setError("Failed to fetch order details");
+                }
+            } catch (err) {
+                setError("An error occurred while tracking your order");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchOrder();
+    }, [orderId]);
+
+    const getStatusSteps = (status: string) => {
+        const stages = [
+            { key: 'PAID', name: 'Payment Received', icon: <CreditCard size={20} /> },
+            { key: 'PROCESSING', name: 'Processing', icon: <Box size={20} /> },
+            { key: 'SHIPPED', name: 'Shipped', icon: <Truck size={20} /> },
+            { key: 'DELIVERED', name: 'Delivered', icon: <Package size={20} /> },
+        ];
+
+        const statusOrder = ['CREATED', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+        const currentIndex = statusOrder.indexOf(status);
+
+        if (status === 'CANCELLED') {
+            return [{ name: 'Order Cancelled', status: 'active', date: 'N/A', icon: <Box size={20} className="text-red-500" /> }];
+        }
+
+        return stages.map((stage) => {
+            const stageOrder = statusOrder.indexOf(stage.key);
+            let stepStatus: 'completed' | 'active' | 'pending' = 'pending';
+
+            if (stageOrder < currentIndex) {
+                stepStatus = 'completed';
+            } else if (stageOrder === currentIndex || (status === 'CREATED' && stage.key === 'PAID')) {
+                stepStatus = 'active';
+            }
+
+            return {
+                ...stage,
+                status: stepStatus,
+                date: stepStatus === 'completed' ? 'Done' : 'Estimated'
+            };
+        });
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#f5f8fb] flex flex-col">
+                <Header />
+                <Navbar />
+                <div className="flex-grow flex items-center justify-center">
+                    <Loader2 className="animate-spin text-blue-600" size={48} />
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (!orderId || !order) {
+        return (
+            <div className="min-h-screen bg-[#f5f8fb] flex flex-col">
+                <Header />
+                <Navbar />
+                <div className="flex-grow flex items-center justify-center p-6 text-center">
+                    <div>
+                        <h1 className="text-2xl font-bold mb-4">{error || "Order context missing"}</h1>
+                        <Link to="/" className="text-blue-600 hover:underline">Return Home</Link>
+                    </div>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
+    const steps = getStatusSteps(order.status);
 
     return (
         <div className="min-h-screen bg-[#f5f8fb] flex flex-col">
@@ -31,14 +121,16 @@ const TrackOrderPage: React.FC = () => {
                     <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle size={48} strokeWidth={1.5} />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-4">Thank you for your order!</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-4 text-center mx-auto">
+                        Order #{order.orderNumber}
+                    </h1>
                     <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                        Your request has been received and is being processed by our professional printing team.
+                        Current Status: <span className="font-bold text-gray-900 uppercase tracking-tight">{order.status}</span>
                     </p>
 
                     <div className="inline-flex items-center gap-4 bg-gray-50 px-6 py-3 rounded-md border border-gray-100">
-                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Order ID</span>
-                        <span className="font-bold text-gray-900">{orderDetails.orderId}</span>
+                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Expected Timeline</span>
+                        <span className="font-bold text-gray-900">4-5 Business Days</span>
                     </div>
                 </div>
 
@@ -46,8 +138,8 @@ const TrackOrderPage: React.FC = () => {
                     <div className="flex items-center justify-between mb-10 pb-6 border-b border-gray-50">
                         <h2 className="text-xl font-bold text-gray-900">Track Status</h2>
                         <div className="text-right">
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Estimated Delivery</p>
-                            <p className="font-bold text-gray-900">{orderDetails.estimatedDelivery}</p>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Status as of</p>
+                            <p className="font-bold text-gray-900">{new Date().toLocaleDateString()}</p>
                         </div>
                     </div>
 
@@ -56,8 +148,8 @@ const TrackOrderPage: React.FC = () => {
                         <div className="absolute left-[26px] top-0 bottom-0 w-0.5 bg-gray-100 z-0" />
 
                         <div className="space-y-10 relative z-10">
-                            {orderDetails.steps.map((step, index) => (
-                                <div key={index} className="flex items-start gap-8">
+                            {steps.map((step) => (
+                                <div key={step.name} className="flex items-start gap-8">
                                     <div className={`p-3 rounded-full border-4 border-white shadow-sm flex items-center justify-center ${step.status === 'completed' ? 'bg-gray-900 text-white' :
                                         step.status === 'active' ? 'bg-blue-600 text-white animate-pulse' :
                                             'bg-gray-100 text-gray-400'
@@ -70,9 +162,9 @@ const TrackOrderPage: React.FC = () => {
                                             <span className="text-xs font-bold text-gray-400">{step.date}</span>
                                         </div>
                                         <p className="text-xs text-gray-500 font-medium">
-                                            {step.status === 'completed' && 'Package has departed source facility'}
-                                            {step.status === 'active' && 'Expert quality checking in progress'}
-                                            {step.status === 'pending' && 'Pending next step'}
+                                            {step.status === 'completed' && 'Stage verified and completed'}
+                                            {step.status === 'active' && 'Currently in this stage'}
+                                            {step.status === 'pending' && 'Scheduled for next stage'}
                                         </p>
                                     </div>
                                 </div>

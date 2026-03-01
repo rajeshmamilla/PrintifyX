@@ -8,7 +8,7 @@ interface ProductImageGalleryProps {
 const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ image, alt }) => {
     return (
         <div className="w-full bg-gray-50 rounded-lg overflow-hidden border border-gray-100 shadow-sm">
-            <div className="aspect-square relative flex items-center justify-center p-4">
+            <div className="aspect-[3/2] relative flex items-center justify-center p-2">
                 <img
                     src={image}
                     alt={alt}

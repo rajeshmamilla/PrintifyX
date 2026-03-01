@@ -19,4 +19,9 @@ public class ProductController {
     public ResponseEntity<ProductDetailDto> getProductDetail(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductDetail(id));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<com.printifyx.backend.dto.ProductDto>> searchProducts(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.searchProducts(keyword));
+    }
 }

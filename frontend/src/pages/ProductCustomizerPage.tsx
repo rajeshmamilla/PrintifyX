@@ -7,6 +7,8 @@ import ProductImageGallery from "../components/ProductImageGallery";
 import ProductOptionSelect from "../components/ProductOptionSelect";
 import PriceSummary from "../components/PriceSummary";
 import { cartService } from "../services/cart.service";
+import { Upload, Grid, Edit3, X } from "lucide-react";
+import { useRef } from "react";
 
 // Import images
 import plasticBusinessCardsImg from "../assets/products/plastic business cards.png";
@@ -56,6 +58,19 @@ const ProductCustomizerPage = () => {
         });
         return initial;
     });
+
+    const [cardDetails, setCardDetails] = useState({
+        businessName: "",
+        tagline: "",
+        contactNumber: "",
+        email: "",
+        website: "",
+        address: "",
+        instructions: ""
+    });
+
+    const [selectedFile, setSelectedFile] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     if (!product) {
         return (
@@ -109,7 +124,8 @@ const ProductCustomizerPage = () => {
                 unitPrice: unitPrice,
                 quantity: quantity,
                 totalPrice: totalPrice,
-                customization: selections
+                customization: selections,
+                cardDetails: cardDetails
             });
 
             // Dispatch event to update header
@@ -124,6 +140,24 @@ const ProductCustomizerPage = () => {
     const handleBuyNow = async () => {
         await handleAddToCart(false);
         navigate("/payment");
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file.name);
+        }
+    };
+
+    const handleRemoveFile = () => {
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
 
     return (
@@ -148,9 +182,93 @@ const ProductCustomizerPage = () => {
                 </nav>
 
                 <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Left: Image Gallery */}
-                    <div className="w-full lg:w-1/2">
+                    {/* Left: Image Gallery & Card Details */}
+                    <div className="w-full lg:w-1/2 space-y-4">
                         <ProductImageGallery image={product.image} alt={product.title} />
+
+                        {/* Card Details / Print Instructions Section */}
+                        <div className="bg-white border rounded-lg p-4 shadow-sm">
+                            <h2 className="text-lg font-bold text-gray-900 mb-3 border-b pb-2">
+                                Card Details / Print Instructions
+                            </h2>
+                            <div className="space-y-2">
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-semibold text-gray-700">
+                                        Business Name <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={cardDetails.businessName}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, businessName: e.target.value })}
+                                        placeholder="Enter your business name"
+                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-semibold text-gray-700">Tagline / Short Description</label>
+                                    <input
+                                        type="text"
+                                        value={cardDetails.tagline}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, tagline: e.target.value })}
+                                        placeholder="e.g. Premium Printing Services"
+                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">Contact Number</label>
+                                        <input
+                                            type="text"
+                                            value={cardDetails.contactNumber}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, contactNumber: e.target.value })}
+                                            placeholder="+91 000 000 0000"
+                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">Email</label>
+                                        <input
+                                            type="email"
+                                            value={cardDetails.email}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, email: e.target.value })}
+                                            placeholder="hello@example.com"
+                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-semibold text-gray-700">Website</label>
+                                    <input
+                                        type="text"
+                                        value={cardDetails.website}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, website: e.target.value })}
+                                        placeholder="www.example.com"
+                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-semibold text-gray-700">Address</label>
+                                    <input
+                                        type="text"
+                                        value={cardDetails.address}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, address: e.target.value })}
+                                        placeholder="Enter full address"
+                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-semibold text-gray-700">Additional Instructions</label>
+                                    <textarea
+                                        value={cardDetails.instructions}
+                                        onChange={(e) => setCardDetails({ ...cardDetails, instructions: e.target.value })}
+                                        placeholder="Any specific layout or design requests..."
+                                        rows={2}
+                                        className="w-full p-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800 resize-none"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Right: Configurator */}
@@ -162,8 +280,8 @@ const ProductCustomizerPage = () => {
                             <span className="text-gray-400 text-sm">({product.category})</span>
                         </div>
 
-                        <div className="bg-white border rounded-lg p-6 shadow-sm">
-                            <div className="flex justify-between items-center mb-6 border-b pb-4">
+                        <div className="bg-white border rounded-lg p-4 shadow-sm">
+                            <div className="flex justify-between items-center mb-2 border-b pb-2">
                                 <h2 className="text-lg font-bold text-gray-900">Price Calculator</h2>
                                 <button className="text-blue-600 text-sm hover:underline flex items-center">
                                     <span className="mr-1">Share Product</span>
@@ -180,19 +298,65 @@ const ProductCustomizerPage = () => {
                                 />
                             ))}
 
+                            <div className="mt-4 bg-[#0D121F] rounded-xl p-4 shadow-2xl">
+                                <div className="space-y-2">
+                                    {selectedFile && (
+                                        <div className="flex items-center justify-between bg-[#1a1f2e] border border-gray-700 rounded p-2 mb-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                                            <div className="flex items-center gap-2 overflow-hidden">
+                                                <Upload size={14} className="text-[#2196F3] flex-shrink-0" />
+                                                <span className="text-xs text-gray-300 truncate font-medium">
+                                                    {selectedFile}
+                                                </span>
+                                            </div>
+                                            <button
+                                                onClick={handleRemoveFile}
+                                                className="p-1 hover:bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors"
+                                                title="Remove file"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                        accept="image/*,.pdf,.ai,.psd"
+                                    />
+
+                                    <button
+                                        onClick={handleUploadClick}
+                                        className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
+                                    >
+                                        <Upload size={20} className="group-hover:scale-110 transition-transform" />
+                                        <span className="tracking-widest uppercase text-xs">Upload Design</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => navigate("/browse-design")}
+                                        className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
+                                    >
+                                        <Grid size={20} className="group-hover:scale-110 transition-transform" />
+                                        <span className="tracking-widest uppercase text-xs">Browse Design</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => navigate("/create-design")}
+                                        className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
+                                    >
+                                        <Edit3 size={20} className="group-hover:scale-110 transition-transform" />
+                                        <span className="tracking-widest uppercase text-xs">Custom Design</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             <PriceSummary
                                 price={calculatePrice()}
                                 onAddToCart={handleAddToCart}
                                 onBuyNow={handleBuyNow}
                             />
-                        </div>
-
-                        {/* Extra Info */}
-                        <div className="mt-6 flex items-center text-blue-600 text-sm cursor-pointer hover:underline">
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                            </svg>
-                            Shipping Cost Estimation
                         </div>
                     </div>
                 </div>

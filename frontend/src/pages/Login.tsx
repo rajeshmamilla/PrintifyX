@@ -26,7 +26,12 @@ const Login = () => {
 
       // later → redirect
       window.dispatchEvent(new Event("cartUpdated"));
-      navigate("/");
+
+      if (data.role === "ADMIN") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (err: any) {
       if (err.message === "Failed to fetch") {
         setError("Connection refused. Please check if the backend is running on port 8081.");

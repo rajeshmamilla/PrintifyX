@@ -176,17 +176,36 @@ const AdminOrders: React.FC = () => {
                                                     className={`appearance-none font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
                                                         order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
                                                             order.status === 'PAID' ? 'bg-blue-50 border-blue-100 text-blue-700' :
-                                                                order.status === 'PENDING' ? 'bg-orange-50 border-orange-100 text-orange-700' :
+                                                                order.status === 'PROCESSING' ? 'bg-purple-50 border-purple-100 text-purple-700' :
                                                                     'bg-orange-50 border-orange-100 text-orange-700'
                                                         }`}
                                                     value={order.status}
                                                     onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                                                 >
-                                                    <option value="CREATED">CREATED</option>
-                                                    <option value="PENDING">PENDING</option>
-                                                    <option value="PAID">PAID</option>
-                                                    <option value="SHIPPED">SHIPPED</option>
-                                                    <option value="CANCELLED">CANCELLED</option>
+                                                    <option value={order.status}>{order.status}</option>
+                                                    {/* Deterministic Transitions */}
+                                                    {order.status === 'CREATED' && (
+                                                        <>
+                                                            <option value="PAID">PAID</option>
+                                                            <option value="PROCESSING">PROCESSING</option>
+                                                            <option value="CANCELLED">CANCELLED</option>
+                                                        </>
+                                                    )}
+                                                    {order.status === 'PAID' && (
+                                                        <>
+                                                            <option value="PROCESSING">PROCESSING</option>
+                                                            <option value="CANCELLED">CANCELLED</option>
+                                                        </>
+                                                    )}
+                                                    {order.status === 'PROCESSING' && (
+                                                        <>
+                                                            <option value="SHIPPED">SHIPPED</option>
+                                                            <option value="CANCELLED">CANCELLED</option>
+                                                        </>
+                                                    )}
+                                                    {order.status === 'SHIPPED' && (
+                                                        <option value="DELIVERED">DELIVERED</option>
+                                                    )}
                                                 </select>
                                                 {updatingId === order.id && <Loader2 className="animate-spin ml-2 text-orange-500" size={16} />}
                                             </div>
