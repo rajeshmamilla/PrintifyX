@@ -42,8 +42,9 @@ export const cartService = {
     },
 
     async checkout(paymentMethod: string = "COD") {
-        const response = await fetchWithAuth(`${BASE_URL}/checkout?paymentMethod=${paymentMethod}`, {
+        const response = await fetchWithAuth(`${BASE_URL}/checkout`, {
             method: "POST",
+            body: JSON.stringify({ paymentMethod }),
         });
         if (!response.ok) throw new Error("Failed to checkout");
         return response.json();

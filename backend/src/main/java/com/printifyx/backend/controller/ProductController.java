@@ -2,6 +2,9 @@ package com.printifyx.backend.controller;
 
 import com.printifyx.backend.dto.ProductDetailDto;
 import com.printifyx.backend.service.ProductService;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

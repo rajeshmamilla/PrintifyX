@@ -52,7 +52,10 @@ public class CartController {
     @PostMapping("/checkout")
     public ResponseEntity<Order> checkout(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestParam(required = false, defaultValue = "COD") String paymentMethod) {
+            @RequestBody(required = false) Map<String, String> body) {
+        String paymentMethod = (body != null && body.containsKey("paymentMethod")) 
+            ? body.get("paymentMethod") 
+            : "COD";
         return ResponseEntity.ok(cartService.checkout(principal.getUserId(), paymentMethod));
     }
 }

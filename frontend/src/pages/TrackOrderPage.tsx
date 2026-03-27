@@ -66,16 +66,30 @@ const TrackOrderPage: React.FC = () => {
             const stageOrder = statusOrder.indexOf(stage.key);
             let stepStatus: 'completed' | 'active' | 'pending' = 'pending';
 
+            // Logic:
+            // 1. If status is AFTER this stage, it's completed.
+            // 2. If status is EQUAL to this stage, it's completed (because PAID means payment IS done).
+            //    BUT if it's the very last stage (DELIVERED), it's active.
+            // 3. The NEXT logical stage after 'status' should be active.
+
             if (stageOrder < currentIndex) {
                 stepStatus = 'completed';
-            } else if (stageOrder === currentIndex || (status === 'CREATED' && stage.key === 'PAID')) {
+            } else if (stageOrder === currentIndex) {
+                // If we are EXACTLY at this stage, it's done (except for the final delivery)
+                if (stage.key === 'DELIVERED') {
+                    stepStatus = 'active';
+                } else {
+                    stepStatus = 'completed';
+                }
+            } else if (stageOrder === currentIndex + 1 || (status === 'CREATED' && stage.key === 'PAID')) {
+                // This is the step we are currently waiting for or working on
                 stepStatus = 'active';
             }
 
             return {
                 ...stage,
                 status: stepStatus,
-                date: stepStatus === 'completed' ? 'Done' : 'Estimated'
+                date: stepStatus === 'completed' ? 'Done' : 'Pending'
             };
         });
     };
