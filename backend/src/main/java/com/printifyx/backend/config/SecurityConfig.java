@@ -47,18 +47,33 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration();
+//
+//        config.setAllowCredentials(true);
+//        config.setAllowedOrigins(List.of("http://localhost:5173"));
+//        config.setAllowedHeaders(List.of("*"));
+//        config.setAllowedMethods(List.of("*"));
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//
+//        return source;
+//    }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "http://localhost:5174",
+            System.getenv().getOrDefault("ALLOWED_ORIGIN", "http://localhost:5173")
+        ));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("*"));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 
