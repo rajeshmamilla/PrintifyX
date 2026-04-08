@@ -44,7 +44,7 @@ const PriceSummary: React.FC<PriceSummaryProps> = ({
             )}
             {isAdmin && (
                 <div className="p-4 bg-gray-50 border border-dashed border-gray-200 rounded-lg text-center">
-                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">Shopping Disabled for Admin</p>
+                    <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">Shopping Disabled for Admin</p>
                 </div>
             )}
         </div>

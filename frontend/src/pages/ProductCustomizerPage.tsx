@@ -331,7 +331,7 @@ const ProductCustomizerPage = () => {
                                         className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
                                     >
                                         <Upload size={20} className="group-hover:scale-110 transition-transform" />
-                                        <span className="tracking-widest uppercase text-xs">Upload Design</span>
+                                        <span className="tracking-wider uppercase text-xs">Upload Design</span>
                                     </button>
 
                                     <button
@@ -339,7 +339,7 @@ const ProductCustomizerPage = () => {
                                         className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
                                     >
                                         <Grid size={20} className="group-hover:scale-110 transition-transform" />
-                                        <span className="tracking-widest uppercase text-xs">Browse Design</span>
+                                        <span className="tracking-wider uppercase text-xs">Browse Design</span>
                                     </button>
 
                                     <button
@@ -347,7 +347,7 @@ const ProductCustomizerPage = () => {
                                         className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
                                     >
                                         <Edit3 size={20} className="group-hover:scale-110 transition-transform" />
-                                        <span className="tracking-widest uppercase text-xs">Custom Design</span>
+                                        <span className="tracking-wider uppercase text-xs">Custom Design</span>
                                     </button>
                                 </div>
                             </div>

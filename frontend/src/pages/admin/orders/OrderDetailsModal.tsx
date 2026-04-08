@@ -85,7 +85,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                 {/* Header */}
                 <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
                     <div>
-                        <h2 className="text-2xl font-black text-gray-900 leading-tight">Order {order.orderNumber}</h2>
+                        <h2 className="text-2xl font-semibold text-gray-900 leading-tight">Order {order.orderNumber}</h2>
                         <p className="text-sm text-gray-500 font-medium">Placed on {new Date(order.createdAt).toLocaleString()}</p>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-white rounded-full transition-colors text-gray-400 hover:text-gray-900 border border-transparent hover:border-gray-100">
@@ -98,21 +98,21 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                     {/* Customer Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
                         <div>
-                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Customer Information</h3>
+                            <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Customer Information</h3>
                             <p className="font-bold text-gray-900">{order.customerName}</p>
                             <p className="text-sm text-gray-600">{order.customerEmail}</p>
                             <p className="text-sm text-gray-600">{order.customerPhone}</p>
                         </div>
                         <div>
-                            <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Order Summary</h3>
-                            <p className="text-sm text-gray-600 font-medium">Status: <span className="font-black text-gray-900">{order.status}</span></p>
-                            <p className="text-lg font-black text-gray-900 mt-1">Total: ₹{order.totalAmount.toLocaleString()}</p>
+                            <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Order Summary</h3>
+                            <p className="text-sm text-gray-600 font-medium">Status: <span className="font-semibold text-gray-900">{order.status}</span></p>
+                            <p className="text-lg font-semibold text-gray-900 mt-1">Total: ₹{order.totalAmount.toLocaleString()}</p>
                         </div>
                     </div>
 
                     {/* Items Table */}
                     <div>
-                        <h3 className="text-lg font-black text-gray-900 mb-4">Order Items</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Items</h3>
                         <div className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
                             <OrderItemsTable items={order.items || []} />
                         </div>
@@ -120,7 +120,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
 
                     {/* Optional Product Detail View */}
                     <div className="grid grid-cols-1 gap-4">
-                        <h3 className="text-lg font-black text-gray-900">Inspect Products</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">Inspect Products</h3>
                         <div className="flex flex-wrap gap-2">
                             {(order.items || []).map((item: any) => (
                                 <button
@@ -147,25 +147,25 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                         {selectedProduct && !productLoading && (
                             <div className="bg-gray-50/80 rounded-xl p-6 border border-gray-100 animate-in slide-in-from-top-4 duration-300">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h4 className="text-xl font-black text-gray-900">{selectedProduct.name}</h4>
-                                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${selectedProduct.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                    <h4 className="text-xl font-semibold text-gray-900">{selectedProduct.name}</h4>
+                                    <span className={`px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${selectedProduct.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                                         }`}>
                                         {selectedProduct.isActive ? 'ACTIVE' : 'INACTIVE'}
                                     </span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="md:col-span-2">
-                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Description</p>
+                                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Description</p>
                                         <p className="text-sm text-gray-600 font-medium leading-relaxed">{selectedProduct.description}</p>
                                     </div>
                                     <div className="space-y-4">
                                         <div>
-                                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Category</p>
+                                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Category</p>
                                             <p className="text-sm font-bold text-gray-800">{selectedProduct.category?.name || 'N/A'}</p>
                                         </div>
                                         <div>
-                                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Base Price</p>
-                                            <p className="text-xl font-black text-orange-600">₹{selectedProduct.basePrice?.toLocaleString()}</p>
+                                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Base Price</p>
+                                            <p className="text-xl font-semibold text-orange-600">₹{selectedProduct.basePrice?.toLocaleString()}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -178,7 +178,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
                 <div className="px-8 py-6 border-t border-gray-100 flex justify-end bg-gray-50/50">
                     <button
                         onClick={onClose}
-                        className="px-8 py-3 bg-white border border-gray-200 text-gray-900 rounded-lg font-black text-sm hover:bg-gray-50 transition-all active:scale-95"
+                        className="px-8 py-3 bg-white border border-gray-200 text-gray-900 rounded-lg font-semibold text-sm hover:bg-gray-50 transition-all active:scale-95"
                     >
                         Close Details
                     </button>

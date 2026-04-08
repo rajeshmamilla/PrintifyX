@@ -248,14 +248,14 @@ const PaymentPage: React.FC = () => {
                                 {loading && <Loader2 size={18} className="animate-spin" />}
                                 {loading ? 'PROCESSING...' : 'COMPLETE PURCHASE'}
                             </button>
-                            <p className="text-[10px] text-gray-400 text-center mt-4 font-bold uppercase tracking-widest">
+                            <p className="text-[10px] text-gray-400 text-center mt-4 font-bold uppercase tracking-wider">
                                 Secure Encrypted Transaction
                             </p>
                         </div>
 
                         {/* Order Summary Placeholder */}
                         <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
-                            <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-widest">Order Summary</h3>
+                            <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider">Order Summary</h3>
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between text-gray-600">
                                     <span>Subtotal</span>
@@ -267,7 +267,7 @@ const PaymentPage: React.FC = () => {
                                 </div>
                                 <div className="border-t border-gray-200 mt-4 pt-4 flex justify-between">
                                     <span className="font-bold text-gray-900">Total</span>
-                                    <span className="font-black text-lg text-gray-900">₹{cartTotal.toLocaleString()}</span>
+                                    <span className="font-semibold text-lg text-gray-900">₹{cartTotal.toLocaleString()}</span>
                                 </div>
                             </div>
                         </div>

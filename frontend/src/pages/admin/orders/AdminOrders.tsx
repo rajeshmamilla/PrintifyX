@@ -68,7 +68,7 @@ const AdminOrders: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center">
                 <Loader2 className="animate-spin text-orange-500 mb-4" size={48} />
-                <h3 className="text-xl font-black text-gray-900">Loading Orders...</h3>
+                <h3 className="text-xl font-semibold text-gray-900">Loading Orders...</h3>
                 <p className="text-gray-500 font-medium">Fetching the latest transactions from the database.</p>
             </div>
         );
@@ -79,7 +79,7 @@ const AdminOrders: React.FC = () => {
             {/* Header & Stats Section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Order Management</h2>
+                    <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Order Management</h2>
                     <p className="text-gray-500 mt-1 font-medium italic">Monitor transactions and process customer shipments.</p>
                 </div>
 
@@ -118,7 +118,7 @@ const AdminOrders: React.FC = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
-                            <tr className="bg-gray-50/50 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100">
+                            <tr className="bg-gray-50/50 text-[10px] font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-100">
                                 <th className="px-8 py-5">Order Identification</th>
                                 <th className="px-8 py-5">Customer Profile</th>
                                 <th className="px-8 py-5">Transaction Details</th>
@@ -132,7 +132,7 @@ const AdminOrders: React.FC = () => {
                                     <td colSpan={5} className="px-8 py-20 text-center">
                                         <div className="flex flex-col items-center">
                                             <ShoppingBag size={48} className="text-gray-200 mb-4" />
-                                            <p className="text-gray-500 font-black text-lg">No orders found matching your criteria</p>
+                                            <p className="text-gray-500 font-semibold text-lg">No orders found matching your criteria</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -141,11 +141,11 @@ const AdminOrders: React.FC = () => {
                                     <tr key={order.id} className="hover:bg-gray-50/50 transition-all group">
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="h-10 w-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 font-black text-xs shrink-0">
+                                                <div className="h-10 w-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 font-semibold text-xs shrink-0">
                                                     #{order.id}
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm font-black text-gray-900 group-hover:text-orange-600 transition-colors uppercase tracking-tight font-mono">{order.orderNumber}</p>
+                                                    <p className="text-sm font-semibold text-gray-900 group-hover:text-orange-600 transition-colors uppercase tracking-tight font-mono">{order.orderNumber}</p>
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <Calendar size={12} className="text-gray-400" />
                                                         <p className="text-[10px] text-gray-400 font-bold italic">{new Date(order.createdAt).toLocaleDateString()}</p>
@@ -162,18 +162,18 @@ const AdminOrders: React.FC = () => {
                                                 <p className="text-xs text-gray-500 font-medium ml-5">{order.customerEmail}</p>
                                             </div>
                                         </td>
-                                        <td className="px-8 py-6 font-black text-gray-900">
+                                        <td className="px-8 py-6 font-semibold text-gray-900">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <CreditCard size={14} className="text-gray-400" />
                                                 <p className="text-sm tracking-tight italic">INR {order.totalAmount?.toLocaleString()}</p>
                                             </div>
-                                            <p className="text-[9px] text-gray-400 uppercase tracking-widest ml-5">Taxes Included</p>
+                                            <p className="text-[9px] text-gray-400 uppercase tracking-wider ml-5">Taxes Included</p>
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center">
                                                 <select
                                                     disabled={updatingId === order.id}
-                                                    className={`appearance-none font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
+                                                    className={`appearance-none font-semibold text-[10px] uppercase tracking-wider px-4 py-2 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
                                                         order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
                                                             order.status === 'PAID' ? 'bg-blue-50 border-blue-100 text-blue-700' :
                                                                 order.status === 'PROCESSING' ? 'bg-purple-50 border-purple-100 text-purple-700' :
@@ -214,7 +214,7 @@ const AdminOrders: React.FC = () => {
                                             <div className="flex justify-center">
                                                 <button
                                                     onClick={() => setSelectedOrderId(order.id)}
-                                                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-900 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-all"
+                                                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-900 rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-gray-50 transition-all"
                                                 >
                                                     <Eye size={14} />
                                                     Details
@@ -232,12 +232,12 @@ const AdminOrders: React.FC = () => {
             {/* Footer Info */}
             <div className="bg-gray-900 rounded-lg p-10 text-white flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="text-center md:text-left">
-                    <h4 className="text-2xl font-black mb-2">Inventory Sync Active</h4>
+                    <h4 className="text-2xl font-semibold mb-2">Inventory Sync Active</h4>
                     <p className="text-gray-400 text-sm font-medium max-w-md">Your dashboard is currently monitoring {orders.length} unique transactions. Shipments should be processed within 24 hours of payment status.</p>
                 </div>
                 <button
                     onClick={fetchOrders}
-                    className="px-10 py-4 bg-white text-gray-900 rounded-lg font-black text-sm hover:bg-gray-50 transition-all active:scale-95 whitespace-nowrap"
+                    className="px-10 py-4 bg-white text-gray-900 rounded-lg font-semibold text-sm hover:bg-gray-50 transition-all active:scale-95 whitespace-nowrap"
                 >
                     Force Manual Refresh
                 </button>
