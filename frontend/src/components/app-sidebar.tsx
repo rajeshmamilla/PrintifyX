@@ -34,24 +34,32 @@ export function AppSidebar() {
       
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden text-gray-400">
+          <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden text-gray-400 text-sm mb-2">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton 
-                    render={<Link to={item.path} />}
-                    tooltip={item.name} 
-                    isActive={location.pathname === item.path}
-                    className="text-gray-400 font-medium hover:bg-gray-800 hover:text-white data-[active=true]:bg-gray-800 data-[active=true]:text-white transition-colors"
-                  >
-                     <item.icon />
-                     <span>{item.name}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu className="gap-2">
+              {menuItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <SidebarMenuItem key={item.path} className="relative group perspective-1000">
+                    <SidebarMenuButton 
+                      render={<Link to={item.path} />}
+                      tooltip={item.name} 
+                      isActive={isActive}
+                      className="text-base py-5 px-3 text-gray-400 font-medium transition-all duration-300 ease-out hover:bg-gray-800 hover:text-white data-[active=true]:bg-gray-800/80 data-[active=true]:backdrop-blur-md data-[active=true]:text-white data-[active=true]:translate-x-2 data-[active=true]:shadow-lg [&_svg]:size-5"
+                    >
+                       <item.icon className={`transition-colors duration-300 ${isActive ? 'text-orange-500' : ''}`} />
+                       <span>{item.name}</span>
+                    </SidebarMenuButton>
+                    
+                    {/* Floating Stylish Indicator to the Body */}
+                    {isActive && (
+                      <div className="absolute -right-2 top-1/2 -translate-y-1/2 h-4/5 w-1.5 bg-orange-500 rounded-l-full shadow-[0_0_12px_rgba(249,115,22,0.9)] opacity-100 transition-all duration-500 animate-in fade-in slide-in-from-left-2"></div>
+                    )}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

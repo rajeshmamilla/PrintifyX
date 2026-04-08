@@ -13,7 +13,7 @@ const AdminLayout = () => {
     }
 
     return (
-        <SidebarProvider>
+        <SidebarProvider style={{ "--sidebar-width": "13rem" } as React.CSSProperties}>
             <AppSidebar />
             <SidebarInset className="min-h-screen bg-gray-50 flex-1">
                 <AdminHeader />
