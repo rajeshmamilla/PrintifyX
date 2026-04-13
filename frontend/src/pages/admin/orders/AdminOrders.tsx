@@ -2,12 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Search, Loader2, Eye, CheckCircle2, AlertCircle, ShoppingBag, Calendar, User, CreditCard } from 'lucide-react';
 import OrderDetailsModal from './OrderDetailsModal';
 import { fetchWithAuth } from "../../../services/apiClient";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const AdminOrders: React.FC = () => {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState('ALL');
     const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
     const [updatingId, setUpdatingId] = useState<number | null>(null);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -60,8 +69,9 @@ const AdminOrders: React.FC = () => {
     };
 
     const filteredOrders = orders.filter(o =>
-        o.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        o.customerEmail.toLowerCase().includes(searchQuery.toLowerCase())
+        (o.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        o.customerEmail.toLowerCase().includes(searchQuery.toLowerCase())) &&
+        (statusFilter === 'ALL' || o.status === statusFilter)
     ).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     if (loading && orders.length === 0) {
@@ -83,15 +93,34 @@ const AdminOrders: React.FC = () => {
                     <p className="text-gray-500 mt-1 font-medium italic">Monitor transactions and process customer shipments.</p>
                 </div>
 
-                <div className="relative group w-full md:w-80">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={20} />
-                    <input
-                        type="text"
-                        placeholder="Search order or email..."
-                        className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-gray-900 transition-all font-bold text-gray-700 placeholder:text-gray-400"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                        <SelectTrigger className="w-full sm:w-40 bg-white border border-gray-200 outline-none focus:ring-1 focus:ring-gray-900 transition-all font-bold text-gray-700 h-[50px] rounded-lg">
+                            <SelectValue placeholder="All Statuses" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="ALL">All Statuses</SelectItem>
+                                <SelectItem value="PENDING">Pending</SelectItem>
+                                <SelectItem value="CREATED">Created</SelectItem>
+                                <SelectItem value="PAID">Paid</SelectItem>
+                                <SelectItem value="PROCESSING">Processing</SelectItem>
+                                <SelectItem value="SHIPPED">Shipped</SelectItem>
+                                <SelectItem value="DELIVERED">Delivered</SelectItem>
+                                <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <div className="relative group w-full sm:w-80 h-[50px]">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-gray-900 transition-colors" size={20} />
+                        <input
+                            type="text"
+                            placeholder="Search order or email..."
+                            className="w-full h-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-gray-900 transition-all font-bold text-gray-700 placeholder:text-gray-400"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -165,48 +194,63 @@ const AdminOrders: React.FC = () => {
                                         <td className="px-8 py-6 font-semibold text-gray-900">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <CreditCard size={14} className="text-gray-400" />
-                                                <p className="text-sm tracking-tight italic">INR {order.totalAmount?.toLocaleString()}</p>
+                                                <p className="text-sm tracking-tight italic">₹{order.totalAmount?.toLocaleString()}</p>
                                             </div>
                                             <p className="text-[9px] text-gray-400 uppercase tracking-wider ml-5">Taxes Included</p>
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center">
-                                                <select
+                                                <Select
                                                     disabled={updatingId === order.id}
-                                                    className={`appearance-none font-semibold text-[10px] uppercase tracking-wider px-4 py-2 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
-                                                        order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
-                                                            order.status === 'PAID' ? 'bg-blue-50 border-blue-100 text-blue-700' :
-                                                                order.status === 'PROCESSING' ? 'bg-purple-50 border-purple-100 text-purple-700' :
-                                                                    'bg-orange-50 border-orange-100 text-orange-700'
-                                                        }`}
                                                     value={order.status}
-                                                    onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
+                                                    onValueChange={(val) => handleStatusUpdate(order.id, val)}
                                                 >
-                                                    <option value={order.status}>{order.status}</option>
-                                                    {/* Deterministic Transitions */}
-                                                    {order.status === 'CREATED' && (
-                                                        <>
-                                                            <option value="PAID">PAID</option>
-                                                            <option value="PROCESSING">PROCESSING</option>
-                                                            <option value="CANCELLED">CANCELLED</option>
-                                                        </>
-                                                    )}
-                                                    {order.status === 'PAID' && (
-                                                        <>
-                                                            <option value="PROCESSING">PROCESSING</option>
-                                                            <option value="CANCELLED">CANCELLED</option>
-                                                        </>
-                                                    )}
-                                                    {order.status === 'PROCESSING' && (
-                                                        <>
-                                                            <option value="SHIPPED">SHIPPED</option>
-                                                            <option value="CANCELLED">CANCELLED</option>
-                                                        </>
-                                                    )}
-                                                    {order.status === 'SHIPPED' && (
-                                                        <option value="DELIVERED">DELIVERED</option>
-                                                    )}
-                                                </select>
+                                                    <SelectTrigger className={`font-semibold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 h-auto w-auto min-w-32 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
+                                                        order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
+                                                            order.status === 'DELIVERED' ? 'bg-teal-50 border-teal-100 text-teal-700' :
+                                                                order.status === 'PAID' ? 'bg-blue-50 border-blue-100 text-blue-700' :
+                                                                    order.status === 'PROCESSING' ? 'bg-purple-50 border-purple-100 text-purple-700' :
+                                                                        'bg-orange-50 border-orange-100 text-orange-700'
+                                                        }`}>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            <SelectItem value={order.status}>{order.status}</SelectItem>
+                                                            {/* Deterministic Transitions */}
+                                                            {order.status === 'PENDING' && (
+                                                                <>
+                                                                    <SelectItem value="PAID">PAID</SelectItem>
+                                                                    <SelectItem value="PROCESSING">PROCESSING</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'CREATED' && (
+                                                                <>
+                                                                    <SelectItem value="PAID">PAID</SelectItem>
+                                                                    <SelectItem value="PROCESSING">PROCESSING</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'PAID' && (
+                                                                <>
+                                                                    <SelectItem value="PROCESSING">PROCESSING</SelectItem>
+                                                                    <SelectItem value="SHIPPED">SHIPPED</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'PROCESSING' && (
+                                                                <>
+                                                                    <SelectItem value="SHIPPED">SHIPPED</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'SHIPPED' && (
+                                                                <SelectItem value="DELIVERED">DELIVERED</SelectItem>
+                                                            )}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
                                                 {updatingId === order.id && <Loader2 className="animate-spin ml-2 text-orange-500" size={16} />}
                                             </div>
                                         </td>

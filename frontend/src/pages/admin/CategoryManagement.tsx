@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Plus, ToggleLeft, ToggleRight, Loader2 } from "lucide-react";
 import { fetchWithAuth } from "../../services/apiClient";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const CategoryManagement = () => {
     const [categories, setCategories] = useState<any[]>([]);
@@ -74,13 +76,56 @@ const CategoryManagement = () => {
                     <h2 className="text-2xl font-bold text-gray-800">Category Management</h2>
                     <p className="text-gray-500 text-sm">Organize and manage your product categories.</p>
                 </div>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="flex items-center gap-2 bg-orange-500 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-md active:scale-95"
-                >
-                    <Plus size={20} />
-                    <span>Add Category</span>
-                </button>
+                <Dialog open={showModal} onOpenChange={setShowModal}>
+                    <DialogTrigger render={<Button variant="secondary" className="flex items-center gap-2 shadow-sm font-bold" />}>
+                        <Plus size={20} />
+                        <span>Add Category</span>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md rounded-2xl bg-white p-8">
+                        <DialogHeader>
+                            <DialogTitle className="text-xl font-bold text-gray-800 mb-2">Add New Category</DialogTitle>
+                        </DialogHeader>
+                        <form onSubmit={handleCreateCategory} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Category Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="e.g. Business Cards"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                                    value={newCategory.name}
+                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="e.g. business-cards"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                                    value={newCategory.slug}
+                                    onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
+                                />
+                            </div>
+                            <div className="flex gap-4 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg"
+                                >
+                                    Create
+                                </button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -129,52 +174,6 @@ const CategoryManagement = () => {
                 </table>
             </div>
 
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl w-full max-w-md p-8 shadow-2xl">
-                        <h3 className="text-xl font-bold text-gray-800 mb-6">Add New Category</h3>
-                        <form onSubmit={handleCreateCategory} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Category Name</label>
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="e.g. Business Cards"
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
-                                    value={newCategory.name}
-                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="e.g. business-cards"
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
-                                    value={newCategory.slug}
-                                    onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
-                                />
-                            </div>
-                            <div className="flex gap-4 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(false)}
-                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg"
-                                >
-                                    Create
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

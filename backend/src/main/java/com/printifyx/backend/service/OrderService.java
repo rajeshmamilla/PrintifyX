@@ -97,11 +97,13 @@ public class OrderService {
 
         switch (current) {
             case "DRAFT":
-                return "CREATED".equals(next) || "PAID".equals(next);
+                return "CREATED".equals(next) || "PAID".equals(next) || "PENDING".equals(next);
+            case "PENDING":
+                return "CREATED".equals(next) || "PAID".equals(next) || "PROCESSING".equals(next);
             case "CREATED":
                 return "PAID".equals(next) || "PROCESSING".equals(next);
             case "PAID":
-                return "PROCESSING".equals(next);
+                return "PROCESSING".equals(next) || "SHIPPED".equals(next);
             case "PROCESSING":
                 return "SHIPPED".equals(next);
             case "SHIPPED":
