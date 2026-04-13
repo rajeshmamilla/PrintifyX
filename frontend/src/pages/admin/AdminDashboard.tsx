@@ -2,6 +2,18 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tag, Package, ShoppingBag, Clock, Loader2, ArrowRight } from "lucide-react";
 import { fetchWithAuth } from "../../services/apiClient";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+
+const chartConfig = {
+  orders: {
+    label: "Orders",
+    color: "#f97316",
+  },
+} satisfies ChartConfig;
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -14,7 +26,9 @@ const AdminDashboard = () => {
     const [recentOrders, setRecentOrders] = useState<any[]>([]);
     const [recentProducts, setRecentProducts] = useState<any[]>([]);
     const [recentCategories, setRecentCategories] = useState<any[]>([]);
+    const [chartData, setChartData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [updatingId, setUpdatingId] = useState<number | null>(null);
 
     useEffect(() => {
@@ -26,9 +40,13 @@ const AdminDashboard = () => {
         fetchData();
     }, [navigate]);
 
-    const fetchData = async () => {
+    const fetchData = async (isRefresh = false) => {
         try {
-            setLoading(true);
+            if (isRefresh) {
+                setIsRefreshing(true);
+            } else {
+                setLoading(true);
+            }
             const [categoriesRes, productsRes, ordersRes] = await Promise.all([
                 fetchWithAuth("/admin/categories"),
                 fetchWithAuth("/admin/products"),
@@ -45,6 +63,26 @@ const AdminDashboard = () => {
                 totalOrders: orders.length,
                 pendingOrders: orders.filter((o: any) => o.status === "CREATED" || o.status === "PENDING").length
             });
+
+            // Chart Data Generation (Last 7 Days)
+            const groupedOrders = orders.reduce((acc: any, order: any) => {
+                 const date = new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                 if(!acc[date]) { acc[date] = 0; }
+                 acc[date] += 1;
+                 return acc;
+            }, {});
+
+            const chartAgg = [];
+            for(let i=6; i>=0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const ds = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                chartAgg.push({
+                   date: ds,
+                   orders: groupedOrders[ds] || 0
+                });
+            }
+            setChartData(chartAgg);
 
             // Sort and slice data
             setRecentOrders(orders.sort((a: any, b: any) =>
@@ -63,6 +101,7 @@ const AdminDashboard = () => {
             console.error("Error fetching admin dashboard data:", error);
         } finally {
             setLoading(false);
+            setIsRefreshing(false);
         }
     };
 
@@ -102,16 +141,22 @@ const AdminDashboard = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Dashboard Overview</h2>
+                    <h2 className="text-3xl font-semibold text-gray-900 tracking-tight">Dashboard Overview</h2>
                     <p className="text-gray-500 mt-1 font-medium">Welcome back, Administrator. Here's what's happening today.</p>
                 </div>
-                <button
-                    onClick={fetchData}
-                    className="bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm flex items-center gap-2"
+                <Button
+                    onClick={() => fetchData(true)}
+                    variant="outline"
+                    disabled={isRefreshing}
+                    className="font-bold text-gray-600 shadow-sm"
                 >
-                    <Clock size={16} />
-                    Refresh Data
-                </button>
+                    {isRefreshing ? (
+                        <Spinner data-icon="inline-start" />
+                    ) : (
+                        <Clock size={16} />
+                    )}
+                    {isRefreshing ? "Refreshing" : "Refresh Data"}
+                </Button>
             </div>
 
             {/* Metric Cards */}
@@ -126,18 +171,45 @@ const AdminDashboard = () => {
                             <card.icon size={26} />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{card.name}</p>
-                            <h3 className="text-3xl font-black text-gray-900">{card.value}</h3>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{card.name}</p>
+                            <h3 className="text-3xl font-semibold text-gray-900">{card.value}</h3>
                         </div>
                     </div>
                 ))}
             </div>
 
+            {/* Daily Orders Chart */}
+            <Card className="shadow-sm border-gray-200">
+                <CardHeader>
+                    <CardTitle className="text-xl font-semibold text-gray-900 tracking-tight">Order Activity (Last 7 Days)</CardTitle>
+                    <CardDescription>Daily order volume processing across your storefront.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ChartContainer
+                        config={chartConfig}
+                        className="h-[300px] w-full"
+                    >
+                        <BarChart data={chartData} margin={{ top: 10, right: 10, bottom: 0, left: 10 }}>
+                            <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#e5e7eb" />
+                            <XAxis
+                                dataKey="date"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={10}
+                                tick={{ fill: "#9ca3af", fontSize: 12, fontWeight: 700 }}
+                            />
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
+                            <Bar dataKey="orders" fill="var(--color-orders)" radius={[4, 4, 0, 0]} barSize={40} />
+                        </BarChart>
+                    </ChartContainer>
+                </CardContent>
+            </Card>
+
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 {/* Recent Orders Table */}
                 <div className="xl:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
-                        <h3 className="text-lg font-black text-gray-900">Recent Orders</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">Recent Orders</h3>
                         <button
                             onClick={() => navigate("/admin/orders")}
                             className="text-gray-900 text-sm font-bold hover:underline flex items-center gap-1"
@@ -148,7 +220,7 @@ const AdminDashboard = () => {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead>
-                                <tr className="bg-gray-50 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                <tr className="bg-gray-50 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
                                     <th className="px-8 py-4">Order Details</th>
                                     <th className="px-8 py-4">Customer</th>
                                     <th className="px-8 py-4">Total</th>
@@ -168,11 +240,11 @@ const AdminDashboard = () => {
                                         <td className="px-8 py-5 text-sm text-gray-500 font-medium">
                                             {order.customerEmail}
                                         </td>
-                                        <td className="px-8 py-5 text-sm font-black text-gray-900">
+                                        <td className="px-8 py-5 text-sm font-semibold text-gray-900">
                                             ₹{order.totalAmount?.toLocaleString()}
                                         </td>
                                         <td className="px-8 py-5">
-                                            <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${order.status === "SHIPPED" ? "bg-green-100 text-green-700" :
+                                            <span className={`px-3 py-1 rounded-full text-[9px] font-semibold uppercase tracking-wider ${order.status === "SHIPPED" ? "bg-green-100 text-green-700" :
                                                 order.status === "CANCELLED" ? "bg-red-100 text-red-700" :
                                                     order.status === "PAID" ? "bg-blue-100 text-blue-700" :
                                                         "bg-orange-100 text-orange-700"
@@ -184,7 +256,7 @@ const AdminDashboard = () => {
                                             <div className="flex items-center justify-center">
                                                 <select
                                                     disabled={updatingId === order.id}
-                                                    className="bg-gray-50 border border-gray-200 rounded px-2 py-1 text-[10px] font-black focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
+                                                    className="bg-gray-50 border border-gray-200 rounded px-2 py-1 text-[10px] font-semibold focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
                                                     value={order.status}
                                                     onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                                                 >
@@ -206,7 +278,7 @@ const AdminDashboard = () => {
                 {/* Catalog Highlights */}
                 <div className="space-y-8">
                     <div className="bg-white rounded-xl p-6 border border-gray-200">
-                        <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center justify-between">
                             Newest Products
                             <button
                                 onClick={() => navigate("/admin/products")}
@@ -218,14 +290,14 @@ const AdminDashboard = () => {
                         <div className="space-y-4">
                             {recentProducts.map(p => (
                                 <div key={p.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                    <div className="h-10 w-10 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-black">
+                                    <div className="h-10 w-10 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-semibold">
                                         {p.name.charAt(0)}
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-sm font-bold text-gray-900 line-clamp-1">{p.name}</p>
                                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">{p.category?.name}</p>
                                     </div>
-                                    <div className="text-sm font-black text-gray-900 italic">
+                                    <div className="text-sm font-semibold text-gray-900 italic">
                                         ₹{p.basePrice}
                                     </div>
                                 </div>
@@ -234,7 +306,7 @@ const AdminDashboard = () => {
                     </div>
 
                     <div className="bg-white rounded-xl p-6 border border-gray-200">
-                        <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center justify-between">
                             Recent Categories
                             <button
                                 onClick={() => navigate("/admin/categories")}
@@ -246,7 +318,7 @@ const AdminDashboard = () => {
                         <div className="space-y-4">
                             {recentCategories.map(c => (
                                 <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                                    <div className="h-10 w-10 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-black">
+                                    <div className="h-10 w-10 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center font-semibold">
                                         {c.name.charAt(0)}
                                     </div>
                                     <div className="flex-1">

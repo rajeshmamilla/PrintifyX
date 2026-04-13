@@ -20,10 +20,12 @@ import TrackOrderPage from "./pages/TrackOrderPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import BrowseDesignPage from "./pages/BrowseDesignPage";
 import CreateDesignPage from "./pages/CreateDesignPage";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
   return (
-    <BrowserRouter>
+    <TooltipProvider>
+      <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -56,6 +58,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </TooltipProvider>
   );
 }
 

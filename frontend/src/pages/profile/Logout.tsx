@@ -19,7 +19,7 @@ const Logout = () => {
 
     return (
         <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-            <p className="text-gray-500 font-black uppercase tracking-widest text-sm">Signing out safely...</p>
+            <p className="text-gray-500 font-semibold uppercase tracking-wider text-sm">Signing out safely...</p>
         </div>
     );
 };

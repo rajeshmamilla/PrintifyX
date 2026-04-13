@@ -1,6 +1,7 @@
 import { Outlet, Navigate } from "react-router-dom";
-import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 const AdminLayout = () => {
     const token = localStorage.getItem("token");
@@ -12,15 +13,15 @@ const AdminLayout = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <AdminSidebar />
-            <div className="ml-64">
+        <SidebarProvider style={{ "--sidebar-width": "13rem" } as React.CSSProperties}>
+            <AppSidebar />
+            <SidebarInset className="min-h-screen bg-gray-50 flex-1">
                 <AdminHeader />
-                <main className="pt-28 pb-10 px-8">
+                <main className="pt-8 pb-10 px-8">
                     <Outlet />
                 </main>
-            </div>
-        </div>
+            </SidebarInset>
+        </SidebarProvider>
     );
 };
 

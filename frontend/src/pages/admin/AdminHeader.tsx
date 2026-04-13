@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { LogOut, Bell, Search } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const AdminHeader = () => {
     const navigate = useNavigate();
@@ -11,17 +12,20 @@ const AdminHeader = () => {
     };
 
     return (
-        <header className="fixed top-0 right-0 left-64 h-20 bg-white border-b border-gray-200 z-10 flex items-center justify-between px-8">
-            {/* Search bar inside header */}
-            <div className="relative w-96">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Search size={18} />
-                </span>
-                <input
-                    type="text"
-                    placeholder="Search for orders, products..."
-                    className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
-                />
+        <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b border-gray-200 bg-white px-8">
+            <div className="flex items-center gap-4">
+                <SidebarTrigger className="shrink-0 -ml-4" />
+                {/* Search bar inside header */}
+                <div className="relative w-72 md:w-96">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <Search size={18} />
+                    </span>
+                    <input
+                        type="text"
+                        placeholder="Search for orders, products..."
+                        className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                    />
+                </div>
             </div>
 
             <div className="flex items-center gap-6">

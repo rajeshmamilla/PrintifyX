@@ -48,7 +48,7 @@ const OrderDetails: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
-                <p className="font-bold text-gray-500 uppercase tracking-widest text-xs">Loading order items...</p>
+                <p className="font-bold text-gray-500 uppercase tracking-wider text-xs">Loading order items...</p>
             </div>
         );
     }
@@ -80,7 +80,7 @@ const OrderDetails: React.FC = () => {
             {!order && !loading && !error && (
                 <div className="bg-white rounded-[2rem] p-16 flex flex-col items-center text-center border border-gray-100">
                     <AlertCircle size={48} className="text-gray-200 mb-4" />
-                    <h3 className="text-xl font-black text-gray-900 mb-2">Order not found</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Order not found</h3>
                     <p className="text-gray-500 font-medium max-w-xs mb-8">This order might not belong to your account or has been removed.</p>
                 </div>
             )}
@@ -91,7 +91,7 @@ const OrderDetails: React.FC = () => {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm relative overflow-hidden">
                             <div className="relative z-10">
-                                <h1 className="text-2xl font-black text-gray-900 mb-6">Order Contents</h1>
+                                <h1 className="text-2xl font-semibold text-gray-900 mb-6">Order Contents</h1>
                                 <div className="space-y-4">
                                     {order.items?.map((item: any) => (
                                         <div key={item.id} className="flex gap-4 p-4 border border-gray-50 rounded-2xl bg-gray-50/30">
@@ -99,14 +99,14 @@ const OrderDetails: React.FC = () => {
                                                 <Package size={32} className="text-gray-200" />
                                             </div>
                                             <div className="flex-1 flex flex-col justify-center">
-                                                <h4 className="font-black text-gray-900 text-sm">{item.productName}</h4>
+                                                <h4 className="font-semibold text-gray-900 text-sm">{item.productName}</h4>
                                                 <div className="flex items-center gap-4 mt-1">
-                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Qty: <span className="text-gray-900">{item.quantity}</span></p>
-                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Price: <span className="text-gray-900">₹{item.unitPrice.toLocaleString()}</span></p>
+                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Qty: <span className="text-gray-900">{item.quantity}</span></p>
+                                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Price: <span className="text-gray-900">₹{item.unitPrice.toLocaleString()}</span></p>
                                                 </div>
                                             </div>
                                             <div className="text-right flex flex-col justify-center">
-                                                <p className="text-lg font-black text-orange-600">₹{item.totalPrice.toLocaleString()}</p>
+                                                <p className="text-lg font-semibold text-orange-600">₹{item.totalPrice.toLocaleString()}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -118,25 +118,25 @@ const OrderDetails: React.FC = () => {
                     {/* Summary Sidebar */}
                     <div className="space-y-6">
                         <div className="bg-gray-900 rounded-[2rem] p-8 text-white shadow-xl shadow-gray-200">
-                            <h2 className="text-xl font-black mb-6 flex items-center gap-2">
+                            <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                                 <Tag size={20} className="text-orange-500" />
                                 Summary
                             </h2>
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center text-sm font-bold border-b border-gray-800 pb-4">
-                                    <span className="text-gray-400 uppercase tracking-widest text-[10px]">Order ID</span>
+                                    <span className="text-gray-400 uppercase tracking-wider text-[10px]">Order ID</span>
                                     <span className="font-mono text-orange-500">#{order.orderNumber}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-sm font-bold border-b border-gray-800 pb-4">
-                                    <span className="text-gray-400 uppercase tracking-widest text-[10px]">Status</span>
+                                    <span className="text-gray-400 uppercase tracking-wider text-[10px]">Status</span>
                                     <span className="px-3 py-1 bg-orange-500/10 text-orange-500 rounded-full text-[10px] uppercase tracking-tighter">
                                         {order.status}
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-end pt-4">
-                                    <span className="text-gray-400 uppercase tracking-widest text-[10px] font-black">Total Payment</span>
+                                    <span className="text-gray-400 uppercase tracking-wider text-[10px] font-semibold">Total Payment</span>
                                     <div className="text-right">
-                                        <p className="text-3xl font-black text-white">₹{order.totalAmount.toLocaleString()}</p>
+                                        <p className="text-3xl font-semibold text-white">₹{order.totalAmount.toLocaleString()}</p>
                                         <p className="text-[10px] text-gray-500 italic mt-1 font-bold">GST Included</p>
                                     </div>
                                 </div>
@@ -144,12 +144,12 @@ const OrderDetails: React.FC = () => {
                         </div>
 
                         <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm">
-                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
                                 <CreditCard size={16} className="text-orange-500" />
                                 Shipping Info
                             </h3>
                             <div className="space-y-1">
-                                <p className="text-sm font-black text-gray-800 leading-tight">{order.customerName}</p>
+                                <p className="text-sm font-semibold text-gray-800 leading-tight">{order.customerName}</p>
                                 <p className="text-xs text-gray-500 font-medium">{order.customerEmail}</p>
                                 <p className="text-xs text-gray-500 font-medium">{order.customerPhone}</p>
                             </div>

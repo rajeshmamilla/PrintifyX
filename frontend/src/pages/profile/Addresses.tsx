@@ -100,7 +100,7 @@ const Addresses: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center py-20">
                 <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
-                <p className="font-bold text-gray-500 uppercase tracking-widest text-xs">Locating your saved spots...</p>
+                <p className="font-bold text-gray-500 uppercase tracking-wider text-xs">Locating your saved spots...</p>
             </div>
         );
     }
@@ -109,13 +109,13 @@ const Addresses: React.FC = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900 tracking-tight">Saved Addresses</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">Saved Addresses</h1>
                     <p className="text-gray-500 font-medium italic mt-1 text-sm">Manage your shipping destinations for faster checkout.</p>
                 </div>
                 {!isAdding && (
                     <button
                         onClick={() => setIsAdding(true)}
-                        className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-600 transition-all shadow-xl shadow-orange-100"
+                        className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-2xl font-semibold text-xs uppercase tracking-wider hover:bg-orange-600 transition-all shadow-xl shadow-orange-100"
                     >
                         <Plus size={18} />
                         Add New
@@ -133,14 +133,14 @@ const Addresses: React.FC = () => {
 
             {isAdding && (
                 <div className="bg-white rounded-[2rem] p-8 border-2 border-orange-500/20 shadow-xl animate-in zoom-in duration-300">
-                    <h2 className="text-xl font-black text-gray-900 mb-6 flex items-center gap-2">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
                         <MapPin size={24} className="text-orange-500" />
                         New Shipping Address
                     </h2>
                     <form onSubmit={handleSaveAddress} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Full Name</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     placeholder="e.g. Rahul Sharma"
@@ -150,7 +150,7 @@ const Addresses: React.FC = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Phone Number</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     placeholder="10-digit number"
@@ -160,7 +160,7 @@ const Addresses: React.FC = () => {
                                 />
                             </div>
                             <div className="md:col-span-2 space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Address Line 1 (House No, Building, Street)</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Address Line 1 (House No, Building, Street)</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     placeholder="e.g. Flat 101, Printify Apartments"
@@ -170,7 +170,7 @@ const Addresses: React.FC = () => {
                                 />
                             </div>
                             <div className="md:col-span-2 space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Address Line 2 (Landmark, Locality)</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Address Line 2 (Landmark, Locality)</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     placeholder="Optional"
@@ -179,7 +179,7 @@ const Addresses: React.FC = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">City</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">City</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     value={formData.city}
@@ -188,7 +188,7 @@ const Addresses: React.FC = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">State</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">State</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     value={formData.state}
@@ -197,7 +197,7 @@ const Addresses: React.FC = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Pincode</label>
+                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Pincode</label>
                                 <input
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
                                     value={formData.pincode}
@@ -214,7 +214,7 @@ const Addresses: React.FC = () => {
                                         onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
                                     />
                                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
-                                    <span className="ml-3 text-xs font-black text-gray-900 uppercase tracking-widest">Set as default address</span>
+                                    <span className="ml-3 text-xs font-semibold text-gray-900 uppercase tracking-wider">Set as default address</span>
                                 </label>
                             </div>
                         </div>
@@ -223,13 +223,13 @@ const Addresses: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setIsAdding(false)}
-                                className="px-8 py-3 bg-gray-100 text-gray-600 rounded-2xl font-black text-sm hover:bg-gray-200 transition-all"
+                                className="px-8 py-3 bg-gray-100 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-200 transition-all"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="px-10 py-3 bg-gray-900 text-white rounded-2xl font-black text-sm hover:bg-black transition-all shadow-xl"
+                                className="px-10 py-3 bg-gray-900 text-white rounded-2xl font-semibold text-sm hover:bg-black transition-all shadow-xl"
                             >
                                 Create Address
                             </button>
@@ -242,7 +242,7 @@ const Addresses: React.FC = () => {
                 {addresses.length === 0 && !isAdding && (
                     <div className="md:col-span-2 bg-white rounded-[2rem] p-16 flex flex-col items-center text-center border border-dashed border-gray-200">
                         <MapPin size={48} className="text-gray-200 mb-4" />
-                        <h3 className="text-xl font-black text-gray-900 mb-2">No addresses saved</h3>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No addresses saved</h3>
                         <p className="text-gray-500 font-medium max-w-xs">Add a shipping address to speed up your future orders.</p>
                     </div>
                 )}
@@ -250,7 +250,7 @@ const Addresses: React.FC = () => {
                 {addresses.map((addr) => (
                     <div key={addr.id} className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-sm relative group hover:shadow-xl hover:shadow-gray-200/50 transition-all">
                         {addr.isDefault && (
-                            <div className="absolute top-6 right-6 px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-orange-200">
+                            <div className="absolute top-6 right-6 px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-[9px] font-semibold uppercase tracking-wider border border-orange-200">
                                 Default
                             </div>
                         )}
@@ -260,7 +260,7 @@ const Addresses: React.FC = () => {
                                 <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors">
                                     <User size={18} />
                                 </div>
-                                <span className="font-black text-lg">{addr.name}</span>
+                                <span className="font-semibold text-lg">{addr.name}</span>
                             </div>
 
                             <div className="flex items-start gap-3">

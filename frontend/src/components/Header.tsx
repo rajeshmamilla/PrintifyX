@@ -226,7 +226,7 @@ const Header = () => {
           >
             {filteredProducts.length > 0 ? (
               <div className="py-2">
-                <div className="px-5 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50/50 mb-1">
+                <div className="px-5 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider bg-gray-50/50 mb-1">
                   Products
                 </div>
                 {filteredProducts.map((product) => (

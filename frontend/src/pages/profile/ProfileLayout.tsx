@@ -58,7 +58,7 @@ const ProfileLayout: React.FC = () => {
                 <h3 className="font-bold text-gray-900 leading-tight">
                   {userName}
                 </h3>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">
                   Welcome
                 </p>
               </div>
@@ -84,12 +84,12 @@ const ProfileLayout: React.FC = () => {
 
             {role === "ADMIN" && (
               <div className="mt-4 p-4 bg-white border border-gray-200 rounded-xl">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
                   Admin Access
                 </p>
                 <button
                   onClick={() => navigate("/admin/dashboard")}
-                  className="w-full py-2 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-gray-900 transition-colors"
+                  className="w-full py-2 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-wider hover:bg-gray-900 transition-colors"
                 >
                   Admin Panel
                 </button>

@@ -113,7 +113,7 @@ const Orders: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
-        <p className="font-bold text-gray-500 uppercase tracking-widest text-xs">
+        <p className="font-bold text-gray-500 uppercase tracking-wider text-xs">
           Retrieving your orders...
         </p>
       </div>
@@ -123,14 +123,14 @@ const Orders: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black text-gray-900 tracking-tight">
+        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
           My Orders
         </h1>
         <div className="px-4 py-2 bg-white rounded-xl border border-gray-100 shadow-sm">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider leading-none">
             Total History
           </p>
-          <p className="text-lg font-black text-gray-900 leading-none mt-1">
+          <p className="text-lg font-semibold text-gray-900 leading-none mt-1">
             {orders.length}
           </p>
         </div>
@@ -169,7 +169,7 @@ const Orders: React.FC = () => {
           <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-6">
             <ShoppingBag size={40} />
           </div>
-          <h3 className="text-xl font-black text-gray-900 mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
             No orders yet
           </h3>
           <p className="text-gray-500 font-medium max-w-xs mb-8">
@@ -177,7 +177,7 @@ const Orders: React.FC = () => {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="px-8 py-3 bg-black text-white rounded-xl font-black text-sm hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
+            className="px-8 py-3 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
           >
             Browse Storefront
           </button>
@@ -191,11 +191,11 @@ const Orders: React.FC = () => {
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                 <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 font-black text-xs shrink-0 group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors">
+                  <div className="h-12 w-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 font-semibold text-xs shrink-0 group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors">
                     #{order.id}
                   </div>
                   <div>
-                    <p className="text-sm font-black text-gray-900 tracking-tight">
+                    <p className="text-sm font-semibold text-gray-900 tracking-tight">
                       {order.orderNumber}
                     </p>
                     <p className="text-xs text-gray-400 font-bold mt-0.5">
@@ -205,15 +205,15 @@ const Orders: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-1 gap-4 md:gap-1 text-right">
-                  <p className="text-xs text-gray-400 font-black uppercase tracking-widest md:hidden text-left">
+                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider md:hidden text-left">
                     Total Amount
                   </p>
-                  <p className="text-lg font-black text-gray-900">
+                  <p className="text-lg font-semibold text-gray-900">
                     ₹{order.totalAmount.toLocaleString()}
                   </p>
 
                   <div
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase md:justify-self-end w-fit ${order.status === "SHIPPED"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase md:justify-self-end w-fit ${order.status === "SHIPPED"
                       ? "bg-gray-900 text-white"
                       : order.status === "CANCELLED"
                         ? "bg-red-50 text-red-700 border border-red-100"
@@ -230,7 +230,7 @@ const Orders: React.FC = () => {
                 <div className="flex items-center gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-gray-50">
                   <button
                     onClick={() => navigate(`/profile/orders/${order.id}`)}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-lg shadow-gray-100"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-gray-900 transition-all shadow-lg shadow-gray-100"
                   >
                     Details
                     <ChevronRight size={14} />
@@ -255,7 +255,7 @@ const Orders: React.FC = () => {
               </div>
 
               {/* Decorative background number */}
-              <div className="absolute -right-4 -bottom-8 text-9xl font-black text-gray-50/50 pointer-events-none group-hover:text-orange-50/30 transition-colors italic">
+              <div className="absolute -right-4 -bottom-8 text-9xl font-semibold text-gray-50/50 pointer-events-none group-hover:text-orange-50/30 transition-colors italic">
                 {order.id}
               </div>
             </div>

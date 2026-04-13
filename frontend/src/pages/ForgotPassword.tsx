@@ -36,7 +36,7 @@ const ForgotPassword = () => {
 
                                 <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="space-y-1.5">
-                                        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
+                                        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider ml-1">Email Address</label>
                                         <input
                                             type="email"
                                             placeholder="e.g. rahul@example.com"
@@ -75,7 +75,7 @@ const ForgotPassword = () => {
                         )}
 
                         <div className="mt-10 pt-8 border-t border-gray-50 text-center">
-                            <Link to="/login" className="inline-flex items-center gap-2 text-gray-500 font-bold text-xs hover:text-gray-900 transition-colors uppercase tracking-widest">
+                            <Link to="/login" className="inline-flex items-center gap-2 text-gray-500 font-bold text-xs hover:text-gray-900 transition-colors uppercase tracking-wider">
                                 <ArrowLeft size={14} /> Back to Login
                             </Link>
                         </div>

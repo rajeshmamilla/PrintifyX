@@ -143,7 +143,7 @@ const TrackOrderPage: React.FC = () => {
                     </p>
 
                     <div className="inline-flex items-center gap-4 bg-gray-50 px-6 py-3 rounded-md border border-gray-100">
-                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Expected Timeline</span>
+                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Expected Timeline</span>
                         <span className="font-bold text-gray-900">4-5 Business Days</span>
                     </div>
                 </div>
@@ -152,7 +152,7 @@ const TrackOrderPage: React.FC = () => {
                     <div className="flex items-center justify-between mb-10 pb-6 border-b border-gray-50">
                         <h2 className="text-xl font-bold text-gray-900">Track Status</h2>
                         <div className="text-right">
-                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Status as of</p>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Status as of</p>
                             <p className="font-bold text-gray-900">{new Date().toLocaleDateString()}</p>
                         </div>
                     </div>
