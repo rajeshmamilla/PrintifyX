@@ -34,3 +34,8 @@ A full-stack enterprise-grade e-commerce platform featuring an interactive produ
 <img width="1916" height="919" alt="image" src="https://github.com/user-attachments/assets/7e973f0b-100d-4aea-b114-8ef4e534100d" />
 <img width="1919" height="889" alt="image" src="https://github.com/user-attachments/assets/f478a17e-76ae-4a6c-ab77-c814611d9f0b" />
 <img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/112fe76f-3521-4b99-ba93-334f9aba6d3b" />
+<img width="1919" height="964" alt="image" src="https://github.com/user-attachments/assets/a223d2ce-a07c-427c-b68a-3afe9bf8be1d" />
+<img width="1919" height="975" alt="image" src="https://github.com/user-attachments/assets/0f3f0b53-6a50-457b-9b37-2defbefcbb61" />
+<img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/c9fe92b1-7c1a-4ffc-81d9-3d08f98c8c7b" />
+<img width="1919" height="962" alt="image" src="https://github.com/user-attachments/assets/05f1b71e-80c2-4f11-96ca-97606799ce18" />
+
