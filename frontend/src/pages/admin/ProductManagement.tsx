@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Plus, ToggleLeft, ToggleRight, Loader2, Filter } from "lucide-react";
 import { fetchWithAuth } from "../../services/apiClient";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const ProductManagement = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -94,13 +96,96 @@ const ProductManagement = () => {
                     <h2 className="text-2xl font-bold text-gray-800">Product Management</h2>
                     <p className="text-gray-500 text-sm">Create and manage your products across categories.</p>
                 </div>
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="flex items-center gap-2 bg-orange-500 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-orange-600 transition-all shadow-md active:scale-95"
-                >
-                    <Plus size={20} />
-                    <span>Add Product</span>
-                </button>
+                <Dialog open={showModal} onOpenChange={setShowModal}>
+                    <DialogTrigger render={<Button variant="secondary" className="flex items-center gap-2 shadow-sm font-bold" />}>
+                        <Plus size={20} />
+                        <span>Add Product</span>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-lg rounded-2xl bg-white p-8 overflow-y-auto max-h-[90vh]">
+                        <DialogHeader>
+                            <DialogTitle className="text-xl font-bold text-gray-800 mb-6">Add New Product</DialogTitle>
+                        </DialogHeader>
+                        <form onSubmit={handleCreateProduct} className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Product Name</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                                        value={newProduct.name}
+                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                                        value={newProduct.slug}
+                                        onChange={(e) => setNewProduct({ ...newProduct, slug: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                                <select
+                                    required
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                    value={newProduct.categoryId}
+                                    onChange={(e) => setNewProduct({ ...newProduct, categoryId: e.target.value })}
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories.map(cat => (
+                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Base Price (₹)</label>
+                                <input
+                                    type="number"
+                                    required
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                                    value={newProduct.basePrice}
+                                    onChange={(e) => setNewProduct({ ...newProduct, basePrice: Number(e.target.value) })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                                <textarea
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 h-24"
+                                    value={newProduct.description}
+                                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Product Image (Optional)</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer text-gray-500"
+                                />
+                            </div>
+                            <div className="flex gap-4 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg"
+                                >
+                                    Create Product
+                                </button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             {/* Filters */}
@@ -182,84 +267,6 @@ const ProductManagement = () => {
                 </table>
             </div>
 
-            {showModal && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl w-full max-w-lg p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
-                        <h3 className="text-xl font-bold text-gray-800 mb-6">Add New Product</h3>
-                        <form onSubmit={handleCreateProduct} className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Product Name</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
-                                        value={newProduct.name}
-                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Slug</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
-                                        value={newProduct.slug}
-                                        onChange={(e) => setNewProduct({ ...newProduct, slug: e.target.value })}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Category</label>
-                                <select
-                                    required
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                                    value={newProduct.categoryId}
-                                    onChange={(e) => setNewProduct({ ...newProduct, categoryId: e.target.value })}
-                                >
-                                    <option value="">Select a category</option>
-                                    {categories.map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Base Price (₹)</label>
-                                <input
-                                    type="number"
-                                    required
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                                    value={newProduct.basePrice}
-                                    onChange={(e) => setNewProduct({ ...newProduct, basePrice: Number(e.target.value) })}
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
-                                <textarea
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 h-24"
-                                    value={newProduct.description}
-                                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                />
-                            </div>
-                            <div className="flex gap-4 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(false)}
-                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg"
-                                >
-                                    Create Product
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

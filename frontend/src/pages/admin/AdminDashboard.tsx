@@ -7,6 +7,14 @@ import { Spinner } from "@/components/ui/spinner";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const chartConfig = {
   orders: {
@@ -254,17 +262,50 @@ const AdminDashboard = () => {
                                         </td>
                                         <td className="px-8 py-5">
                                             <div className="flex items-center justify-center">
-                                                <select
+                                                <Select
                                                     disabled={updatingId === order.id}
-                                                    className="bg-gray-50 border border-gray-200 rounded px-2 py-1 text-[10px] font-semibold focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer"
                                                     value={order.status}
-                                                    onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
+                                                    onValueChange={(val) => handleStatusUpdate(order.id, val)}
                                                 >
-                                                    <option value="CREATED">CREATED</option>
-                                                    <option value="PAID">PAID</option>
-                                                    <option value="SHIPPED">SHIPPED</option>
-                                                    <option value="CANCELLED">CANCELLED</option>
-                                                </select>
+                                                    <SelectTrigger className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs font-semibold focus:ring-1 focus:ring-gray-400 outline-none cursor-pointer w-auto uppercase">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectGroup>
+                                                            <SelectItem value={order.status}>{order.status}</SelectItem>
+                                                            {order.status === 'PENDING' && (
+                                                                <>
+                                                                    <SelectItem value="PAID">PAID</SelectItem>
+                                                                    <SelectItem value="PROCESSING">PROCESSING</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'CREATED' && (
+                                                                <>
+                                                                    <SelectItem value="PAID">PAID</SelectItem>
+                                                                    <SelectItem value="PROCESSING">PROCESSING</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'PAID' && (
+                                                                <>
+                                                                    <SelectItem value="PROCESSING">PROCESSING</SelectItem>
+                                                                    <SelectItem value="SHIPPED">SHIPPED</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'PROCESSING' && (
+                                                                <>
+                                                                    <SelectItem value="SHIPPED">SHIPPED</SelectItem>
+                                                                    <SelectItem value="CANCELLED">CANCELLED</SelectItem>
+                                                                </>
+                                                            )}
+                                                            {order.status === 'SHIPPED' && (
+                                                                <SelectItem value="DELIVERED">DELIVERED</SelectItem>
+                                                            )}
+                                                        </SelectGroup>
+                                                    </SelectContent>
+                                                </Select>
                                                 {updatingId === order.id && <Loader2 className="animate-spin ml-2 text-gray-400" size={14} />}
                                             </div>
                                         </td>
