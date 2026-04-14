@@ -18,6 +18,7 @@ A full-stack enterprise-grade e-commerce platform featuring an interactive produ
 - **Vite**
 - **Tailwind CSS**
 - **Lucide Icons**
+- **ShadCN**
 
 ### Backend
 - **Java / Spring Boot**
