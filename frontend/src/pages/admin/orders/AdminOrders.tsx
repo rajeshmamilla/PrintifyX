@@ -3,12 +3,12 @@ import { Search, Loader2, Eye, CheckCircle2, AlertCircle, ShoppingBag, Calendar,
 import OrderDetailsModal from './OrderDetailsModal';
 import { fetchWithAuth } from "../../../services/apiClient";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 
 const AdminOrders: React.FC = () => {
@@ -70,7 +70,7 @@ const AdminOrders: React.FC = () => {
 
     const filteredOrders = orders.filter(o =>
         (o.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        o.customerEmail.toLowerCase().includes(searchQuery.toLowerCase())) &&
+            o.customerEmail.toLowerCase().includes(searchQuery.toLowerCase())) &&
         (statusFilter === 'ALL' || o.status === statusFilter)
     ).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
@@ -94,7 +94,7 @@ const AdminOrders: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val || 'ALL')}>
                         <SelectTrigger className="w-full sm:w-40 bg-white border border-gray-200 outline-none focus:ring-1 focus:ring-gray-900 transition-all font-bold text-gray-700 h-[50px] rounded-lg">
                             <SelectValue placeholder="All Statuses" />
                         </SelectTrigger>
@@ -203,7 +203,7 @@ const AdminOrders: React.FC = () => {
                                                 <Select
                                                     disabled={updatingId === order.id}
                                                     value={order.status}
-                                                    onValueChange={(val) => handleStatusUpdate(order.id, val)}
+                                                    onValueChange={(val) => val && handleStatusUpdate(order.id, val)}
                                                 >
                                                     <SelectTrigger className={`font-semibold text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/20 transition-all cursor-pointer border-2 h-auto w-auto min-w-32 ${order.status === 'SHIPPED' ? 'bg-green-50 border-green-100 text-green-700' :
                                                         order.status === 'CANCELLED' ? 'bg-red-50 border-red-100 text-red-700' :
