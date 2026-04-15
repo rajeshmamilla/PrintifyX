@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { LogOut, Bell, Search } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import AdminNotifications from "./AdminNotifications";
 
 const AdminHeader = () => {
     const navigate = useNavigate();
@@ -30,12 +31,7 @@ const AdminHeader = () => {
 
             <div className="flex items-center gap-6">
                 {/* Notifications */}
-                <button className="relative text-gray-500 hover:text-orange-500 transition-colors">
-                    <Bell size={22} />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white">
-                        3
-                    </span>
-                </button>
+                <AdminNotifications />
 
                 {/* Separator */}
                 <div className="h-8 w-[1px] bg-gray-200 mx-2"></div>
