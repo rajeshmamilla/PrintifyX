@@ -68,6 +68,27 @@ const PRODUCTS = [
   { id: 32, name: "Wall Decals", category: "Decals", implemented: false },
 ];
 
+const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+const renderHighlightedText = (text: string, highlight: string) => {
+  if (!highlight.trim()) return <span>{text}</span>;
+  const regex = new RegExp(`(${escapeRegExp(highlight.trim())})`, 'gi');
+  const parts = text.split(regex);
+  return (
+    <span>
+      {parts.map((part, i) => 
+        part.toLowerCase() === highlight.trim().toLowerCase() ? (
+          <span key={i} className="bg-yellow-200 text-gray-900 rounded-sm font-bold">{part}</span>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </span>
+  );
+};
+
 const Header = () => {
   const navigate = useNavigate();
   const searchRef = useRef<HTMLDivElement>(null);
@@ -142,7 +163,7 @@ const Header = () => {
 
   const handleSearch = (currentQuery: string) => {
     const query = currentQuery.trim().toLowerCase();
-    if (!query) {
+    if (query.length < 3) {
       setFilteredProducts([]);
       setShowResults(false);
       return;
@@ -245,7 +266,7 @@ const Header = () => {
                   >
                     <div>
                       <div className="text-[15px] font-semibold text-gray-900 group-hover:text-black">
-                        {product.name}
+                        {renderHighlightedText(product.name, searchQuery)}
                       </div>
                       <div className="text-[11px] text-gray-400 font-medium lowercase first-letter:uppercase">
                         in {product.category}
