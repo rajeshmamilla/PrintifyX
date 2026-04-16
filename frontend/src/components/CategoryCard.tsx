@@ -9,7 +9,6 @@ type CategoryCardProps = {
 const CategoryCard = ({ title, image, link }: CategoryCardProps) => {
   const CardContent = (
     <>
-      {/* Image */}
       <div className="h-[220px] overflow-hidden">
         <img
           src={image}
@@ -18,7 +17,6 @@ const CategoryCard = ({ title, image, link }: CategoryCardProps) => {
         />
       </div>
 
-      {/* Title */}
       <div className="py-4 text-center">
         <h3 className="text-[16px] font-semibold text-gray-800">{title}</h3>
       </div>
@@ -36,7 +34,15 @@ const CategoryCard = ({ title, image, link }: CategoryCardProps) => {
     );
   }
 
-  return <div className={className}>{CardContent}</div>;
+  return (
+    <div
+      className={className}
+      onClick={() => alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!")}
+    >
+      {CardContent}
+    </div>
+  );
 };
 
 export default CategoryCard;
+

@@ -12,6 +12,12 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../services/api";
+import { CheckCircle2Icon, AlertCircle } from "lucide-react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 
 export function RegisterForm({
   className,
@@ -31,20 +37,43 @@ export function RegisterForm({
     setLoading(true);
 
     try {
-        const data = await registerUser(email, password);
-        console.log("Registration success:", data);
-        setSuccess(true);
-        alert("Registration Successful");
+      const data = await registerUser(email, password);
+      console.log("Registration success:", data);
+      setSuccess(true);
+      setTimeout(() => {
         navigate("/login");
+      }, 2000);
     } catch (err: any) {
-        setError(err.message || "Registration failed. Please try again.");
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      {success && (
+        <Alert className="border-emerald-500/50 bg-emerald-50/50 text-emerald-900">
+          <CheckCircle2Icon className="h-4 w-4 stroke-emerald-600" />
+          <AlertTitle className="text-emerald-800">Registration Successful</AlertTitle>
+          <AlertDescription className="text-emerald-700">
+            Your account has been created successfully. Redirecting you to login...
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>{error}</AlertTitle>
+          <AlertDescription>
+            {error.toLowerCase().includes("email") || error.toLowerCase().includes("exist")
+              ? "Use different email or login."
+              : "Please try again."}
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
@@ -69,22 +98,17 @@ export function RegisterForm({
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input 
-                    id="password" 
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required 
-                    className="h-10 px-3 py-2 text-sm"
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="h-10 px-3 py-2 text-sm"
                 />
               </div>
 
-              {error && (
-                <p className="text-sm text-red-500 font-medium text-center">{error}</p>
-              )}
-               {success && (
-                <p className="text-sm text-green-500 font-medium text-center">Registration successful!</p>
-              )}
+              {/* Alerts moved above the form */}
 
               <Button type="submit" disabled={loading} className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm border border-transparent">
                 {loading ? "Registering..." : "Sign up"}

@@ -78,7 +78,7 @@ const renderHighlightedText = (text: string, highlight: string) => {
   const parts = text.split(regex);
   return (
     <span>
-      {parts.map((part, i) => 
+      {parts.map((part, i) =>
         part.toLowerCase() === highlight.trim().toLowerCase() ? (
           <span key={i} className="bg-yellow-200 text-gray-900 rounded-sm font-bold">{part}</span>
         ) : (
@@ -259,7 +259,7 @@ const Header = () => {
                         setShowResults(false);
                         setSearchQuery("");
                       } else {
-                        alert("This page is yet to develop, Try Business cards");
+                        alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!");
                       }
                     }}
                     className="px-5 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors group"
