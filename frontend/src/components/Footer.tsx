@@ -1,133 +1,125 @@
 import {
-  Facebook,
-  Twitter,
-  Youtube,
-  Pin,
   MapPin,
-  Phone,
-  MessageCircle,
   Mail,
+  Star,
+  Linkedin,
+  Github,
 } from "lucide-react";
 
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-[#0b1730] to-[#070f22] text-gray-300">
-      {/* TOP SECTION */}
-      <div className="mx-auto max-w-[1300px] px-10 py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
-          {/* SUPPORT */}
-          <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase text-white">
-              Support
+      {/* TRUST BANNER: 10,000+ HAPPY CUSTOMERS */}
+      <div className="border-b border-white/5">
+        <div className="mx-auto flex max-w-[1300px] flex-col items-center justify-center px-10 py-8 text-center md:py-12">
+          <h3 className="mb-3 text-2xl font-bold tracking-tight text-white md:text-3xl">
+            Join 10,000+ Happy Customers
+          </h3>
+          <div className="mb-3 flex items-center justify-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className="h-6 w-6 fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+              />
+            ))}
+          </div>
+          <p className="max-w-2xl text-sm leading-relaxed text-gray-400 md:text-base">
+            Rated 4.9/5 based on customer and business reviews. <br className="hidden md:block" />
+            <span className="mt-1 inline-block font-medium text-gray-300">
+              Fast turnaround • Premium quality • Affordable pricing
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* MAIN FOOTER LINKS */}
+      <div className="mx-auto max-w-[1300px] px-10 py-10 md:py-12">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+          {/* COLUMN 1: SHOP */}
+          <div className="flex flex-col items-center text-center">
+            <h4 className="mb-5 text-sm font-semibold uppercase tracking-wider text-white">
+              Shop
             </h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">FAQs</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Download Templates</a></li>
-              <li><a href="#">Track Order</a></li>
-              <li><a href="#">Request a Quote</a></li>
-              <li><a href="#">Testimonials</a></li>
-              <li><a href="#">Privacy & Security Policy</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
-              <li><a href="#">Accessibility</a></li>
+            <ul className="flex flex-col items-center space-y-3 text-sm">
+              <li>
+                <a href="/categories/business-cards" className="transition-colors hover:text-white">Business Cards</a>
+              </li>
+              <li>
+                <a href="#flyers" className="transition-colors hover:text-white">Flyers</a>
+              </li>
+              <li>
+                <a href="#banners" className="transition-colors hover:text-white">Banners</a>
+              </li>
+              <li>
+                <a href="#posters" className="transition-colors hover:text-white">Posters</a>
+              </li>
+              <li>
+                <a href="#stickers" className="transition-colors hover:text-white">Stickers</a>
+              </li>
             </ul>
           </div>
 
-          {/* RESOURCES */}
-          <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase text-white">
-              Resources
-            </h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">Templates</a></li>
-              <li><a href="#">Pricing</a></li>
-              <li><a href="#">File Preparation Guide</a></li>
-              <li><a href="#">Tutorials</a></li>
-              <li><a href="#">Reviews</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
-            </ul>
-          </div>
-
-          {/* MY ACCOUNT */}
-          <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase text-white">
+          {/* COLUMN 2: MY ACCOUNT */}
+          <div className="flex flex-col items-center text-center">
+            <h4 className="mb-5 text-sm font-semibold uppercase tracking-wider text-white">
               My Account
             </h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">Reviews</a></li>
-              <li><a href="#">Our Story</a></li>
-              <li><a href="#">Blogs</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">View All</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
+            <ul className="flex flex-col items-center space-y-3 text-sm">
+              <li>
+                <a href="/login" className="transition-colors hover:text-white">Login</a>
+              </li>
+              <li>
+                <a href="/register" className="transition-colors hover:text-white">Register</a>
+              </li>
+              <li>
+                <a href="/profile" className="transition-colors hover:text-white">My Orders</a>
+              </li>
+              <li>
+                <a href="/cart" className="transition-colors hover:text-white">Cart</a>
+              </li>
             </ul>
           </div>
 
-          {/* ABOUT */}
-          <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase text-white">
-              About
+          {/* COLUMN 3: CONTACT */}
+          <div className="flex flex-col items-center text-center">
+            <h4 className="mb-5 text-sm font-semibold uppercase tracking-wider text-white">
+              Contact
             </h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#">Track My Order</a></li>
-              <li><a href="#">My Orders</a></li>
-              <li><a href="#">Reorder</a></li>
-              <li><a href="#">Request Quote</a></li>
-              <li><a href="#">Saved Designs</a></li>
-              <li><a href="#">Reviews</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms & Conditions</a></li>
-            </ul>
-          </div>
-
-          {/* CONTACT */}
-          <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase text-white">
-              Talk to PrintifyX
-            </h4>
-
-            <ul className="space-y-4 text-sm">
-              <li className="flex items-center gap-3">
-                <MapPin size={16} /> Hyderabad, Telangana - 500081
+            <ul className="flex flex-col items-center space-y-4 text-sm">
+              <li className="flex items-center justify-center gap-2">
+                <Mail size={18} className="shrink-0" />
+                <a href="mailto:rajeshmamilla206@gmail.com" className="transition-colors hover:text-white">rajeshmamilla206@gmail.com</a>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={16} /> Call (214)-432-0563
+              <li className="flex items-start justify-center gap-2">
+                <MapPin size={18} className="shrink-0" />
+                <span>Hyderabad, India</span>
               </li>
-              <li className="flex items-center gap-3">
-                <MessageCircle size={16} /> Chat with an Expert
+              <li className="flex items-center justify-center gap-2">
+                <Linkedin size={18} className="shrink-0" />
+                <a href="https://www.linkedin.com/in/rajeshmamilla/" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
+                  LinkedIn
+                </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail size={16} /> Email Us
+              <li className="flex items-center justify-center gap-2">
+                <Github size={18} className="shrink-0" />
+                <a href="https://github.com/rajeshmamilla/printifyx" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-white">
+                  GitHub
+                </a>
               </li>
             </ul>
-
-            {/* SOCIAL ICONS */}
-            <div className="mt-6 flex gap-4">
-              <a href="#" className="hover:text-white">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Youtube size={18} />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Pin size={18} />
-              </a>
-            </div>
           </div>
         </div>
       </div>
 
       {/* BOTTOM BAR */}
-      <div className="border-t border-white/10 py-6 text-center text-sm text-gray-400">
-        © 2026 PrintifyX. All Rights Reserved.
+      <div className="border-t border-white/10 bg-[#060a17]">
+        <div className="mx-auto flex max-w-[1300px] flex-col items-center justify-center px-10 py-6 text-sm text-gray-400">
+          <p>© 2026 PrintifyX. Built by Rajesh Mamilla</p>
+        </div>
       </div>
     </footer>
   );
 };
 
 export default Footer;
+

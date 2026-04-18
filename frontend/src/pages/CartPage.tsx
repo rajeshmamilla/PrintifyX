@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { cartService } from "../services/cart.service";
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -125,7 +126,10 @@ const CartPage = () => {
             </p>
             <Link
               to="/"
-              className="inline-block bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
+              className={buttonVariants({ 
+                variant: "default", 
+                className: "h-12 px-10 rounded-xl font-bold text-lg shadow-xl shadow-gray-100" 
+              })}
             >
               Start Shopping
             </Link>

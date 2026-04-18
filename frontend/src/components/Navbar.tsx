@@ -145,7 +145,7 @@ const Navbar = () => {
 
   const handlePlaceholderClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert("This page is yet to develop, Try Business cards");
+    alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!");
   };
 
   return (

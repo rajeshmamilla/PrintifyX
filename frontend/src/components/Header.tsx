@@ -68,9 +68,31 @@ const PRODUCTS = [
   { id: 32, name: "Wall Decals", category: "Decals", implemented: false },
 ];
 
+const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+const renderHighlightedText = (text: string, highlight: string) => {
+  if (!highlight.trim()) return <span>{text}</span>;
+  const regex = new RegExp(`(${escapeRegExp(highlight.trim())})`, 'gi');
+  const parts = text.split(regex);
+  return (
+    <span>
+      {parts.map((part, i) =>
+        part.toLowerCase() === highlight.trim().toLowerCase() ? (
+          <span key={i} className="bg-yellow-200 text-gray-900 rounded-sm font-bold">{part}</span>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      )}
+    </span>
+  );
+};
+
 const Header = () => {
   const navigate = useNavigate();
   const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -142,7 +164,7 @@ const Header = () => {
 
   const handleSearch = (currentQuery: string) => {
     const query = currentQuery.trim().toLowerCase();
-    if (!query) {
+    if (query.length < 3) {
       setFilteredProducts([]);
       setShowResults(false);
       return;
@@ -195,11 +217,12 @@ const Header = () => {
       <div className="relative flex flex-1 justify-center group" ref={searchRef}>
         <div className="relative w-1/2">
           <input
+            ref={inputRef}
             value={searchQuery}
             onChange={onInputChange}
             onKeyDown={handleKeyDown}
             onFocus={() => { if (filteredProducts.length > 0) setShowResults(true); }}
-            placeholder="Product and something awesome..."
+            placeholder="What are you looking to print today?"
             className="w-full rounded-lg border border-gray-300 px-5 py-3 pr-12 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-shadow duration-200 focus:shadow-sm"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
@@ -213,7 +236,10 @@ const Header = () => {
             <Search
               size={20}
               className="cursor-pointer opacity-60 hover:opacity-100 transition-all active:scale-95"
-              onClick={() => handleSearch(searchQuery)}
+              onClick={() => {
+                inputRef.current?.focus();
+                handleSearch(searchQuery);
+              }}
             />
           </div>
 
@@ -238,14 +264,14 @@ const Header = () => {
                         setShowResults(false);
                         setSearchQuery("");
                       } else {
-                        alert("This page is yet to develop, Try Business cards");
+                        alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!");
                       }
                     }}
                     className="px-5 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors group"
                   >
                     <div>
                       <div className="text-[15px] font-semibold text-gray-900 group-hover:text-black">
-                        {product.name}
+                        {renderHighlightedText(product.name, searchQuery)}
                       </div>
                       <div className="text-[11px] text-gray-400 font-medium lowercase first-letter:uppercase">
                         in {product.category}

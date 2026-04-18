@@ -78,6 +78,12 @@ const PaymentPage: React.FC = () => {
     const handleAddressSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!formData.name.trim() || !formData.phone.trim() || !formData.addressLine1.trim() || !formData.city.trim() || !formData.state.trim() || !formData.pincode.trim()) {
+            setNotification({ message: 'Please fill in all required shipping address fields.', type: 'error' });
+            setTimeout(() => setNotification(null), 3000);
+            return;
+        }
+
         try {
             setLoading(true);
             // Save address (if user modified it or for the first time)
@@ -98,7 +104,7 @@ const PaymentPage: React.FC = () => {
                 setNotification(null);
                 // Dispatch event to update cart count in header
                 window.dispatchEvent(new Event("cartUpdated"));
-                navigate('/track-order', { state: { orderId: orderRes.orderNumber } });
+                navigate('/profile/orders');
             }, 1500);
         } catch (err: any) {
             setNotification({ message: err.message, type: 'error' });
@@ -138,7 +144,9 @@ const PaymentPage: React.FC = () => {
                         <form onSubmit={handleAddressSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-1.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Full Name</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        Full Name <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:border-gray-900 transition-all font-medium text-gray-700"
                                         placeholder="Enter full name"
@@ -148,7 +156,9 @@ const PaymentPage: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Phone Number</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        Phone Number <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:border-gray-900 transition-all font-medium text-gray-700"
                                         placeholder="10-digit mobile number"
@@ -158,7 +168,9 @@ const PaymentPage: React.FC = () => {
                                     />
                                 </div>
                                 <div className="md:col-span-2 space-y-1.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Street Address</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        Street Address <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:border-gray-900 transition-all font-medium text-gray-700"
                                         placeholder="House No., Building, Street, Area"
@@ -177,7 +189,9 @@ const PaymentPage: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">City</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        City <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:border-gray-900 transition-all font-medium text-gray-700"
                                         placeholder="City"
@@ -187,7 +201,9 @@ const PaymentPage: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">State</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        State <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:border-gray-900 transition-all font-medium text-gray-700"
                                         placeholder="State"
@@ -197,7 +213,9 @@ const PaymentPage: React.FC = () => {
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Pincode</label>
+                                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+                                        Pincode <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-md outline-none focus:border-gray-900 transition-all font-medium text-gray-700"
                                         placeholder="6-digit pincode"
