@@ -184,7 +184,7 @@ const Orders: React.FC = () => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {orders.map((order) => (
+          {orders.map((order, index) => (
             <div
               key={order.id}
               className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative"
@@ -192,7 +192,7 @@ const Orders: React.FC = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                 <div className="flex items-start gap-4">
                   <div className="h-12 w-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 font-semibold text-xs shrink-0 group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors">
-                    #{order.id}
+                    #{orders.length - index}
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900 tracking-tight">
@@ -236,27 +236,13 @@ const Orders: React.FC = () => {
                     <ChevronRight size={14} />
                   </button>
 
-                  {(order.status === "CREATED" ||
-                    order.status === "PENDING") && (
-                      <button
-                        disabled={cancellingId === order.id}
-                        onClick={() => handleCancelOrder(order.id)}
-                        className="flex items-center justify-center px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-all disabled:opacity-50"
-                        title="Cancel Order"
-                      >
-                        {cancellingId === order.id ? (
-                          <Loader2 className="animate-spin" size={18} />
-                        ) : (
-                          <XCircle size={18} />
-                        )}
-                      </button>
-                    )}
+
                 </div>
               </div>
 
               {/* Decorative background number */}
               <div className="absolute -right-4 -bottom-8 text-9xl font-semibold text-gray-50/50 pointer-events-none group-hover:text-orange-50/30 transition-colors italic">
-                {order.id}
+                {orders.length - index}
               </div>
             </div>
           ))}

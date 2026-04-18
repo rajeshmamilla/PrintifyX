@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
@@ -8,7 +8,6 @@ import ProductOptionSelect from "../components/ProductOptionSelect";
 import PriceSummary from "../components/PriceSummary";
 import { cartService } from "../services/cart.service";
 import { Upload, Grid, Edit3, X } from "lucide-react";
-import { useRef } from "react";
 
 // Import images
 import plasticBusinessCardsImg from "../assets/products/plastic business cards.png";
@@ -72,6 +71,21 @@ const ProductCustomizerPage = () => {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        const storedEmail = localStorage.getItem("email") || localStorage.getItem("userEmail") || "";
+        const storedName = localStorage.getItem("businessName") || localStorage.getItem("name") || localStorage.getItem("firstName") || "";
+        const storedAddress = localStorage.getItem("address") || "";
+        const storedPhone = localStorage.getItem("phone") || localStorage.getItem("contactNumber") || "";
+        
+        setCardDetails(prev => ({
+            ...prev,
+            email: prev.email || storedEmail,
+            businessName: prev.businessName || storedName,
+            address: prev.address || storedAddress,
+            contactNumber: prev.contactNumber || storedPhone
+        }));
+    }, []);
+
     if (!product) {
         return (
             <div className="min-h-screen bg-white flex flex-col">
@@ -110,6 +124,11 @@ const ProductCustomizerPage = () => {
 
         if (!isTokenValid) {
             navigate("/login");
+            return;
+        }
+
+        if (!cardDetails.businessName.trim() || !cardDetails.address.trim()) {
+            alert("Please fill in the required fields: Business Name and Address.");
             return;
         }
 
@@ -248,13 +267,16 @@ const ProductCustomizerPage = () => {
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-semibold text-gray-700">Address</label>
+                                    <label className="text-sm font-semibold text-gray-700">
+                                        Address <span className="text-red-500">*</span>
+                                    </label>
                                     <input
                                         type="text"
                                         value={cardDetails.address}
                                         onChange={(e) => setCardDetails({ ...cardDetails, address: e.target.value })}
                                         placeholder="Enter full address"
                                         className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                        required
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1">
