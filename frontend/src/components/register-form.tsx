@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { registerUser } from "../services/api";
+import { registerUser, sendRegisterOtp, verifyOtp } from "../services/api";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import {
   Alert,
@@ -97,6 +97,40 @@ export function RegisterForm({
   const [otpError, setOtpError] = useState("");
   const [otpLoading, setOtpLoading] = useState(false);
   const [resendDisabled, setResendDisabled] = useState(true);
+  const [timer, setTimer] = useState(60);
+
+  // Countdown timer for resend
+  useState(() => {
+    let interval: any;
+    if (step === "otp" && resendDisabled) {
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            setResendDisabled(false);
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  });
+
+  const startTimer = () => {
+    setResendDisabled(true);
+    setTimer(60);
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          setResendDisabled(false);
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
   // ── Step 1: submit registration ──
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,20 +148,17 @@ export function RegisterForm({
 
     setLoading(true);
     try {
-      await registerUser(email, password);
-      // Backend registered — now show OTP verification step
+      await sendRegisterOtp(email);
       setStep("otp");
-      setResendDisabled(true);
-      // Re-enable resend after 30 s (placeholder — will be replaced with real timer later)
-      setTimeout(() => setResendDisabled(false), 30_000);
+      startTimer();
     } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
+      setError(err.message || "Failed to send verification code.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ── Step 2: verify OTP ──
+  // ── Step 2: verify OTP & Register ──
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setOtpError("");
@@ -136,20 +167,32 @@ export function RegisterForm({
       setOtpError("Please enter all 6 digits.");
       return;
     }
+    
     setOtpLoading(true);
-    // TODO: wire up real OTP verify API call
-    // For now simulate a brief delay then redirect to login
-    setTimeout(() => {
-      setOtpLoading(false);
+    try {
+      // 1. Verify OTP first
+      await verifyOtp(email, code, "REGISTRATION");
+      
+      // 2. If verified, proceed with actual registration
+      await registerUser(email, password);
+      
       navigate("/login");
-    }, 800);
+    } catch (err: any) {
+      setOtpError(err.message || "Verification failed. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
-  const handleResendOtp = () => {
-    setOtp(Array(6).fill(""));
-    setOtpError("");
-    setResendDisabled(true);
-    setTimeout(() => setResendDisabled(false), 30_000);
+  const handleResendOtp = async () => {
+    try {
+      setOtp(Array(6).fill(""));
+      setOtpError("");
+      await sendRegisterOtp(email);
+      startTimer();
+    } catch (err: any) {
+      setOtpError(err.message || "Failed to resend OTP.");
+    }
   };
 
   // ── OTP step UI ──
@@ -206,7 +249,7 @@ export function RegisterForm({
                         : "text-zinc-900 hover:text-zinc-700"
                     )}
                   >
-                    Resend OTP
+                    Resend OTP {resendDisabled && `(${timer}s)`}
                   </button>
                 </p>
               </div>

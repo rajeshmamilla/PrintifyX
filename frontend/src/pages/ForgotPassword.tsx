@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { sendForgotOtp, verifyOtp, resetPassword } from "../services/api";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -96,22 +97,42 @@ const ForgotPassword = () => {
   const [resetError, setResetError] = useState("");
   const [resetLoading, setResetLoading] = useState(false);
   const [resetDone, setResetDone] = useState(false);
+  const [timer, setTimer] = useState(60);
+
+  // Countdown timer for resend
+  const startTimer = () => {
+    setResendDisabled(true);
+    setTimer(60);
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          setResendDisabled(false);
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
   // ── Step 1: send OTP ──
-  const handleSendOtp = (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setEmailLoading(true);
-    // TODO: call real API — POST /auth/forgot-password {email}
-    setTimeout(() => {
-      setEmailLoading(false);
+    setResetError(""); // clear any previous errors
+    try {
+      await sendForgotOtp(email);
       setStep("otp");
-      setResendDisabled(true);
-      setTimeout(() => setResendDisabled(false), 30_000);
-    }, 800);
+      startTimer();
+    } catch (err: any) {
+      setResetError(err.message || "Failed to send verification code.");
+    } finally {
+      setEmailLoading(false);
+    }
   };
 
   // ── Step 2: verify OTP ──
-  const handleVerifyOtp = (e: React.FormEvent) => {
+  const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setOtpError("");
     const code = otp.join("");
@@ -120,23 +141,29 @@ const ForgotPassword = () => {
       return;
     }
     setOtpLoading(true);
-    // TODO: call real API — POST /auth/verify-otp {email, otp}
-    setTimeout(() => {
-      setOtpLoading(false);
+    try {
+      await verifyOtp(email, code, "FORGOT_PASSWORD");
       setStep("reset");
-    }, 800);
+    } catch (err: any) {
+      setOtpError(err.message || "Invalid or expired OTP.");
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
-  const handleResendOtp = () => {
-    setOtp(Array(6).fill(""));
-    setOtpError("");
-    setResendDisabled(true);
-    // TODO: call real API to resend OTP
-    setTimeout(() => setResendDisabled(false), 30_000);
+  const handleResendOtp = async () => {
+    try {
+      setOtp(Array(6).fill(""));
+      setOtpError("");
+      await sendForgotOtp(email);
+      startTimer();
+    } catch (err: any) {
+      setOtpError(err.message || "Failed to resend OTP.");
+    }
   };
 
   // ── Step 3: reset password ──
-  const handleReset = (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setResetError("");
     if (newPassword.length < 8) {
@@ -148,11 +175,14 @@ const ForgotPassword = () => {
       return;
     }
     setResetLoading(true);
-    // TODO: call real API — POST /auth/reset-password {email, otp, newPassword}
-    setTimeout(() => {
-      setResetLoading(false);
+    try {
+      await resetPassword(email, newPassword);
       setResetDone(true);
-    }, 800);
+    } catch (err: any) {
+      setResetError(err.message || "Failed to reset password. Please try again.");
+    } finally {
+      setResetLoading(false);
+    }
   };
 
   // ── Card Content by step ──
@@ -217,6 +247,10 @@ const ForgotPassword = () => {
                 >
                   {emailLoading ? "Sending OTP..." : "Send OTP"}
                 </Button>
+
+                {resetError && (
+                  <p className="text-sm text-red-500 font-medium text-center">{resetError}</p>
+                )}
               </div>
 
               <div className="mt-4 text-center text-sm">
@@ -287,7 +321,7 @@ const ForgotPassword = () => {
                         : "text-zinc-900 hover:text-zinc-700"
                     )}
                   >
-                    Resend OTP
+                    Resend OTP {resendDisabled && `(${timer}s)`}
                   </button>
                 </p>
               </div>
