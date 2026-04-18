@@ -119,7 +119,12 @@ export function LoginForm({
               <Button type="submit" disabled={loading} className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm border border-transparent">
                 {loading ? "Logging in..." : "Login"}
               </Button>
-              <Button type="button" variant="outline" className="w-full h-10 font-medium" onClick={() => alert('Google login coming soon!')}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full h-10 font-medium" 
+                onClick={() => window.location.href = "http://localhost:8081/oauth2/authorization/google"}
+              >
                 Login with Google
               </Button>
             </div>

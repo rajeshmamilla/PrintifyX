@@ -1,8 +1,9 @@
 package com.printifyx.backend.service;
 
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import com.printifyx.backend.entity.User;
 import com.printifyx.backend.exception.EmailAlreadyExistsException;
@@ -40,5 +41,17 @@ public class UserService {
             return user;
         }
         throw new RuntimeException("Invalid email or password");
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public void resetPassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setRole("USER"); // Ensure role is maintained if needed, or just update password
+        userRepository.save(user);
     }
 }

@@ -20,6 +20,7 @@ import TrackOrderPage from "./pages/TrackOrderPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import BrowseDesignPage from "./pages/BrowseDesignPage";
 import CreateDesignPage from "./pages/CreateDesignPage";
+import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route path="/categories/business-cards" element={<BusinessCardsCategory />} />
         <Route path="/products/:productId" element={<ProductCustomizerPage />} />
         <Route path="/cart" element={<CartPage />} />
