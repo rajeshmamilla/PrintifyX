@@ -26,11 +26,20 @@ public class User {
     @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Column(nullable = false, length = 50)
     private String role = "USER";
+
+    @Column(length = 50)
+    private String provider = "LOCAL";
+
+    @Column(name = "provider_id")
+    private String providerId;
+
+    @Column(name = "picture_url")
+    private String pictureUrl;
 
    
 

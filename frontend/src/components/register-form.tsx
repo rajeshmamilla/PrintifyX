@@ -377,7 +377,7 @@ export function RegisterForm({
                 type="button"
                 variant="outline"
                 className="w-full h-10 font-medium"
-                onClick={() => alert("Google signup coming soon!")}
+                onClick={() => window.location.href = "http://localhost:8081/oauth2/authorization/google"}
               >
                 Sign up with Google
               </Button>

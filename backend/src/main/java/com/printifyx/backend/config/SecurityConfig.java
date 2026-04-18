@@ -25,9 +25,15 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final com.printifyx.backend.service.CustomOAuth2UserService oauth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oauth2SuccessHandler;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, 
+                          com.printifyx.backend.service.CustomOAuth2UserService oauth2UserService,
+                          OAuth2AuthenticationSuccessHandler oauth2SuccessHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.oauth2UserService = oauth2UserService;
+        this.oauth2SuccessHandler = oauth2SuccessHandler;
     }
 
     @Bean
@@ -40,6 +46,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
+                        .successHandler(oauth2SuccessHandler)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
