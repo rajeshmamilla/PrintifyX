@@ -97,7 +97,7 @@ const PaymentPage: React.FC = () => {
             setNotification({ message: 'Saving address...', type: 'success' });
 
             // Now perform actual checkout to create the order
-            const orderRes = await cartService.checkout(selectedMethod);
+            await cartService.checkout(selectedMethod);
 
             setNotification({ message: 'Order placed successfully!', type: 'success' });
             setTimeout(() => {

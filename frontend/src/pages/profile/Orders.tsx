@@ -16,11 +16,7 @@ const Orders: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [cancellingId, setCancellingId] = useState<number | null>(null);
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
+
 
   const userId = localStorage.getItem("userId");
   const isUserValid = userId && userId !== "undefined" && userId !== "null";
@@ -65,36 +61,7 @@ const Orders: React.FC = () => {
     }
   };
 
-  const handleCancelOrder = async (orderId: number) => {
-    if (
-      !window.confirm(
-        "Are you sure you want to cancel this order? This action cannot be undone.",
-      )
-    )
-      return;
 
-    try {
-      setCancellingId(orderId);
-      const res = await fetchWithAuth(`/orders/${orderId}/status`, {
-        method: "PATCH",
-        body: JSON.stringify({ status: "CANCELLED" }),
-      });
-
-      if (!res.ok) throw new Error("Failed to cancel order");
-
-      setNotification({
-        message: "Order cancelled successfully",
-        type: "success",
-      });
-      setTimeout(() => setNotification(null), 3000);
-      fetchOrders();
-    } catch (err: any) {
-      setNotification({ message: err.message, type: "error" });
-      setTimeout(() => setNotification(null), 3000);
-    } finally {
-      setCancellingId(null);
-    }
-  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -146,23 +113,7 @@ const Orders: React.FC = () => {
         </div>
       )}
 
-      {notification && (
-        <div
-          className={`fixed top-8 right-8 z-[2000] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-right-8 duration-300 ${notification.type === "success"
-            ? "bg-green-50 border-green-100 text-green-800"
-            : "bg-red-50 border-red-100 text-red-800"
-            }`}
-        >
-          {notification.type === "success" ? (
-            <CheckCircle2 size={24} />
-          ) : (
-            <AlertCircle size={24} />
-          )}
-          <p className="font-bold text-sm tracking-tight">
-            {notification.message}
-          </p>
-        </div>
-      )}
+
 
       {orders.length === 0 ? (
         <div className="bg-white rounded-xl p-16 flex flex-col items-center text-center border border-gray-100">
