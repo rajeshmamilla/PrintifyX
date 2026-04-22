@@ -13,5 +13,6 @@ public class ProductVariantDto {
     private Long id;
     private String variantName;
     private BigDecimal price;
+    private Boolean isActive;
     private List<VariantPricingDto> pricing;
 }

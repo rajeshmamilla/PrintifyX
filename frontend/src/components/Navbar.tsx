@@ -1,240 +1,114 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const MENU_DATA: Record<
-  Exclude<MenuType, null>,
-  {
-    title: string;
-    items: { name: string; path?: string }[];
-  }[]
-> = {
-  business: [
-    {
-      title: "Business Cards",
-      items: [
-        { name: "Standard Business Cards", path: "/products/standard-business-cards" },
-        { name: "Plastic Business Cards", path: "/products/plastic-business-cards" },
-      ],
-    },
-    {
-      title: "Postcards",
-      items: [
-        { name: "Standard Postcards" },
-        { name: "EDDM Postcards" }
-      ],
-    },
-    {
-      title: "Flyers & Brochures",
-      items: [
-        { name: "Business Flyers" },
-        { name: "Club Flyers" }
-      ],
-    },
-  ],
+interface ProductSummary {
+  id: number;
+  name: string;
+  slug: string;
+}
 
-  flyers: [
-    {
-      title: "Flyers",
-      items: [
-        { name: "Standard Flyers" },
-        { name: "Premium Flyers" },
-        { name: "Club Flyers" }
-      ],
-    },
-    {
-      title: "Brochures",
-      items: [
-        { name: "Bi-Fold" },
-        { name: "Tri-Fold" },
-        { name: "Z-Fold" }
-      ],
-    },
-    {
-      title: "Menus",
-      items: [
-        { name: "Restaurant Menus" },
-        { name: "Takeout Menus" }
-      ],
-    },
-  ],
-
-  banners: [
-    {
-      title: "Banners",
-      items: [
-        { name: "Vinyl Banners" },
-        { name: "Mesh Banners" },
-        { name: "Fabric Banners" }
-      ],
-    },
-    {
-      title: "Displays",
-      items: [
-        { name: "Roll-Up Banners" },
-        { name: "X-Stand Displays" }
-      ],
-    },
-    {
-      title: "Outdoor",
-      items: [
-        { name: "Fence Banners" },
-        { name: "Pole Banners" }
-      ],
-    },
-  ],
-
-  posters: [
-    {
-      title: "Posters",
-      items: [
-        { name: "Paper Posters" },
-        { name: "Photo Posters" }
-      ],
-    },
-    {
-      title: "Large Format",
-      items: [
-        { name: "Foam Board" },
-        { name: "Mounted Posters" }
-      ],
-    },
-    {
-      title: "Events",
-      items: [
-        { name: "Movie Posters" },
-        { name: "Event Posters" }
-      ],
-    },
-  ],
-
-  stickers: [
-    {
-      title: "Stickers",
-      items: [
-        { name: "Die-Cut Stickers" },
-        { name: "Kiss-Cut Stickers" }
-      ],
-    },
-    {
-      title: "Labels",
-      items: [
-        { name: "Product Labels" },
-        { name: "Bottle Labels" }
-      ],
-    },
-    {
-      title: "Decals",
-      items: [
-        { name: "Window Decals" },
-        { name: "Wall Decals" }
-      ],
-    },
-  ],
-};
-
-type MenuType =
-  | "business"
-  | "flyers"
-  | "banners"
-  | "posters"
-  | "stickers"
-  | null;
+interface CategoryWithProducts {
+  id: number;
+  name: string;
+  slug: string;
+  products: ProductSummary[];
+}
 
 const Navbar = () => {
-  const [activeMenu, setActiveMenu] = useState<MenuType>(null);
+  const [navCategories, setNavCategories] = useState<CategoryWithProducts[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
+
+  const fallbackCategories = [
+    { name: "Business Cards", slug: "business-cards" },
+    { name: "Flyers", slug: "flyers" },
+    { name: "Banners", slug: "banners" },
+    { name: "Posters", slug: "posters" },
+    { name: "Stickers", slug: "stickers" },
+  ];
+
+  useEffect(() => {
+    const fetchNavData = async () => {
+      try {
+        setLoading(true);
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const response = await fetch(`${baseUrl}/categories/with-products`);
+        if (response.ok) {
+          const data = await response.json();
+          setNavCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching navbar categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNavData();
+  }, []);
 
   const handlePlaceholderClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!");
+    alert("This category selection is currently limited. Please explore our available products!");
   };
+
+  const categoriesToRender = navCategories.length > 0 ? navCategories : fallbackCategories.map((c, i) => ({ ...c, id: -(i + 1), products: [] }));
 
   return (
     <nav
       className="relative bg-[#2b2b2b] h-[58px]"
-      onMouseLeave={() => setActiveMenu(null)}
+      onMouseLeave={() => setActiveMenuId(null)}
     >
       {/* NAV ITEMS */}
       <ul className="flex h-full items-center justify-center gap-10 text-white font-semibold">
-        <li
-          onMouseEnter={() => setActiveMenu("business")}
-          className="cursor-pointer hover:underline"
-        >
-          <Link to="/categories/business-cards">Business Cards</Link>
-        </li>
-        <li
-          onMouseEnter={() => setActiveMenu("flyers")}
-          className="cursor-pointer hover:underline"
-          onClick={handlePlaceholderClick}
-        >
-          Flyers
-        </li>
-        <li
-          onMouseEnter={() => setActiveMenu("banners")}
-          className="cursor-pointer hover:underline"
-          onClick={handlePlaceholderClick}
-        >
-          Banners
-        </li>
-        <li
-          onMouseEnter={() => setActiveMenu("posters")}
-          className="cursor-pointer hover:underline"
-          onClick={handlePlaceholderClick}
-        >
-          Posters
-        </li>
-        <li
-          onMouseEnter={() => setActiveMenu("stickers")}
-          className="cursor-pointer hover:underline"
-          onClick={handlePlaceholderClick}
-        >
-          Stickers
-        </li>
-      </ul>
+        {categoriesToRender.map((category) => (
+          <li
+            key={category.id}
+            onMouseEnter={() => setActiveMenuId(category.id)}
+            className="h-full flex items-center cursor-pointer hover:text-orange-500 transition-colors relative"
+          >
+            <Link 
+              to={`/categories/${category.slug}`}
+              className="hover:underline"
+              onClick={(e) => {
+                if (category.products.length === 0 && category.id < 0) {
+                     handlePlaceholderClick(e);
+                }
+              }}
+            >
+              {category.name}
+            </Link>
 
-      {/* MEGA MENU */}
-      {activeMenu && (
-        <div
-          className="
-          absolute left-1/2 top-full
-          -translate-x-1/2
-          w-[80%]
-          bg-white
-          shadow-xl
-          z-[100]
-        "
-        >
-          <div className="mx-auto grid max-w-[1100px] grid-cols-3 gap-10 px-10 py-8">
-            {MENU_DATA[activeMenu].map((section) => (
-              <div key={section.title}>
-                <h4 className="mb-2 text-[16px] font-semibold">
-                  {section.title}
-                </h4>
-                {section.items.map((item) => {
-                  const isBusinessCard = section.title === "Business Cards";
-                  return item.path && isBusinessCard ? (
+            {/* DROPDOWN */}
+            {activeMenuId === category.id && category.products.length > 0 && (
+              <div
+                className="
+                  absolute left-0 top-full
+                  w-64
+                  bg-white
+                  shadow-xl
+                  z-[100]
+                  border-t-2 border-orange-500
+                  animate-in fade-in slide-in-from-top-1
+                "
+              >
+                <div className="py-3">
+                  {category.products.map((product) => (
                     <Link
-                      key={item.name}
-                      to={item.path}
-                      className="block cursor-pointer text-[14px] hover:text-orange-500 mb-1"
-                      onClick={() => setActiveMenu(null)}
+                      key={product.id}
+                      to={`/products/${product.slug}`}
+                      className="block px-6 py-2.5 text-[14px] text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition-colors uppercase tracking-wide font-bold"
+                      onClick={() => setActiveMenuId(null)}
                     >
-                      {item.name}
+                      {product.name}
                     </Link>
-                  ) : (
-                    <p
-                      key={item.name}
-                      className="cursor-pointer text-[14px] hover:text-orange-500 mb-1"
-                      onClick={handlePlaceholderClick}
-                    >
-                      {item.name}
-                    </p>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 };

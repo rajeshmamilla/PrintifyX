@@ -23,6 +23,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductDetail(id));
     }
 
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<ProductDetailDto> getProductBySlug(@PathVariable String slug) {
+        try {
+            return ResponseEntity.ok(productService.getProductBySlug(slug));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<com.printifyx.backend.dto.ProductDto>> searchProducts(@RequestParam String keyword) {
         return ResponseEntity.ok(productService.searchProducts(keyword));
