@@ -30,7 +30,7 @@ public class CategoryService {
         return categoryRepository.findByIsActiveTrue().stream()
                 .map(cat -> {
                     List<ProductSummaryDto> products = productRepository.findByCategoryIdAndIsActiveTrue(cat.getId()).stream()
-                            .map(p -> new ProductSummaryDto(p.getId(), p.getName(), p.getSlug()))
+                            .map(p -> new ProductSummaryDto(p.getId(), p.getName(), p.getSlug(), p.getImageUrl()))
                             .collect(Collectors.toList());
                     return new CategoryWithProductsDto(cat.getId(), cat.getName(), cat.getSlug(), products);
                 })

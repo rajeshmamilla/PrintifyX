@@ -26,13 +26,13 @@ public class ProductService {
 
     public List<ProductDto> getProductsByCategory(Long categoryId) {
         return productRepository.findByCategoryIdAndIsActiveTrue(categoryId).stream()
-                .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice()))
+                .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice(), p.getImageUrl()))
                 .collect(Collectors.toList());
     }
 
     public List<ProductDto> searchProducts(String keyword) {
         return productRepository.findByNameContainingIgnoreCaseAndIsActiveTrue(keyword).stream()
-                .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice()))
+                .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice(), p.getImageUrl()))
                 .collect(Collectors.toList());
     }
 
@@ -45,12 +45,12 @@ public class ProductService {
                     List<VariantPricingDto> pricing = pricingRepository.findByVariantId(v.getId()).stream()
                             .map(pr -> new VariantPricingDto(pr.getId(), pr.getQuantity(), pr.getPrice()))
                             .collect(Collectors.toList());
-                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), v.getIsActive(), pricing);
+                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), v.getIsActive(), pricing, v.getImageUrl());
                 })
                 .collect(Collectors.toList());
 
         return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
-                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants);
+                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants, p.getImageUrl());
     }
 
     public ProductDetailDto getProductBySlug(String slug) {
@@ -62,11 +62,11 @@ public class ProductService {
                     List<VariantPricingDto> pricing = pricingRepository.findByVariantId(v.getId()).stream()
                             .map(pr -> new VariantPricingDto(pr.getId(), pr.getQuantity(), pr.getPrice()))
                             .collect(Collectors.toList());
-                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), v.getIsActive(), pricing);
+                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), v.getIsActive(), pricing, v.getImageUrl());
                 })
                 .collect(Collectors.toList());
 
         return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
-                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants);
+                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants, p.getImageUrl());
     }
 }

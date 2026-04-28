@@ -19,4 +19,5 @@ public class ProductDetailDto {
     private String categorySlug;
     private Boolean isActive;
     private List<ProductVariantDto> variants;
+    private String imageUrl;
 }

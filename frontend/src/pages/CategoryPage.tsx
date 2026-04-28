@@ -12,6 +12,7 @@ interface Product {
   id: number;
   name: string;
   slug: string;
+  imageUrl?: string;
 }
 
 interface Category {
@@ -118,7 +119,7 @@ const CategoryPage = () => {
               <CategoryProductCard
                 key={product.slug}
                 title={product.name}
-                image={standardBusinessCardsImg} // Fallback to standard image for grid display
+                image={product.imageUrl || standardBusinessCardsImg} 
                 link={`/products/${product.slug}`}
               />
             ))}

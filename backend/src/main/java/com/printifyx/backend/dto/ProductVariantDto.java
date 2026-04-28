@@ -15,4 +15,5 @@ public class ProductVariantDto {
     private BigDecimal price;
     private Boolean isActive;
     private List<VariantPricingDto> pricing;
+    private String imageUrl;
 }
