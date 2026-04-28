@@ -39,4 +39,7 @@ public class Product {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

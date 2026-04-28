@@ -50,7 +50,7 @@ public class ProductService {
                 .collect(Collectors.toList());
 
         return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
-                                    p.getBasePrice(), p.getCategory().getName(), p.getIsActive(), variants);
+                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants);
     }
 
     public ProductDetailDto getProductBySlug(String slug) {
@@ -67,6 +67,6 @@ public class ProductService {
                 .collect(Collectors.toList());
 
         return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
-                                    p.getBasePrice(), p.getCategory().getName(), p.getIsActive(), variants);
+                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants);
     }
 }

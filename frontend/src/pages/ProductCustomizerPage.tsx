@@ -156,7 +156,8 @@ const ProductCustomizerPage = () => {
         // Fallback to local imports based on slug
         if (productId === "plastic-business-cards") return plasticBusinessCardsImg;
         if (productId === "standard-business-cards") return standardBusinessCardsImg;
-        return null;
+        // Default to standard image for any other slug as a safe fallback
+        return standardBusinessCardsImg;
     };
 
     const getProductOptions = () => {
@@ -252,7 +253,9 @@ const ProductCustomizerPage = () => {
                             <span className="mx-2">/</span>
                         </li>
                         <li className="flex items-center">
-                            <Link to="/categories/business-cards" className="hover:text-blue-600 text-blue-600">Business Cards</Link>
+                            <Link to={`/categories/${productData.categorySlug}`} className="hover:text-blue-600 text-blue-600">
+                                {productData.categoryName}
+                            </Link>
                             <span className="mx-2">/</span>
                         </li>
                         <li className="text-gray-900 font-medium">{productData.name}</li>
