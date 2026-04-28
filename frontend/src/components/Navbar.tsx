@@ -16,7 +16,6 @@ interface CategoryWithProducts {
 
 const Navbar = () => {
   const [navCategories, setNavCategories] = useState<CategoryWithProducts[]>([]);
-  const [loading, setLoading] = useState(true);
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
 
   const fallbackCategories = [
@@ -30,7 +29,6 @@ const Navbar = () => {
   useEffect(() => {
     const fetchNavData = async () => {
       try {
-        setLoading(true);
         const baseUrl = import.meta.env.VITE_API_BASE_URL;
         const response = await fetch(`${baseUrl}/categories/with-products`);
         if (response.ok) {
@@ -39,8 +37,6 @@ const Navbar = () => {
         }
       } catch (error) {
         console.error("Error fetching navbar categories:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
