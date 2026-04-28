@@ -16,5 +16,7 @@ public class ProductDetailDto {
     private String description;
     private BigDecimal basePrice;
     private String categoryName;
+    private String categorySlug;
+    private Boolean isActive;
     private List<ProductVariantDto> variants;
 }

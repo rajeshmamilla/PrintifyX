@@ -24,9 +24,12 @@ public class AdminProductController {
         return ResponseEntity.ok(adminProductService.getAllProducts());
     }
 
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> createProduct(@RequestBody ProductRequest request) {
-        Long id = adminProductService.createProduct(request);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<Map<String, Object>> createProduct(
+            @RequestPart("product") ProductRequest request,
+            @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
+        
+        Long id = adminProductService.createProduct(request, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "id", id,
                 "status", "CREATED"

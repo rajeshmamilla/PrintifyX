@@ -1,6 +1,7 @@
 package com.printifyx.backend.controller;
 
 import com.printifyx.backend.dto.CategoryDto;
+import com.printifyx.backend.dto.CategoryWithProductsDto;
 import com.printifyx.backend.dto.ProductDto;
 import com.printifyx.backend.service.CategoryService;
 import com.printifyx.backend.service.ProductService;
@@ -23,6 +24,11 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllActiveCategories());
+    }
+
+    @GetMapping("/with-products")
+    public ResponseEntity<List<CategoryWithProductsDto>> getCategoriesWithProducts() {
+        return ResponseEntity.ok(categoryService.getCategoriesWithProducts());
     }
 
     @GetMapping("/{id}/products")

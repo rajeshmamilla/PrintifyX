@@ -45,11 +45,28 @@ public class ProductService {
                     List<VariantPricingDto> pricing = pricingRepository.findByVariantId(v.getId()).stream()
                             .map(pr -> new VariantPricingDto(pr.getId(), pr.getQuantity(), pr.getPrice()))
                             .collect(Collectors.toList());
-                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), pricing);
+                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), v.getIsActive(), pricing);
                 })
                 .collect(Collectors.toList());
 
         return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
-                                    p.getBasePrice(), p.getCategory().getName(), variants);
+                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants);
+    }
+
+    public ProductDetailDto getProductBySlug(String slug) {
+        Product p = productRepository.findBySlug(slug)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        List<ProductVariantDto> variants = variantRepository.findByProductIdAndIsActiveTrue(p.getId()).stream()
+                .map(v -> {
+                    List<VariantPricingDto> pricing = pricingRepository.findByVariantId(v.getId()).stream()
+                            .map(pr -> new VariantPricingDto(pr.getId(), pr.getQuantity(), pr.getPrice()))
+                            .collect(Collectors.toList());
+                    return new ProductVariantDto(v.getId(), v.getVariantName(), v.getPrice(), v.getIsActive(), pricing);
+                })
+                .collect(Collectors.toList());
+
+        return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
+                                    p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants);
     }
 }

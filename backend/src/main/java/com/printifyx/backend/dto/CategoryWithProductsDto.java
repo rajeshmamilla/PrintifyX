@@ -3,16 +3,14 @@ package com.printifyx.backend.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductVariantDto {
+public class CategoryWithProductsDto {
     private Long id;
-    private String variantName;
-    private BigDecimal price;
-    private Boolean isActive;
-    private List<VariantPricingDto> pricing;
+    private String name;
+    private String slug;
+    private List<ProductSummaryDto> products;
 }

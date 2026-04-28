@@ -9,4 +9,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByIsActiveTrue();
     List<Product> findByCategoryIdAndIsActiveTrue(Long categoryId);
     List<Product> findByNameContainingIgnoreCaseAndIsActiveTrue(String keyword);
+    java.util.Optional<Product> findBySlug(String slug);
 }

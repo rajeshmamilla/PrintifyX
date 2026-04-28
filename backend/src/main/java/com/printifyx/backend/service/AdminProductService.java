@@ -15,13 +15,16 @@ public class AdminProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public AdminProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    private final FileUploadService fileUploadService;
+
+    public AdminProductService(ProductRepository productRepository, CategoryRepository categoryRepository, FileUploadService fileUploadService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.fileUploadService = fileUploadService;
     }
 
     @Transactional
-    public Long createProduct(ProductRequest request) {
+    public Long createProduct(ProductRequest request, org.springframework.web.multipart.MultipartFile image) {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
@@ -32,6 +35,15 @@ public class AdminProductService {
         product.setDescription(request.getDescription());
         product.setBasePrice(request.getBasePrice());
         product.setIsActive(true);
+        
+        if (image != null && !image.isEmpty()) {
+            try {
+                String imageUrl = fileUploadService.uploadImage(image);
+                product.setImageUrl(imageUrl);
+            } catch (java.io.IOException e) {
+                throw new RuntimeException("Failed to upload image", e);
+            }
+        }
         
         return productRepository.save(product).getId();
     }

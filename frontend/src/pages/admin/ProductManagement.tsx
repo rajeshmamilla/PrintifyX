@@ -11,6 +11,8 @@ const ProductManagement = () => {
     const [filterCategory, setFilterCategory] = useState<string>("all");
     const [showModal, setShowModal] = useState(false);
     const [processingId, setProcessingId] = useState<number | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [newProduct, setNewProduct] = useState({
         name: "",
         slug: "",
@@ -59,21 +61,36 @@ const ProductManagement = () => {
     const handleCreateProduct = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            setIsSubmitting(true);
+            
+            const formData = new FormData();
+            
+            // Append product data as a JSON blob part to match @RequestPart("product")
+            const productData = {
+                ...newProduct,
+                basePrice: Number(newProduct.basePrice),
+                categoryId: Number(newProduct.categoryId)
+            };
+            formData.append("product", new Blob([JSON.stringify(productData)], { type: "application/json" }));
+            
+            if (imageFile) {
+                formData.append("image", imageFile);
+            }
+
             const res = await fetchWithAuth("/admin/products", {
                 method: "POST",
-                body: JSON.stringify({
-                    ...newProduct,
-                    basePrice: Number(newProduct.basePrice),
-                    categoryId: Number(newProduct.categoryId)
-                }),
+                body: formData, // fetch automatically sets the multipart/form-data boundary
             });
             if (res.ok) {
                 setShowModal(false);
                 setNewProduct({ name: "", slug: "", description: "", basePrice: 0, categoryId: "" });
+                setImageFile(null);
                 fetchData();
             }
         } catch (error) {
             console.error("Error creating product:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -165,22 +182,26 @@ const ProductManagement = () => {
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
                                     className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer text-gray-500"
                                 />
                             </div>
                             <div className="flex gap-4 pt-4">
                                 <button
                                     type="button"
+                                    disabled={isSubmitting}
                                     onClick={() => setShowModal(false)}
-                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg"
+                                    disabled={isSubmitting}
+                                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg disabled:opacity-50"
                                 >
-                                    Create Product
+                                    {isSubmitting && <Loader2 className="animate-spin" size={18} />}
+                                    {isSubmitting ? "Uploading..." : "Create Product"}
                                 </button>
                             </div>
                         </form>

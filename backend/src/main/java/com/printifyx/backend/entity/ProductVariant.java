@@ -29,4 +29,7 @@ public class ProductVariant {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

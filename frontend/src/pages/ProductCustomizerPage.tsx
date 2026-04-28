@@ -13,50 +13,14 @@ import { Upload, Grid, Edit3, X } from "lucide-react";
 import plasticBusinessCardsImg from "../assets/products/plastic business cards.png";
 import standardBusinessCardsImg from "../assets/products/standard business cards.png";
 
-// Mock Data Store
-const PRODUCT_DATA: Record<string, any> = {
-    "plastic-business-cards": {
-        title: "Plastic Business Cards",
-        category: "Business Cards",
-        image: plasticBusinessCardsImg,
-        options: {
-            Size: ["2 x 3.5 (U.S. Standard)", "3.35 x 2.17 (European Standard)"],
-            Quantity: ["100", "250", "500", "1000"],
-            "Select Shape": ["Rectangle", "Rounded Corners"],
-            Material: ["20 pt. White Plastic", "20 pt. Clear Plastic", "20 pt. Frosted Plastic"],
-            "Printing Sides": ["Single Sided", "Double Sided"],
-        },
-        basePrice: 1200, // Example base price in INR
-    },
-    "standard-business-cards": {
-        title: "Standard Business Cards",
-        category: "Business Cards",
-        image: standardBusinessCardsImg,
-        options: {
-            Size: ["2 x 3.5 (U.S. Standard)"],
-            Quantity: ["100", "250", "500", "1000", "2500"],
-            "Select Shape": ["Rectangle"],
-            Material: ["14 pt. Gloss Coated Cover", "16 pt. Premium Matte"],
-            "Printing Sides": ["Single Sided", "Double Sided"],
-        },
-        basePrice: 450,
-    },
-};
-
 const ProductCustomizerPage = () => {
     const navigate = useNavigate();
-    const { productId } = useParams<{ productId: string }>();
-    const product = productId ? PRODUCT_DATA[productId] : null;
-
-    // State for selections
-    const [selections, setSelections] = useState<Record<string, string>>(() => {
-        if (!product) return {};
-        const initial: Record<string, string> = {};
-        Object.keys(product.options).forEach((key) => {
-            initial[key] = product.options[key][0];
-        });
-        return initial;
-    });
+    const { productId } = useParams<{ productId: string }>(); // productId is the slug
+    
+    const [productData, setProductData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [selections, setSelections] = useState<Record<string, string>>({});
 
     const [cardDetails, setCardDetails] = useState({
         businessName: "",
@@ -70,6 +34,60 @@ const ProductCustomizerPage = () => {
 
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const fetchProductData = async () => {
+            try {
+                setLoading(true);
+                const baseUrl = import.meta.env.VITE_API_BASE_URL;
+                const response = await fetch(`${baseUrl}/products/slug/${productId}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        setError("Product not found");
+                    } else {
+                        setError("Failed to load product");
+                    }
+                    return;
+                }
+                
+                const data = await response.json();
+                setProductData(data);
+                
+                // Initialize selections from variants
+                const groups: Record<string, string[]> = {};
+                data.variants.forEach((v: any) => {
+                    const name = v.variantName;
+                    if (name.includes(":")) {
+                        const [cat, val] = name.split(":").map((s: string) => s.trim());
+                        if (!groups[cat]) groups[cat] = [];
+                        if (!groups[cat].includes(val)) groups[cat].push(val);
+                    } else {
+                        const cat = "Options";
+                        const val = name.trim();
+                        if (!groups[cat]) groups[cat] = [];
+                        if (!groups[cat].includes(val)) groups[cat].push(val);
+                    }
+                });
+
+                const initialSelections: Record<string, string> = {};
+                Object.keys(groups).forEach(key => {
+                    initialSelections[key] = groups[key][0];
+                });
+                setSelections(initialSelections);
+                
+            } catch (err) {
+                console.error("Error fetching product:", err);
+                setError("An error occurred while fetching product data");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (productId) {
+            fetchProductData();
+        }
+    }, [productId]);
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("email") || localStorage.getItem("userEmail") || "";
@@ -86,14 +104,30 @@ const ProductCustomizerPage = () => {
         }));
     }, []);
 
-    if (!product) {
+    if (loading) {
         return (
             <div className="min-h-screen bg-white flex flex-col">
                 <Header />
                 <Navbar />
                 <div className="flex-grow flex items-center justify-center">
                     <div className="text-center">
-                        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600 font-medium">Loading product details...</p>
+                    </div>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (error || !productData) {
+        return (
+            <div className="min-h-screen bg-white flex flex-col">
+                <Header />
+                <Navbar />
+                <div className="flex-grow flex items-center justify-center">
+                    <div className="text-center">
+                        <h1 className="text-2xl font-bold mb-4">{error || "Product Not Found"}</h1>
                         <Link to="/" className="text-blue-600 hover:underline">Return Home</Link>
                     </div>
                 </div>
@@ -107,8 +141,7 @@ const ProductCustomizerPage = () => {
     };
 
     const calculatePrice = () => {
-        // Simple mock calculation logic
-        let total = product.basePrice;
+        let total = productData.basePrice || 0;
         if (selections["Quantity"]) {
             total *= parseInt(selections["Quantity"]) / 100;
         }
@@ -116,6 +149,33 @@ const ProductCustomizerPage = () => {
             total += 200;
         }
         return total;
+    };
+
+    const getProductImage = () => {
+        if (productData.imageUrl) return productData.imageUrl;
+        // Fallback to local imports based on slug
+        if (productId === "plastic-business-cards") return plasticBusinessCardsImg;
+        if (productId === "standard-business-cards") return standardBusinessCardsImg;
+        // Default to standard image for any other slug as a safe fallback
+        return standardBusinessCardsImg;
+    };
+
+    const getProductOptions = () => {
+        const groups: Record<string, string[]> = {};
+        productData.variants.forEach((v: any) => {
+            const name = v.variantName;
+            if (name.includes(":")) {
+                const [cat, val] = name.split(":").map((s: string) => s.trim());
+                if (!groups[cat]) groups[cat] = [];
+                if (!groups[cat].includes(val)) groups[cat].push(val);
+            } else {
+                const cat = "Options";
+                const val = name.trim();
+                if (!groups[cat]) groups[cat] = [];
+                if (!groups[cat].includes(val)) groups[cat].push(val);
+            }
+        });
+        return groups;
     };
 
     const handleAddToCart = async (showAlert = true) => {
@@ -138,8 +198,8 @@ const ProductCustomizerPage = () => {
             const unitPrice = totalPrice / quantity;
 
             await cartService.addItem({
-                productId: productId === "plastic-business-cards" ? 1 : 2, // Mock IDs
-                productName: product.title,
+                productId: productData.id,
+                productName: productData.name,
                 unitPrice: unitPrice,
                 quantity: quantity,
                 totalPrice: totalPrice,
@@ -193,17 +253,19 @@ const ProductCustomizerPage = () => {
                             <span className="mx-2">/</span>
                         </li>
                         <li className="flex items-center">
-                            <Link to="/categories/business-cards" className="hover:text-blue-600 text-blue-600">Business Cards</Link>
+                            <Link to={`/categories/${productData.categorySlug}`} className="hover:text-blue-600 text-blue-600">
+                                {productData.categoryName}
+                            </Link>
                             <span className="mx-2">/</span>
                         </li>
-                        <li className="text-gray-900 font-medium">{product.title}</li>
+                        <li className="text-gray-900 font-medium">{productData.name}</li>
                     </ol>
                 </nav>
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Left: Image Gallery & Card Details */}
                     <div className="w-full lg:w-1/2 space-y-4">
-                        <ProductImageGallery image={product.image} alt={product.title} />
+                        <ProductImageGallery image={getProductImage()} alt={productData.name} />
 
                         {/* Card Details / Print Instructions Section */}
                         <div className="bg-white border rounded-lg p-4 shadow-sm">
@@ -297,9 +359,9 @@ const ProductCustomizerPage = () => {
                     <div className="w-full lg:w-1/2">
                         <div className="mb-6">
                             <h1 className="text-3xl font-bold text-gray-900 inline-block mr-2">
-                                {product.title}
+                                {productData.name}
                             </h1>
-                            <span className="text-gray-400 text-sm">({product.category})</span>
+                            <span className="text-gray-400 text-sm">({productData.categoryName})</span>
                         </div>
 
                         <div className="bg-white border rounded-lg p-4 shadow-sm">
@@ -310,11 +372,11 @@ const ProductCustomizerPage = () => {
                                 </button>
                             </div>
 
-                            {Object.keys(product.options).map((key) => (
+                            {Object.keys(getProductOptions()).map((key) => (
                                 <ProductOptionSelect
                                     key={key}
                                     label={key}
-                                    options={product.options[key]}
+                                    options={getProductOptions()[key]}
                                     value={selections[key]}
                                     onChange={(val) => handleOptionChange(key, val)}
                                 />

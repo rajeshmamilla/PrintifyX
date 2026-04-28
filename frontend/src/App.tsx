@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import BusinessCardsCategory from "./pages/BusinessCardsCategory";
+import CategoryPage from "./pages/CategoryPage";
 import ProductCustomizerPage from "./pages/ProductCustomizerPage";
 import CartPage from "./pages/CartPage";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -32,7 +32,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
-        <Route path="/categories/business-cards" element={<BusinessCardsCategory />} />
+        <Route path="/categories/:categorySlug" element={<CategoryPage />} />
         <Route path="/products/:productId" element={<ProductCustomizerPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/payment" element={<PaymentPage />} />
