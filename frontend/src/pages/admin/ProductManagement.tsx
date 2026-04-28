@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, ToggleLeft, ToggleRight, Loader2, Filter } from "lucide-react";
+import { Plus, ToggleLeft, ToggleRight, Loader2, Filter, Edit, Trash2 } from "lucide-react";
 import { fetchWithAuth } from "../../services/apiClient";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -13,6 +13,7 @@ const ProductManagement = () => {
     const [processingId, setProcessingId] = useState<number | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [editingProductId, setEditingProductId] = useState<number | null>(null);
     const [newProduct, setNewProduct] = useState({
         name: "",
         slug: "",
@@ -58,14 +59,51 @@ const ProductManagement = () => {
         }
     };
 
-    const handleCreateProduct = async (e: React.FormEvent) => {
+    const openCreateModal = () => {
+        setEditingProductId(null);
+        setNewProduct({ name: "", slug: "", description: "", basePrice: 0, categoryId: "" });
+        setImageFile(null);
+        setShowModal(true);
+    };
+
+    const openEditModal = (product: any) => {
+        setEditingProductId(product.id);
+        setNewProduct({
+            name: product.name,
+            slug: product.slug,
+            description: product.description || "",
+            basePrice: product.basePrice,
+            categoryId: product.category?.id || ""
+        });
+        setImageFile(null);
+        setShowModal(true);
+    };
+
+    const handleDeleteProduct = async (id: number) => {
+        if (!window.confirm("Are you sure you want to delete this product? This action cannot be undone.")) return;
+        
+        try {
+            setProcessingId(id);
+            const res = await fetchWithAuth(`/admin/products/${id}`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                fetchData();
+            }
+        } catch (error) {
+            console.error("Error deleting product:", error);
+        } finally {
+            setProcessingId(null);
+        }
+    };
+
+    const handleSubmitProduct = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setIsSubmitting(true);
             
             const formData = new FormData();
             
-            // Append product data as a JSON blob part to match @RequestPart("product")
             const productData = {
                 ...newProduct,
                 basePrice: Number(newProduct.basePrice),
@@ -77,18 +115,23 @@ const ProductManagement = () => {
                 formData.append("image", imageFile);
             }
 
-            const res = await fetchWithAuth("/admin/products", {
-                method: "POST",
-                body: formData, // fetch automatically sets the multipart/form-data boundary
+            const url = editingProductId ? `/admin/products/${editingProductId}` : "/admin/products";
+            const method = editingProductId ? "PUT" : "POST";
+
+            const res = await fetchWithAuth(url, {
+                method: method,
+                body: formData,
             });
+            
             if (res.ok) {
                 setShowModal(false);
                 setNewProduct({ name: "", slug: "", description: "", basePrice: 0, categoryId: "" });
                 setImageFile(null);
+                setEditingProductId(null);
                 fetchData();
             }
         } catch (error) {
-            console.error("Error creating product:", error);
+            console.error("Error saving product:", error);
         } finally {
             setIsSubmitting(false);
         }
@@ -113,16 +156,26 @@ const ProductManagement = () => {
                     <h2 className="text-2xl font-bold text-gray-800">Product Management</h2>
                     <p className="text-gray-500 text-sm">Create and manage your products across categories.</p>
                 </div>
-                <Dialog open={showModal} onOpenChange={setShowModal}>
-                    <DialogTrigger render={<Button variant="secondary" className="flex items-center gap-2 shadow-sm font-bold" />}>
-                        <Plus size={20} />
-                        <span>Add Product</span>
+                <Dialog open={showModal} onOpenChange={(open) => {
+                    if (!open) {
+                        setEditingProductId(null);
+                        setNewProduct({ name: "", slug: "", description: "", basePrice: 0, categoryId: "" });
+                    }
+                    setShowModal(open);
+                }}>
+                    <DialogTrigger asChild>
+                        <Button onClick={openCreateModal} variant="secondary" className="flex items-center gap-2 shadow-sm font-bold">
+                            <Plus size={20} />
+                            <span>Add Product</span>
+                        </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-lg rounded-2xl bg-white p-8 overflow-y-auto max-h-[90vh]">
                         <DialogHeader>
-                            <DialogTitle className="text-xl font-bold text-gray-800 mb-6">Add New Product</DialogTitle>
+                            <DialogTitle className="text-xl font-bold text-gray-800 mb-6">
+                                {editingProductId ? "Edit Product" : "Add New Product"}
+                            </DialogTitle>
                         </DialogHeader>
-                        <form onSubmit={handleCreateProduct} className="space-y-4">
+                        <form onSubmit={handleSubmitProduct} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Product Name</label>
@@ -201,7 +254,7 @@ const ProductManagement = () => {
                                     className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-orange-500 hover:bg-orange-600 transition-colors shadow-lg disabled:opacity-50"
                                 >
                                     {isSubmitting && <Loader2 className="animate-spin" size={18} />}
-                                    {isSubmitting ? "Uploading..." : "Create Product"}
+                                    {isSubmitting ? "Saving..." : (editingProductId ? "Update Product" : "Create Product")}
                                 </button>
                             </div>
                         </form>
@@ -266,21 +319,38 @@ const ProductManagement = () => {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <button
-                                        disabled={processingId === p.id}
-                                        onClick={() => handleToggleStatus(p.id)}
-                                        className={`flex items-center gap-2 text-sm font-bold transition-colors ${p.isActive ? "text-red-500 hover:text-red-600" : "text-green-500 hover:text-green-600"
-                                            }`}
-                                    >
-                                        {processingId === p.id ? (
-                                            <Loader2 className="animate-spin" size={20} />
-                                        ) : p.isActive ? (
-                                            <ToggleRight size={24} />
-                                        ) : (
-                                            <ToggleLeft size={24} />
-                                        )}
-                                        <span>{p.isActive ? "Disable" : "Enable"}</span>
-                                    </button>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            disabled={processingId === p.id}
+                                            onClick={() => handleToggleStatus(p.id)}
+                                            className={`flex items-center gap-1 text-sm font-bold transition-colors ${p.isActive ? "text-green-500 hover:text-green-600" : "text-gray-400 hover:text-gray-500"
+                                                }`}
+                                            title={p.isActive ? "Disable Product" : "Enable Product"}
+                                        >
+                                            {processingId === p.id ? (
+                                                <Loader2 className="animate-spin" size={20} />
+                                            ) : p.isActive ? (
+                                                <ToggleRight size={22} />
+                                            ) : (
+                                                <ToggleLeft size={22} />
+                                            )}
+                                        </button>
+                                        <button
+                                            onClick={() => openEditModal(p)}
+                                            className="text-blue-500 hover:text-blue-600 transition-colors"
+                                            title="Edit Product"
+                                        >
+                                            <Edit size={18} />
+                                        </button>
+                                        <button
+                                            disabled={processingId === p.id}
+                                            onClick={() => handleDeleteProduct(p.id)}
+                                            className="text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
+                                            title="Delete Product"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
