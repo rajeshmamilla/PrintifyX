@@ -142,9 +142,9 @@ const ProductCustomizerPage = () => {
 
     const calculatePrice = () => {
         let total = productData.basePrice || 0;
-        if (selections["Quantity"]) {
-            total *= parseInt(selections["Quantity"]) / 100;
-        }
+        const qty = parseInt(selections["Quantity"] || "100");
+        total *= qty;
+        
         if (selections["Printing Sides"] === "Double Sided") {
             total += 200;
         }
@@ -263,99 +263,93 @@ const ProductCustomizerPage = () => {
                 </nav>
 
                 <div className="flex flex-col lg:flex-row gap-8">
-                    {/* Left: Image Gallery & Card Details */}
+                    {/* Left: Image Gallery & Options/Upload */}
                     <div className="w-full lg:w-1/2 space-y-4">
                         <ProductImageGallery image={getProductImage()} alt={productData.name} />
 
-                        {/* Card Details / Print Instructions Section */}
+                        {/* Options and Uploads Section */}
                         <div className="bg-white border rounded-lg p-4 shadow-sm">
-                            <h2 className="text-lg font-bold text-gray-900 mb-3 border-b pb-2">
-                                Card Details / Print Instructions
-                            </h2>
-                            <div className="space-y-2">
-                                <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-semibold text-gray-700">
-                                        Business Name <span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={cardDetails.businessName}
-                                        onChange={(e) => setCardDetails({ ...cardDetails, businessName: e.target.value })}
-                                        placeholder="Enter your business name"
-                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
-                                        required
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-semibold text-gray-700">Tagline / Short Description</label>
-                                    <input
-                                        type="text"
-                                        value={cardDetails.tagline}
-                                        onChange={(e) => setCardDetails({ ...cardDetails, tagline: e.target.value })}
-                                        placeholder="e.g. Premium Printing Services"
-                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-semibold text-gray-700">Contact Number</label>
-                                        <input
-                                            type="text"
-                                            value={cardDetails.contactNumber}
-                                            onChange={(e) => setCardDetails({ ...cardDetails, contactNumber: e.target.value })}
-                                            placeholder="+91 000 000 0000"
-                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
-                                        />
+                            <div className="flex justify-between items-center mb-2 border-b pb-2">
+                                <h2 className="text-lg font-bold text-gray-900">Customize & Upload</h2>
+                                <button className="text-blue-600 text-sm hover:underline flex items-center">
+                                    <span className="mr-1">Share Product</span>
+                                </button>
+                            </div>
+
+                            {/* Upload Sample Section */}
+                            <div className="mb-4">
+                                {selectedFile && (
+                                    <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded p-3 mb-3">
+                                        <div className="flex items-center gap-2 overflow-hidden">
+                                            <Upload size={16} className="text-blue-600 flex-shrink-0" />
+                                            <span className="text-sm text-gray-700 truncate font-medium">
+                                                {selectedFile}
+                                            </span>
+                                        </div>
+                                        <button
+                                            onClick={handleRemoveFile}
+                                            className="p-1 hover:bg-gray-200 rounded-full text-gray-500 hover:text-gray-700 transition-colors"
+                                            title="Remove file"
+                                        >
+                                            <X size={16} />
+                                        </button>
                                     </div>
-                                    <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-semibold text-gray-700">Email</label>
-                                        <input
-                                            type="email"
-                                            value={cardDetails.email}
-                                            onChange={(e) => setCardDetails({ ...cardDetails, email: e.target.value })}
-                                            placeholder="hello@example.com"
-                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
-                                        />
+                                )}
+
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                    accept="image/*,.pdf,.ai,.psd"
+                                />
+
+                                <button
+                                    onClick={handleUploadClick}
+                                    className="w-full flex items-center justify-center gap-2 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-sm transition-colors"
+                                >
+                                    <Upload size={18} />
+                                    <span className="tracking-wider uppercase text-sm">Upload Sample</span>
+                                </button>
+                            </div>
+
+                            {/* Quantity Selector */}
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-50 border border-gray-200 rounded-md p-4 mt-4">
+                                <div className="mb-3 sm:mb-0">
+                                    <span className="text-base font-semibold text-gray-800">Quantity</span>
+                                    <div className="text-sm text-gray-500 mt-1">
+                                        ₹{productData.basePrice?.toLocaleString()} / unit
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-semibold text-gray-700">Website</label>
-                                    <input
-                                        type="text"
-                                        value={cardDetails.website}
-                                        onChange={(e) => setCardDetails({ ...cardDetails, website: e.target.value })}
-                                        placeholder="www.example.com"
-                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                <div className="flex items-center border border-gray-300 bg-white rounded-md overflow-hidden shadow-sm">
+                                    <button 
+                                        className="w-12 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 border-r border-gray-300 transition-colors text-lg font-medium"
+                                        onClick={() => {
+                                            const current = parseInt(selections["Quantity"] || "100");
+                                            if (current > 100) handleOptionChange("Quantity", (current - 100).toString());
+                                        }}
+                                    >-</button>
+                                    <input 
+                                        type="number" 
+                                        className="w-20 h-10 text-center text-base font-medium outline-none text-gray-800"
+                                        value={selections["Quantity"] || "100"}
+                                        onChange={(e) => handleOptionChange("Quantity", e.target.value)}
+                                        min="100"
+                                        step="100"
                                     />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-semibold text-gray-700">
-                                        Address <span className="text-red-500">*</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={cardDetails.address}
-                                        onChange={(e) => setCardDetails({ ...cardDetails, address: e.target.value })}
-                                        placeholder="Enter full address"
-                                        className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
-                                        required
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-semibold text-gray-700">Additional Instructions</label>
-                                    <textarea
-                                        value={cardDetails.instructions}
-                                        onChange={(e) => setCardDetails({ ...cardDetails, instructions: e.target.value })}
-                                        placeholder="Any specific layout or design requests..."
-                                        rows={2}
-                                        className="w-full p-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800 resize-none"
-                                    />
+                                    <button 
+                                        className="w-12 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 border-l border-gray-300 transition-colors text-lg font-medium"
+                                        onClick={() => {
+                                            const current = parseInt(selections["Quantity"] || "100");
+                                            handleOptionChange("Quantity", (current + 100).toString());
+                                        }}
+                                    >+</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right: Configurator */}
+                    {/* Right: Title, Card Details & Price Summary */}
                     <div className="w-full lg:w-1/2">
                         <div className="mb-6">
                             <h1 className="text-3xl font-bold text-gray-900 inline-block mr-2">
@@ -364,83 +358,102 @@ const ProductCustomizerPage = () => {
                             <span className="text-gray-400 text-sm">({productData.categoryName})</span>
                         </div>
 
-                        <div className="bg-white border rounded-lg p-4 shadow-sm">
-                            <div className="flex justify-between items-center mb-2 border-b pb-2">
-                                <h2 className="text-lg font-bold text-gray-900">Price Calculator</h2>
-                                <button className="text-blue-600 text-sm hover:underline flex items-center">
-                                    <span className="mr-1">Share Product</span>
-                                </button>
-                            </div>
-
-                            {Object.keys(getProductOptions()).map((key) => (
-                                <ProductOptionSelect
-                                    key={key}
-                                    label={key}
-                                    options={getProductOptions()[key]}
-                                    value={selections[key]}
-                                    onChange={(val) => handleOptionChange(key, val)}
-                                />
-                            ))}
-
-                            <div className="mt-4 bg-[#0D121F] rounded-xl p-4 shadow-2xl">
+                        <div className="space-y-4">
+                            {/* Card Details / Print Instructions Section */}
+                            <div className="bg-white border rounded-lg p-4 shadow-sm">
+                                <h2 className="text-lg font-bold text-gray-900 mb-3 border-b pb-2">
+                                    Card Details / Print Instructions
+                                </h2>
                                 <div className="space-y-2">
-                                    {selectedFile && (
-                                        <div className="flex items-center justify-between bg-[#1a1f2e] border border-gray-700 rounded p-2 mb-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                                            <div className="flex items-center gap-2 overflow-hidden">
-                                                <Upload size={14} className="text-[#2196F3] flex-shrink-0" />
-                                                <span className="text-xs text-gray-300 truncate font-medium">
-                                                    {selectedFile}
-                                                </span>
-                                            </div>
-                                            <button
-                                                onClick={handleRemoveFile}
-                                                className="p-1 hover:bg-gray-800 rounded-full text-gray-400 hover:text-white transition-colors"
-                                                title="Remove file"
-                                            >
-                                                <X size={14} />
-                                            </button>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">
+                                            Business Name <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={cardDetails.businessName}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, businessName: e.target.value })}
+                                            placeholder="Enter your business name"
+                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">Tagline / Short Description</label>
+                                        <input
+                                            type="text"
+                                            value={cardDetails.tagline}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, tagline: e.target.value })}
+                                            placeholder="e.g. Premium Printing Services"
+                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-sm font-semibold text-gray-700">Contact Number</label>
+                                            <input
+                                                type="text"
+                                                value={cardDetails.contactNumber}
+                                                onChange={(e) => setCardDetails({ ...cardDetails, contactNumber: e.target.value })}
+                                                placeholder="+91 000 000 0000"
+                                                className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                            />
                                         </div>
-                                    )}
-
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        onChange={handleFileChange}
-                                        className="hidden"
-                                        accept="image/*,.pdf,.ai,.psd"
-                                    />
-
-                                    <button
-                                        onClick={handleUploadClick}
-                                        className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
-                                    >
-                                        <Upload size={20} className="group-hover:scale-110 transition-transform" />
-                                        <span className="tracking-wider uppercase text-xs">Upload Design</span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => navigate("/browse-design")}
-                                        className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
-                                    >
-                                        <Grid size={20} className="group-hover:scale-110 transition-transform" />
-                                        <span className="tracking-wider uppercase text-xs">Browse Design</span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => navigate("/create-design")}
-                                        className="w-full flex items-center justify-center gap-3 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-lg transition-all group"
-                                    >
-                                        <Edit3 size={20} className="group-hover:scale-110 transition-transform" />
-                                        <span className="tracking-wider uppercase text-xs">Custom Design</span>
-                                    </button>
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-sm font-semibold text-gray-700">Email</label>
+                                            <input
+                                                type="email"
+                                                value={cardDetails.email}
+                                                onChange={(e) => setCardDetails({ ...cardDetails, email: e.target.value })}
+                                                placeholder="hello@example.com"
+                                                className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">Website</label>
+                                        <input
+                                            type="text"
+                                            value={cardDetails.website}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, website: e.target.value })}
+                                            placeholder="www.example.com"
+                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">
+                                            Address <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={cardDetails.address}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, address: e.target.value })}
+                                            placeholder="Enter full address"
+                                            className="w-full h-9 px-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-semibold text-gray-700">Additional Instructions</label>
+                                        <textarea
+                                            value={cardDetails.instructions}
+                                            onChange={(e) => setCardDetails({ ...cardDetails, instructions: e.target.value })}
+                                            placeholder="Any specific layout or design requests..."
+                                            rows={2}
+                                            className="w-full p-3 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-gray-800 resize-none"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            <PriceSummary
-                                price={calculatePrice()}
-                                onAddToCart={handleAddToCart}
-                                onBuyNow={handleBuyNow}
-                            />
+                            {/* Price Summary Section */}
+                            <div className="bg-white border rounded-lg p-4 shadow-sm">
+                                <PriceSummary
+                                    price={calculatePrice()}
+                                    onAddToCart={handleAddToCart}
+                                    onBuyNow={handleBuyNow}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

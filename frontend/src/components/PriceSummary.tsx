@@ -21,8 +21,11 @@ const PriceSummary: React.FC<PriceSummaryProps> = ({
 
     return (
         <div className="mt-2 pt-2 border-t border-gray-100">
-            <div className="flex justify-between items-center mb-2">
-                <span className="text-lg font-bold text-gray-900">Total:</span>
+            <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center gap-1.5">
+                    <span className="text-lg font-bold text-gray-900">Total:</span>
+                    <span className="text-[11px] text-gray-500 font-medium mt-1">(Delivery charges may Apply)</span>
+                </div>
                 <span className="text-2xl font-bold text-blue-600">{formattedPrice}</span>
             </div>
 
