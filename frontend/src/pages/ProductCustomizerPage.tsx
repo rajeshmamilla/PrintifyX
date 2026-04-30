@@ -7,7 +7,8 @@ import ProductImageGallery from "../components/ProductImageGallery";
 import ProductOptionSelect from "../components/ProductOptionSelect";
 import PriceSummary from "../components/PriceSummary";
 import { cartService } from "../services/cart.service";
-import { Upload, Grid, Edit3, X } from "lucide-react";
+import { fetchWithAuth } from "../services/apiClient";
+import { Upload, Grid, Edit3, X, Loader2 } from "lucide-react";
 
 // Import images
 import plasticBusinessCardsImg from "../assets/products/plastic business cards.png";
@@ -33,6 +34,7 @@ const ProductCustomizerPage = () => {
     });
 
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -225,10 +227,35 @@ const ProductCustomizerPage = () => {
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
+        if (!file) return;
+
+        try {
+            setIsUploading(true);
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const res = await fetchWithAuth("/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error("Upload failed");
+
+            const data = await res.json();
+            const imageUrl = data.url;
+
             setSelectedFile(file.name);
+            setSelections(prev => ({
+                ...prev,
+                sampleImageUrl: imageUrl
+            }));
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            alert("Failed to upload image. Please try again.");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -306,10 +333,17 @@ const ProductCustomizerPage = () => {
 
                                 <button
                                     onClick={handleUploadClick}
-                                    className="w-full flex items-center justify-center gap-2 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-sm transition-colors"
+                                    disabled={isUploading}
+                                    className={`w-full flex items-center justify-center gap-2 py-3 bg-[#2196F3] hover:bg-[#1E88E5] text-white font-bold rounded shadow-sm transition-colors ${isUploading ? "opacity-75 cursor-not-allowed" : ""}`}
                                 >
-                                    <Upload size={18} />
-                                    <span className="tracking-wider uppercase text-sm">Upload Sample</span>
+                                    {isUploading ? (
+                                        <Loader2 size={18} className="animate-spin" />
+                                    ) : (
+                                        <Upload size={18} />
+                                    )}
+                                    <span className="tracking-wider uppercase text-sm">
+                                        {isUploading ? "Uploading..." : "Upload Sample"}
+                                    </span>
                                 </button>
                             </div>
 
