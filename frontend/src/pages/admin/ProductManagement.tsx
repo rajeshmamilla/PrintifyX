@@ -163,12 +163,14 @@ const ProductManagement = () => {
                     }
                     setShowModal(open);
                 }}>
-                    <DialogTrigger asChild>
-                        <Button onClick={openCreateModal} variant="secondary" className="flex items-center gap-2 shadow-sm font-bold">
-                            <Plus size={20} />
-                            <span>Add Product</span>
-                        </Button>
-                    </DialogTrigger>
+                    <DialogTrigger
+                        render={
+                            <Button onClick={openCreateModal} variant="secondary" className="flex items-center gap-2 shadow-sm font-bold">
+                                <Plus size={20} />
+                                <span>Add Product</span>
+                            </Button>
+                        }
+                    />
                     <DialogContent className="sm:max-w-lg rounded-2xl bg-white p-8 overflow-y-auto max-h-[90vh]">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-bold text-gray-800 mb-6">
