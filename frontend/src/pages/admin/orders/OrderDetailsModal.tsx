@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Loader2, Package } from 'lucide-react';
+import { X, Loader2, Package, Download } from 'lucide-react';
 import OrderItemsTable from './OrderItemsTable';
 import { fetchWithAuth } from "../../../services/apiClient";
 
@@ -57,6 +57,40 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
         }
     };
 
+    const extractSampleUrl = (items: any[]) => {
+        if (!items || !items.length) return null;
+        for (const item of items) {
+            let cust = item.customization;
+            if (typeof cust === 'string') {
+                try { cust = JSON.parse(cust); } catch (e) { }
+            }
+            if (!cust) continue;
+            const url = cust.sampleImageUrl || cust.imageUrl || cust.url || cust.designUrl || cust.sample_url;
+            if (url && typeof url === 'string' && url.includes('http')) return url;
+            const cloudUrl = Object.values(cust).find(v => typeof v === 'string' && v.includes('cloudinary.com'));
+            if (cloudUrl) return cloudUrl as string;
+        }
+        return null;
+    };
+
+    const handleDownloadSample = async (url: string) => {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = `Order_${order.orderNumber}_Sample.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (err) {
+            console.error('Download failed', err);
+            window.open(url, '_blank');
+        }
+    };
+
     if (loading) {
         return (
             <div className="fixed inset-0 bg-black/50 z-[1000] flex items-center justify-center p-4">
@@ -95,18 +129,32 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ orderId, onClose 
 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto p-8 space-y-8">
-                    {/* Customer Info */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
-                        <div>
-                            <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Customer Information</h3>
-                            <p className="font-bold text-gray-900">{order.customerName}</p>
-                            <p className="text-sm text-gray-600">{order.customerEmail}</p>
-                            <p className="text-sm text-gray-600">{order.customerPhone}</p>
-                        </div>
-                        <div>
-                            <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Order Summary</h3>
-                            <p className="text-sm text-gray-600 font-medium">Status: <span className="font-semibold text-gray-900">{order.status}</span></p>
-                            <p className="text-lg font-semibold text-gray-900 mt-1">Total: ₹{order.totalAmount.toLocaleString()}</p>
+                    {/* Customer Info & Order Summary */}
+                    <div className="bg-gray-50 p-6 rounded-lg border border-gray-100 relative">
+                        {(() => {
+                            const url = extractSampleUrl(order.items || []);
+                            return url ? (
+                                <button
+                                    onClick={() => handleDownloadSample(url)}
+                                    className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg font-bold text-xs hover:bg-gray-100 transition-all shadow-sm active:scale-95"
+                                >
+                                    <Download size={14} />
+                                    Download Sample
+                                </button>
+                            ) : null;
+                        })()}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Customer Information</h3>
+                                <p className="font-bold text-gray-900">{order.customerName}</p>
+                                <p className="text-sm text-gray-600">{order.customerEmail}</p>
+                                <p className="text-sm text-gray-600">{order.customerPhone}</p>
+                            </div>
+                            <div>
+                                <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Order Summary</h3>
+                                <p className="text-sm text-gray-600 font-medium">Status: <span className="font-semibold text-gray-900">{order.status}</span></p>
+                                <p className="text-lg font-semibold text-gray-900 mt-1">Total: ₹{order.totalAmount.toLocaleString()}</p>
+                            </div>
                         </div>
                     </div>
 

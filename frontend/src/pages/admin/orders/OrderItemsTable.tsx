@@ -33,20 +33,29 @@ const OrderItemsTable: React.FC<OrderItemsTableProps> = ({ items }) => {
                         <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                             <td className="px-4 py-4 text-sm font-bold text-gray-800">{item.productName}</td>
                             <td className="px-4 py-4 text-sm text-gray-600">
-                                {item.customization?.sampleImageUrl ? (
-                                    <a 
-                                        href={item.customization.sampleImageUrl} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-semibold transition-colors"
-                                    >
-                                        <ImageIcon size={14} />
-                                        <span>View Sample</span>
-                                        <ExternalLink size={12} />
-                                    </a>
-                                ) : (
-                                    <span className="text-gray-400 italic">No sample</span>
-                                )}
+                                {(() => {
+                                    let cust = item.customization;
+                                    if (typeof cust === 'string') {
+                                        try { cust = JSON.parse(cust); } catch (e) { }
+                                    }
+                                    const sampleUrl = cust?.sampleImageUrl || cust?.imageUrl || cust?.url || cust?.designUrl ||
+                                                     Object.values(cust || {}).find(v => typeof v === 'string' && v.includes('cloudinary.com'));
+                                    
+                                    return sampleUrl ? (
+                                        <a 
+                                            href={sampleUrl as string} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                                        >
+                                            <ImageIcon size={14} />
+                                            <span>View Sample</span>
+                                            <ExternalLink size={12} />
+                                        </a>
+                                    ) : (
+                                        <span className="text-gray-400 italic">No sample</span>
+                                    );
+                                })()}
                             </td>
                             <td className="px-4 py-4 text-sm text-gray-600">{item.quantity}</td>
                             <td className="px-4 py-4 text-sm text-gray-800 text-right">₹{item.unitPrice.toLocaleString()}</td>
