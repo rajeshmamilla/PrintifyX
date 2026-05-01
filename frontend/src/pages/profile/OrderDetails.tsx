@@ -198,6 +198,16 @@ const OrderDetails: React.FC = () => {
                                             </div>
                                             <div className="flex-1 flex flex-col justify-center">
                                                 <h4 className="font-semibold text-gray-900 text-sm mb-1">{item.productName}</h4>
+                                                {item.customization?.sampleImageUrl && (
+                                                    <a 
+                                                        href={item.customization.sampleImageUrl} 
+                                                        target="_blank" 
+                                                        rel="noopener noreferrer"
+                                                        className="text-[10px] text-blue-600 hover:underline flex items-center gap-1 font-bold mb-1"
+                                                    >
+                                                        <Printer size={10} /> View Sample Design
+                                                    </a>
+                                                )}
                                                 <div className="flex items-center gap-4">
                                                     <div className="flex flex-col">
                                                         <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Qty</span>

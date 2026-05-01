@@ -15,6 +15,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import java.util.Map;
 
 @Entity
 @Table(name = "order_items")
@@ -49,4 +52,8 @@ public class OrderItem {
 
     @Column(nullable = false)
     private BigDecimal price;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> customization;
 }

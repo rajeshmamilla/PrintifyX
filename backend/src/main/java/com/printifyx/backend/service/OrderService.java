@@ -50,12 +50,12 @@ public class OrderService {
             item.setUnitPrice(itemReq.getUnitPrice());
             item.setQuantity(itemReq.getQuantity());
             item.setTotalPrice(itemReq.getTotalPrice());
-            item.setPrice(itemReq.getPrice());
             item.setPrice(
             	    itemReq.getPrice() != null
             	        ? itemReq.getPrice()
             	        : itemReq.getUnitPrice()
             	);
+            item.setCustomization(itemReq.getCustomization());
 
 
             orderItemRepository.save(item);

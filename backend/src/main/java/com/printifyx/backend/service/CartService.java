@@ -68,7 +68,8 @@ public class CartService {
             // Update existing item
             int newQuantity = existingItem.getQuantity() + request.getQuantity();
             existingItem.setQuantity(newQuantity);
-            existingItem.setTotalPrice(existingItem.getUnitPrice().multiply(new BigDecimal(newQuantity)));
+            existingItem.setUnitPrice(request.getUnitPrice());
+            existingItem.setTotalPrice(request.getUnitPrice().multiply(new BigDecimal(newQuantity)));
         } else {
             // Create new item
             CartItem item = new CartItem();
@@ -150,6 +151,7 @@ public class CartService {
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
             orderItem.setPrice(cartItem.getUnitPrice()); // Compatibility with existing field
+            orderItem.setCustomization(cartItem.getCustomization()); // Ensure design data is carried over
             return orderItem;
         }).collect(Collectors.toList());
 

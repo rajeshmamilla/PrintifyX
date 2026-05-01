@@ -44,4 +44,26 @@ public class AdminProductController {
                 "status", "UPDATED"
         ));
     }
+
+    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Map<String, Object>> updateProduct(
+            @PathVariable Long id,
+            @RequestPart("product") ProductRequest request,
+            @RequestPart(value = "image", required = false) org.springframework.web.multipart.MultipartFile image) {
+        
+        Long updatedId = adminProductService.updateProduct(id, request, image);
+        return ResponseEntity.ok(Map.of(
+                "id", updatedId,
+                "status", "UPDATED"
+        ));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
+        adminProductService.deleteProduct(id);
+        return ResponseEntity.ok(Map.of(
+                "id", id,
+                "status", "DELETED"
+        ));
+    }
 }

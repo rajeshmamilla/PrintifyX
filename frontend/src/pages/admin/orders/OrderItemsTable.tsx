@@ -1,4 +1,5 @@
 import React from 'react';
+import { ExternalLink, Image as ImageIcon } from 'lucide-react';
 
 interface OrderItem {
     id: number;
@@ -7,6 +8,7 @@ interface OrderItem {
     unitPrice: number;
     quantity: number;
     totalPrice: number;
+    customization?: any;
 }
 
 interface OrderItemsTableProps {
@@ -20,6 +22,7 @@ const OrderItemsTable: React.FC<OrderItemsTableProps> = ({ items }) => {
                 <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
                         <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Product Name</th>
+                        <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Design</th>
                         <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Quantity</th>
                         <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Unit Price</th>
                         <th className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Total Price</th>
@@ -29,6 +32,31 @@ const OrderItemsTable: React.FC<OrderItemsTableProps> = ({ items }) => {
                     {items.map((item) => (
                         <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                             <td className="px-4 py-4 text-sm font-bold text-gray-800">{item.productName}</td>
+                            <td className="px-4 py-4 text-sm text-gray-600">
+                                {(() => {
+                                    let cust = item.customization;
+                                    if (typeof cust === 'string') {
+                                        try { cust = JSON.parse(cust); } catch (e) { }
+                                    }
+                                    const sampleUrl = cust?.sampleImageUrl || cust?.imageUrl || cust?.url || cust?.designUrl ||
+                                                     Object.values(cust || {}).find(v => typeof v === 'string' && v.includes('cloudinary.com'));
+                                    
+                                    return sampleUrl ? (
+                                        <a 
+                                            href={sampleUrl as string} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                                        >
+                                            <ImageIcon size={14} />
+                                            <span>View Sample</span>
+                                            <ExternalLink size={12} />
+                                        </a>
+                                    ) : (
+                                        <span className="text-gray-400 italic">No sample</span>
+                                    );
+                                })()}
+                            </td>
                             <td className="px-4 py-4 text-sm text-gray-600">{item.quantity}</td>
                             <td className="px-4 py-4 text-sm text-gray-800 text-right">₹{item.unitPrice.toLocaleString()}</td>
                             <td className="px-4 py-4 text-sm font-semibold text-orange-600 text-right">₹{item.totalPrice.toLocaleString()}</td>
@@ -37,7 +65,7 @@ const OrderItemsTable: React.FC<OrderItemsTableProps> = ({ items }) => {
                 </tbody>
                 <tfoot>
                     <tr className="bg-gray-50 font-semibold">
-                        <td colSpan={3} className="px-4 py-4 text-right text-gray-800">Total</td>
+                        <td colSpan={4} className="px-4 py-4 text-right text-gray-800">Total</td>
                         <td className="px-4 py-4 text-right text-orange-600">
                             ₹{items.reduce((sum, item) => sum + item.totalPrice, 0).toLocaleString()}
                         </td>
