@@ -4,11 +4,10 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductImageGallery from "../components/ProductImageGallery";
-import ProductOptionSelect from "../components/ProductOptionSelect";
 import PriceSummary from "../components/PriceSummary";
 import { cartService } from "../services/cart.service";
 import { fetchWithAuth } from "../services/apiClient";
-import { Upload, Grid, Edit3, X, Loader2 } from "lucide-react";
+import { Upload, X, Loader2 } from "lucide-react";
 
 // Import images
 import plasticBusinessCardsImg from "../assets/products/plastic business cards.png";
@@ -162,23 +161,6 @@ const ProductCustomizerPage = () => {
         return standardBusinessCardsImg;
     };
 
-    const getProductOptions = () => {
-        const groups: Record<string, string[]> = {};
-        productData.variants.forEach((v: any) => {
-            const name = v.variantName;
-            if (name.includes(":")) {
-                const [cat, val] = name.split(":").map((s: string) => s.trim());
-                if (!groups[cat]) groups[cat] = [];
-                if (!groups[cat].includes(val)) groups[cat].push(val);
-            } else {
-                const cat = "Options";
-                const val = name.trim();
-                if (!groups[cat]) groups[cat] = [];
-                if (!groups[cat].includes(val)) groups[cat].push(val);
-            }
-        });
-        return groups;
-    };
 
     const handleAddToCart = async (showAlert = true) => {
         const token = localStorage.getItem("token");
