@@ -20,7 +20,7 @@ import com.printifyx.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping({"/api/auth", "/auth"})
 public class AuthController {
 
     private final UserService userService;
