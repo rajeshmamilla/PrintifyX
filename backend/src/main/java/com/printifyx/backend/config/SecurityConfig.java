@@ -42,9 +42,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/api/auth/health").permitAll()
-                        .requestMatchers("/api/products/**", "/api/products").permitAll()
-                        .requestMatchers("/api/categories/**", "/api/categories").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/auth/health", "/auth/**").permitAll()
+                        .requestMatchers("/api/products/**", "/api/products", "/products/**").permitAll()
+                        .requestMatchers("/api/categories/**", "/api/categories", "/categories/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
