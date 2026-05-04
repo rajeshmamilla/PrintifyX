@@ -62,6 +62,9 @@ public class SecurityConfig {
     }
 
 
+    @org.springframework.beans.factory.annotation.Value("${ALLOWED_ORIGIN:http://localhost:5173}")
+    private String allowedOrigin;
+
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -71,7 +74,8 @@ public class SecurityConfig {
             "http://localhost:5173",
             "http://localhost:5174",
             "https://*.vercel.app",
-            "https://printify-x.vercel.app"
+            "https://printify-x.vercel.app",
+            allowedOrigin
         ));
         config.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
