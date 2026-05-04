@@ -92,3 +92,11 @@ export async function resetPassword(email: string, newPassword: string) {
 
   return response.json();
 }
+
+export async function getTrendingProducts() {
+  const response = await fetch(`${BASE_URL}/products/trending`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch trending products");
+  }
+  return response.json();
+}

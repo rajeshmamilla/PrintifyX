@@ -19,6 +19,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    
+    @org.springframework.beans.factory.annotation.Value("${app.frontend.url}")
+    private String frontendUrl;
 
     public OAuth2AuthenticationSuccessHandler(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
@@ -41,9 +44,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         String token = jwtUtil.generateToken(userDetails, userId);
+        String name = (String) attributes.get("name");
+        String picture = (String) attributes.get("picture");
 
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/redirect")
+        String targetUrl = UriComponentsBuilder.fromUriString(frontendUrl + "/oauth2/redirect")
                 .queryParam("token", token)
+                .queryParam("name", name)
+                .queryParam("email", email)
+                .queryParam("picture", picture)
                 .build().toUriString();
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);

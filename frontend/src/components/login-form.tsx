@@ -123,7 +123,12 @@ export function LoginForm({
                 type="button" 
                 variant="outline" 
                 className="w-full h-10 font-medium" 
-                onClick={() => window.location.href = "http://localhost:8081/oauth2/authorization/google"}
+                onClick={() => {
+                  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api";
+                  // Remove /api from the end because oauth2/authorization is a root endpoint
+                  const oauthUrl = baseUrl.replace(/\/api$/, "") + "/oauth2/authorization/google";
+                  window.location.href = oauthUrl;
+                }}
               >
                 Login with Google
               </Button>

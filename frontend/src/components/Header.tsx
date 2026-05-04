@@ -200,6 +200,8 @@ const Header = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
     localStorage.removeItem("email");
+    localStorage.removeItem("name");
+    localStorage.removeItem("picture");
     setIsLoggedIn(false);
     setIsAdmin(false);
     setShowMenu(false);
@@ -312,7 +314,15 @@ const Header = () => {
               {userName && (
                 <span className="text-sm font-medium">{userName}</span>
               )}
-              <User size={20} />
+              {localStorage.getItem("picture") ? (
+                <img 
+                  src={localStorage.getItem("picture") || ""} 
+                  alt={userName} 
+                  className="w-8 h-8 rounded-full border border-gray-200"
+                />
+              ) : (
+                <User size={20} />
+              )}
             </div>
 
             {showMenu && (
