@@ -28,6 +28,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         this.userDetailsService = userDetailsService;
     }
 
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        System.out.println("FRONTEND REDIRECT URL CONFIGURED AS: " + frontendUrl);
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
