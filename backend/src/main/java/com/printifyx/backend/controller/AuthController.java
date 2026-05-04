@@ -19,7 +19,6 @@ import com.printifyx.backend.service.OtpService;
 import com.printifyx.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

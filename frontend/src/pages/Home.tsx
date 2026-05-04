@@ -54,7 +54,7 @@ const Home = () => {
         <section id="categories" className="bg-[#f5f8fb] py-16">
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-tight">
-              Shop Our Trending Categories
+              Shop Our Top Categories
             </h2>
             <div className="w-12 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
             <p className="text-gray-500 mt-4 font-medium italic">
@@ -138,8 +138,8 @@ const Home = () => {
                 <p className="text-gray-500 mt-2 font-medium italic">Hand-picked bestsellers ready for your design.</p>
               </div>
               <div className="h-[2px] flex-1 bg-gray-100 mx-10 mb-4 hidden md:block"></div>
-              <button 
-                onClick={() => navigate('/categories/business-cards')} 
+              <button
+                onClick={() => navigate('/categories/business-cards')}
                 className="text-sm font-bold uppercase tracking-widest text-orange-500 hover:text-orange-600 transition-colors"
               >
                 View All Collection
@@ -149,15 +149,15 @@ const Home = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {trendingProducts.length > 0 ? (
                 trendingProducts.map((product) => (
-                  <div 
-                    key={product.id} 
+                  <div
+                    key={product.id}
                     onClick={() => navigate(`/products/${product.slug}`)}
                     className="group cursor-pointer"
                   >
                     <div className="relative aspect-[4/5] bg-gray-50 rounded-[2rem] overflow-hidden mb-6 border border-gray-100 transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-orange-100 group-hover:-translate-y-2">
-                      <img 
-                        src={product.imageUrl || "/placeholder-product.jpg"} 
-                        alt={product.name} 
+                      <img
+                        src={product.imageUrl || "/placeholder-product.jpg"}
+                        alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-orange-600 uppercase tracking-wider border border-orange-100 shadow-sm">
