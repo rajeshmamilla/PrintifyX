@@ -11,11 +11,10 @@ export const BackendWakeupProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: any;
 
     const performCheck = async () => {
       const ready = await checkHealth();
-      console.log("Backend ready status:", ready);
       if (ready) {
         setIsReady(true);
       } else {

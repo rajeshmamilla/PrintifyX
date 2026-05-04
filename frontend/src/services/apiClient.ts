@@ -32,12 +32,10 @@ export const checkHealth = async () => {
   try {
     // We hit a known public endpoint. 
     // If the server responds with ANYTHING (even a 404), it means the process is UP.
-    const response = await fetch(`${BASE_URL}/categories`);
-    console.log("Backend response received. Status:", response.status);
+    await fetch(`${BASE_URL}/categories`);
     return true; 
   } catch (error) {
     // Only return false if it's a network error (server still starting/down)
-    console.log("Backend still unreachable...");
     return false;
   }
 };
