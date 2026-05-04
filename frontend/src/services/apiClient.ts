@@ -17,8 +17,11 @@ export const fetchWithAuth = async (
     headers.set("Content-Type", "application/json");
   }
 
+  const cleanBaseUrl = BASE_URL.endsWith("/") ? BASE_URL.slice(0, -1) : BASE_URL;
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+
   const response = await fetch(
-    `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`,
+    `${cleanBaseUrl}${cleanPath}`,
     {
       ...options,
       headers,
