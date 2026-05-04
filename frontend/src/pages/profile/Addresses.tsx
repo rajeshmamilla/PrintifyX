@@ -59,6 +59,23 @@ const Addresses: React.FC = () => {
 
     const handleSaveAddress = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Validation
+        const phoneRegex = /^[0-9]{10}$/;
+        const pincodeRegex = /^[0-9]{6}$/;
+        
+        if (!phoneRegex.test(formData.phone)) {
+            setNotification({ message: 'Please enter a valid 10-digit phone number', type: 'error' });
+            setTimeout(() => setNotification(null), 3000);
+            return;
+        }
+        
+        if (!pincodeRegex.test(formData.pincode)) {
+            setNotification({ message: 'Please enter a valid 6-digit pincode', type: 'error' });
+            setTimeout(() => setNotification(null), 3000);
+            return;
+        }
+
         try {
             const res = await fetchWithAuth('/addresses', {
                 method: 'POST',
@@ -178,32 +195,37 @@ const Addresses: React.FC = () => {
                                     onChange={(e) => setFormData({ ...formData, addressLine2: e.target.value })}
                                 />
                             </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">City</label>
-                                <input
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
-                                    value={formData.city}
-                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">State</label>
-                                <input
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
-                                    value={formData.state}
-                                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Pincode</label>
-                                <input
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
-                                    value={formData.pincode}
-                                    onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                                    required
-                                />
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:col-span-2">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">City</label>
+                                    <input
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
+                                        placeholder="e.g. Mumbai"
+                                        value={formData.city}
+                                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">State</label>
+                                    <input
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
+                                        placeholder="e.g. Maharashtra"
+                                        value={formData.state}
+                                        onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Pincode</label>
+                                    <input
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-4 focus:ring-orange-500/10 focus:border-orange-500 transition-all font-bold text-gray-700"
+                                        placeholder="6-digit code"
+                                        value={formData.pincode}
+                                        onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
+                                        required
+                                    />
+                                </div>
                             </div>
                             <div className="flex items-center gap-3 pt-6">
                                 <label className="relative inline-flex items-center cursor-pointer">

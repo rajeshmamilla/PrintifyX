@@ -16,10 +16,19 @@ const OAuth2RedirectHandler = () => {
         };
 
         const token = getUrlParameter("token");
+        const name = getUrlParameter("name");
+        const email = getUrlParameter("email");
+        const picture = getUrlParameter("picture");
 
         if (token) {
             localStorage.setItem("token", token);
-            // You might want to fetch user details here and store them in context/state
+            if (name) localStorage.setItem("name", name);
+            if (email) localStorage.setItem("email", email);
+            if (picture) localStorage.setItem("picture", picture);
+            
+            // Dispatch event to update header immediately
+            window.dispatchEvent(new Event("cartUpdated"));
+            
             navigate("/", { replace: true });
         } else {
             navigate("/login", { replace: true });
