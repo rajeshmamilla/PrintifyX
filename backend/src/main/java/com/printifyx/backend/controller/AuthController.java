@@ -20,6 +20,7 @@ import com.printifyx.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping({"/api/auth", "/auth"})
 public class AuthController {
 
