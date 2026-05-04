@@ -36,4 +36,9 @@ public class ProductController {
     public ResponseEntity<List<com.printifyx.backend.dto.ProductDto>> searchProducts(@RequestParam String keyword) {
         return ResponseEntity.ok(productService.searchProducts(keyword));
     }
+
+    @GetMapping("/trending")
+    public ResponseEntity<List<com.printifyx.backend.dto.ProductDto>> getTrendingProducts() {
+        return ResponseEntity.ok(productService.getTrendingProducts());
+    }
 }

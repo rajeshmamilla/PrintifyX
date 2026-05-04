@@ -69,4 +69,10 @@ public class ProductService {
         return new ProductDetailDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), 
                                     p.getBasePrice(), p.getCategory().getName(), p.getCategory().getSlug(), p.getIsActive(), variants, p.getImageUrl());
     }
+
+    public List<ProductDto> getTrendingProducts() {
+        return productRepository.findByTrendingTrueAndIsActiveTrue().stream()
+                .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice(), p.getImageUrl()))
+                .collect(Collectors.toList());
+    }
 }
