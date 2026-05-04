@@ -29,6 +29,11 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
     private final OtpService otpService;
 
+    @org.springframework.web.bind.annotation.GetMapping("/")
+    public String healthCheck() {
+        return "PrintifyX Backend is UP and Running!";
+    }
+
     public AuthController(UserService userService, AuthenticationManager authenticationManager, 
                           JwtUtil jwtUtil, UserDetailsService userDetailsService,
                           OtpService otpService) {
