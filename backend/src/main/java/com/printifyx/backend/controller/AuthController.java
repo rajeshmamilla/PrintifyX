@@ -113,4 +113,9 @@ public class AuthController {
         
         return response;
     }
+
+    @org.springframework.web.bind.annotation.GetMapping("/health")
+    public Map<String, String> health() {
+        return Map.of("status", "UP");
+    }
 }
