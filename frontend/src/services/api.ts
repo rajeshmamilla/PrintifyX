@@ -100,3 +100,11 @@ export async function getTrendingProducts() {
   }
   return response.json();
 }
+
+export async function getTrendingCategories() {
+  const response = await fetch(`${BASE_URL}/categories/trending`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch trending categories");
+  }
+  return response.json();
+}

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.printifyx.backend.config.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,5 +43,8 @@ public class AddressController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Address> updateAddress(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id, @RequestBody Address address) {
+        return ResponseEntity.ok(addressService.updateAddress(id, principal.getUserId(), address));
+    }
 }

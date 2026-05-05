@@ -26,6 +26,12 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    public List<CategoryDto> getTrendingCategories() {
+        return categoryRepository.findByTrendingTrueAndIsActiveTrue().stream()
+                .map(cat -> new CategoryDto(cat.getId(), cat.getName(), cat.getSlug()))
+                .collect(Collectors.toList());
+    }
+
     public List<CategoryWithProductsDto> getCategoriesWithProducts() {
         return categoryRepository.findByIsActiveTrue().stream()
                 .map(cat -> {

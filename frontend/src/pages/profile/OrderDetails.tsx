@@ -240,21 +240,30 @@ const OrderDetails: React.FC = () => {
                                 
                                 <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded-xl border border-gray-100 shadow-sm h-full">
                                     {(() => {
-                                        const finalAddress = order.shippingAddress || fetchedAddress;
+                                        const hasOrderAddress = order.shippingAddressLine1;
                                         return (
                                         <>
                                             <div>
-                                                <p className="text-sm font-bold text-gray-900 mb-1">{order.customerName}</p>
+                                                <p className="text-sm font-bold text-gray-900 mb-1">{order.shippingName || order.customerName}</p>
                                                 <p className="text-xs text-gray-500 font-medium mb-1">{order.customerEmail}</p>
-                                                <p className="text-xs text-gray-500 font-medium">{order.phone || order.customerPhone || finalAddress?.phone || 'Contact not provided'}</p>
+                                                <p className="text-xs text-gray-500 font-medium">{order.customerPhone}</p>
                                             </div>
                                             
-                                            {finalAddress && (
+                                            {(hasOrderAddress || fetchedAddress) && (
                                                 <div className="md:border-l md:border-gray-100 md:pl-6">
                                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Delivery Address</p>
                                                     <p className="text-xs text-gray-600 font-medium leading-relaxed">
-                                                        {finalAddress.addressLine1} {finalAddress.addressLine2}<br/>
-                                                        {finalAddress.city}, {finalAddress.state} {finalAddress.pincode}
+                                                        {hasOrderAddress ? (
+                                                            <>
+                                                                {order.shippingAddressLine1} {order.shippingAddressLine2}<br/>
+                                                                {order.shippingCity}, {order.shippingState} {order.shippingPincode}
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {fetchedAddress.addressLine1} {fetchedAddress.addressLine2}<br/>
+                                                                {fetchedAddress.city}, {fetchedAddress.state} {fetchedAddress.pincode}
+                                                            </>
+                                                        )}
                                                     </p>
                                                 </div>
                                             )}

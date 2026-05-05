@@ -88,7 +88,7 @@ const CartPage = () => {
       <Header />
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[60vh]">
+      <main className="max-w-[1600px] mx-auto px-[100px] py-8 min-h-[60vh]">
         {error && (
           <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-8">
             <div className="flex">
@@ -138,7 +138,7 @@ const CartPage = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Cart Items Table */}
             <div className="lg:w-2/3">
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+              <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
@@ -169,8 +169,9 @@ const CartPage = () => {
                               {item.productName}
                             </span>
                             <div className="text-xs text-gray-500 space-y-1">
-                              {Object.entries(item.customization || {}).map(
-                                ([key, val]: any) => (
+                              {Object.entries(item.customization || {})
+                                .filter(([key]) => key !== 'sampleImageUrl')
+                                .map(([key, val]: any) => (
                                   <div key={key}>
                                     <span className="font-medium">{key}:</span>{" "}
                                     {val}

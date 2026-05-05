@@ -32,6 +32,7 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
+    
     @Transactional
     public void deleteAddress(Long id, Long userId) {
         Address address = addressRepository.findById(id)
@@ -42,5 +43,37 @@ public class AddressService {
         }
         
         addressRepository.delete(address);
+    }
+
+    @Transactional
+    public Address updateAddress(Long id, Long userId, Address updatedAddress) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        if (!address.getUserId().equals(userId)) {
+            throw new RuntimeException("Unauthorized to update this address");
+        }
+
+        address.setName(updatedAddress.getName());
+        address.setPhone(updatedAddress.getPhone());
+        address.setAddressLine1(updatedAddress.getAddressLine1());
+        address.setAddressLine2(updatedAddress.getAddressLine2());
+        address.setCity(updatedAddress.getCity());
+        address.setState(updatedAddress.getState());
+        address.setPincode(updatedAddress.getPincode());
+        
+        if (updatedAddress.getIsDefault() != null && updatedAddress.getIsDefault() && !address.getIsDefault()) {
+            // New default requested
+            List<Address> existingDefaults = addressRepository.findByUserIdAndIsDefaultTrue(userId);
+            for (Address ad : existingDefaults) {
+                ad.setIsDefault(false);
+                addressRepository.save(ad);
+            }
+            address.setIsDefault(true);
+        } else if (updatedAddress.getIsDefault() != null) {
+            address.setIsDefault(updatedAddress.getIsDefault());
+        }
+
+        return addressRepository.save(address);
     }
 }

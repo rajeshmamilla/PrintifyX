@@ -47,7 +47,7 @@ const Hero = () => {
         </p>
 
         <a
-          href="#categories"
+          href="#trending"
           className="mt-10 rounded border border-black px-8 py-3 text-black font-bold transition-all duration-400 hover:bg-black hover:text-white inline-block uppercase tracking-wider text-sm"
         >
           Order Now
