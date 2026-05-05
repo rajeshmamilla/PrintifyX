@@ -32,7 +32,7 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    @Transactional
+    
     @Transactional
     public void deleteAddress(Long id, Long userId) {
         Address address = addressRepository.findById(id)

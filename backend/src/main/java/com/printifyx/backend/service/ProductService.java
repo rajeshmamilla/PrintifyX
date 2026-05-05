@@ -6,6 +6,7 @@ import com.printifyx.backend.repository.ProductRepository;
 import com.printifyx.backend.repository.ProductVariantRepository;
 import com.printifyx.backend.repository.VariantPricingRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,7 @@ public class ProductService {
     }
 
     public List<ProductDto> getTrendingProducts() {
-        return productRepository.findByTrendingTrueAndIsActiveTrue().stream()
+        return productRepository.findTopTrendingProducts(PageRequest.of(0, 5)).stream()
                 .map(p -> new ProductDto(p.getId(), p.getName(), p.getSlug(), p.getDescription(), p.getBasePrice(), p.getImageUrl()))
                 .collect(Collectors.toList());
     }
