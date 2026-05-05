@@ -39,6 +39,24 @@ public class Order {
     @Column(name = "customer_phone")
     private String customerPhone;
 
+    @Column(name = "shipping_name")
+    private String shippingName;
+
+    @Column(name = "shipping_address_line1")
+    private String shippingAddressLine1;
+
+    @Column(name = "shipping_address_line2")
+    private String shippingAddressLine2;
+
+    @Column(name = "shipping_city")
+    private String shippingCity;
+
+    @Column(name = "shipping_state")
+    private String shippingState;
+
+    @Column(name = "shipping_pincode")
+    private String shippingPincode;
+
     @Column(name = "total_amount", nullable = false)
     private BigDecimal totalAmount;
 

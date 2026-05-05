@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -113,7 +114,7 @@ public class CartService {
     }
 
     @Transactional
-    public Order checkout(Long userId, String paymentMethod) {
+    public Order checkout(Long userId, String paymentMethod, java.util.Map<String, String> shippingDetails) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
         
@@ -127,9 +128,22 @@ public class CartService {
         CreateOrderRequest orderRequest = new CreateOrderRequest();
         orderRequest.setUserId(userId);
         orderRequest.setOrderNumber("ORD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        orderRequest.setCustomerName(user.getEmail().split("@")[0]); // Fallback name
+        
+        if (shippingDetails != null) {
+            orderRequest.setCustomerName(shippingDetails.getOrDefault("name", user.getEmail().split("@")[0]));
+            orderRequest.setCustomerPhone(shippingDetails.getOrDefault("phone", "0000000000"));
+            orderRequest.setShippingName(shippingDetails.get("name"));
+            orderRequest.setShippingAddressLine1(shippingDetails.get("addressLine1"));
+            orderRequest.setShippingAddressLine2(shippingDetails.get("addressLine2"));
+            orderRequest.setShippingCity(shippingDetails.get("city"));
+            orderRequest.setShippingState(shippingDetails.get("state"));
+            orderRequest.setShippingPincode(shippingDetails.get("pincode"));
+        } else {
+            orderRequest.setCustomerName(user.getEmail().split("@")[0]);
+            orderRequest.setCustomerPhone("0000000000");
+        }
+        
         orderRequest.setCustomerEmail(user.getEmail());
-        orderRequest.setCustomerPhone("0000000000"); // Placeholder
         
         // Initial status based on payment method
         if ("cod".equalsIgnoreCase(paymentMethod)) {

@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import CategoryCard from "../components/CategoryCard";
-import { getTrendingProducts } from "../services/api";
+import { getTrendingProducts, getTrendingCategories } from "../services/api";
 import { useState } from "react";
 import businessCards from "../assets/categories/business-cards.jpg";
 import postcards from "../assets/categories/post-cards.jpg";
@@ -20,9 +20,18 @@ import {
   CarouselPrevious,
 } from "../components/ui/carousel";
 
+const categoryImageMap: Record<string, string> = {
+  "business-cards": businessCards,
+  "postcards": postcards,
+  "banners": banners,
+  "brochures-flyers": flyers,
+  "marketing-materials": flyers,
+};
+
 const Home = () => {
   const navigate = useNavigate();
   const [trendingProducts, setTrendingProducts] = useState<any[]>([]);
+  const [trendingCategories, setTrendingCategories] = useState<any[]>([]);
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -31,15 +40,19 @@ const Home = () => {
       return;
     }
 
-    const fetchTrending = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getTrendingProducts();
-        setTrendingProducts(data);
+        const [products, categories] = await Promise.all([
+          getTrendingProducts(),
+          getTrendingCategories()
+        ]);
+        setTrendingProducts(products);
+        setTrendingCategories(categories);
       } catch (error) {
-        console.error("Failed to fetch trending products:", error);
+        console.error("Failed to fetch trending data:", error);
       }
     };
-    fetchTrending();
+    fetchData();
   }, [navigate]);
 
   return (
@@ -71,57 +84,29 @@ const Home = () => {
               className="w-full"
             >
               <CarouselContent className="-ml-2 md:-ml-4">
-                {/* SET 1 */}
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard
-                      title="Business Cards"
-                      image={businessCards}
-                      link="/categories/business-cards"
-                    />
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard title="Postcards" image={postcards} />
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard title="Banners" image={banners} />
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard title="Brochures & Flyers" image={flyers} />
-                  </div>
-                </CarouselItem>
-
-                {/* SET 2 (Duplicated exactly to enable flawless infinite scroll physics) */}
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard
-                      title="Business Cards"
-                      image={businessCards}
-                      link="/categories/business-cards"
-                    />
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard title="Postcards" image={postcards} />
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard title="Banners" image={banners} />
-                  </div>
-                </CarouselItem>
-                <CarouselItem className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
-                  <div className="p-1">
-                    <CategoryCard title="Brochures & Flyers" image={flyers} />
-                  </div>
-                </CarouselItem>
+                {trendingCategories.length > 0 ? (
+                  // Double the items for infinite scroll physics as originally implemented
+                  [...trendingCategories, ...trendingCategories].map((cat, index) => (
+                    <CarouselItem key={`${cat.id}-${index}`} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
+                      <div className="p-1">
+                        <CategoryCard
+                          title={cat.name}
+                          image={categoryImageMap[cat.slug] || businessCards}
+                          link={`/categories/${cat.slug}`}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))
+                ) : (
+                  // Skeleton state for categories
+                  [1, 2, 3].map((i) => (
+                    <CarouselItem key={i} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
+                      <div className="p-1">
+                        <div className="h-[280px] bg-gray-100 rounded-xl animate-pulse"></div>
+                      </div>
+                    </CarouselItem>
+                  ))
+                )}
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />

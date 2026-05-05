@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.printifyx.backend.config.UserPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import java.util.Map;
+import lombok.Data;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -52,10 +53,16 @@ public class CartController {
     @PostMapping("/checkout")
     public ResponseEntity<Order> checkout(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody(required = false) Map<String, String> body) {
-        String paymentMethod = (body != null && body.containsKey("paymentMethod")) 
-            ? body.get("paymentMethod") 
-            : "COD";
-        return ResponseEntity.ok(cartService.checkout(principal.getUserId(), paymentMethod));
+            @RequestBody CheckoutRequest request) {
+        System.out.println("Checkout Request Received: " + request);
+        String paymentMethod = request.getPaymentMethod() != null ? request.getPaymentMethod() : "COD";
+        java.util.Map<String, String> shipping = (java.util.Map<String, String>) (java.util.Map<?, ?>) request.getShippingDetails();
+        return ResponseEntity.ok(cartService.checkout(principal.getUserId(), paymentMethod, shipping));
+    }
+
+    @Data
+    public static class CheckoutRequest {
+        private String paymentMethod;
+        private java.util.Map<String, Object> shippingDetails;
     }
 }
