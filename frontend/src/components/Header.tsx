@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { cartService } from "../services/cart.service";
 import { Search, Phone, User, ShoppingCart, X, Menu } from "lucide-react";
+import Logo from "../assets/logo.png";
 
 // Hardcoded product list for frontend-only search
 const PRODUCTS = [
@@ -227,9 +228,9 @@ const Header = () => {
   };
 
   return (
-    <header className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 md:gap-10 bg-white px-4 md:px-[100px] py-4 md:py-[38px] border-b border-gray-200 sticky top-0 z-[500]">
+    <header className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 md:gap-10 bg-white px-4 md:px-[100px] py-2 md:py-3 border-b border-gray-200 sticky top-0 z-[500]">
       {/* Mobile Menu Toggle */}
-      <button 
+      <button
         className="md:hidden p-2 text-gray-700 hover:text-orange-500 transition-colors"
         onClick={() => setIsMobileMenuOpen(true)}
       >
@@ -238,7 +239,7 @@ const Header = () => {
 
       {/* Logo */}
       <Link to="/" className="cursor-pointer shrink-0">
-        <h1 className="text-2xl md:text-[30px] font-bold">PrintifyX</h1>
+        <img src={Logo} alt="PrintifyX Logo" className="h-18 md:h-28 w-auto object-contain" />
       </Link>
 
       {/* Search */}
@@ -341,9 +342,9 @@ const Header = () => {
                 <span className="text-sm font-medium">{userName}</span>
               )}
               {localStorage.getItem("picture") ? (
-                <img 
-                  src={localStorage.getItem("picture") || ""} 
-                  alt={userName} 
+                <img
+                  src={localStorage.getItem("picture") || ""}
+                  alt={userName}
                   className="w-8 h-8 rounded-full border border-gray-200"
                 />
               ) : (
@@ -414,21 +415,19 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation Drawer */}
-      <div 
-        className={`fixed inset-0 bg-black/50 z-[1000] transition-opacity duration-300 md:hidden ${
-          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+      <div
+        className={`fixed inset-0 bg-black/50 z-[1000] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
         onClick={() => setIsMobileMenuOpen(false)}
       >
-        <div 
-          className={`absolute left-0 top-0 h-full w-[280px] bg-white shadow-2xl transition-transform duration-300 transform ${
-            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        <div
+          className={`absolute left-0 top-0 h-full w-[280px] bg-white shadow-2xl transition-transform duration-300 transform ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-6 border-b border-gray-100">
             <h2 className="text-xl font-bold">Menu</h2>
-            <button 
+            <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
             >
