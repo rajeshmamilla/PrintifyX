@@ -341,7 +341,7 @@ const Header = () => {
           >
             <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors py-2">
               {userName && (
-                <span className="text-sm font-bold text-zinc-900">{userName}</span>
+                <span className="text-sm font-semibold text-zinc-600">{userName}</span>
               )}
               {localStorage.getItem("picture") ? (
                 <img
@@ -357,54 +357,43 @@ const Header = () => {
             </div>
 
             {showMenu && (
-              <div className="absolute right-0 top-full w-64 rounded-2xl bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-zinc-100 z-[200] animate-in fade-in slide-in-from-top-2 duration-300">
-                {/* User Info Header - Refined */}
-                <div className="px-4 py-4 mb-2 border-b border-zinc-100 flex items-center gap-3 bg-zinc-50/50 rounded-t-2xl">
-                  <div className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center text-white text-sm font-black ring-4 ring-white shadow-sm shrink-0">
-                    {userName ? userName.charAt(0).toUpperCase() : <User size={16} />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest leading-none mb-1">Account</p>
-                    <p className="text-[15px] font-black text-zinc-900 truncate leading-tight">{userName || "User Account"}</p>
-                  </div>
-                </div>
-
+              <div className="absolute right-0 top-full w-56 rounded-2xl bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-zinc-100 z-[200] animate-in fade-in slide-in-from-top-2 duration-300">
                 <div className="space-y-0.5">
                   {isAdmin ? (
                     <button
-                      className="flex items-center gap-3 w-full px-3 py-2.5 text-left text-[13px] font-bold text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all group"
+                      className="flex items-center gap-3 w-full px-3 py-2 text-left text-[14px] font-medium text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all group"
                       onClick={() => {
                         setShowMenu(false);
                         navigate("/admin/dashboard");
                       }}
                     >
-                      <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors">
+                      <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors border border-zinc-100/50">
                         <LayoutDashboard size={16} className="text-zinc-500" />
                       </div>
                       Admin Dashboard
                     </button>
                   ) : (
                     <button
-                      className="flex items-center gap-3 w-full px-3 py-2.5 text-left text-[13px] font-bold text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all group"
+                      className="flex items-center gap-3 w-full px-3 py-2 text-left text-[14px] font-medium text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all group"
                       onClick={() => {
                         setShowMenu(false);
                         navigate("/profile");
                       }}
                     >
-                      <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors">
+                      <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors border border-zinc-100/50">
                         <User size={16} className="text-zinc-500" />
                       </div>
                       My Profile
                     </button>
                   )}
 
-                  <div className="h-px bg-zinc-50 my-1 mx-2"></div>
+                  <div className="h-px bg-zinc-50 my-1.5 mx-2"></div>
 
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-3 w-full px-3 py-2.5 text-left text-[13px] font-bold text-red-600 hover:bg-red-50 rounded-xl transition-all group"
+                    className="flex items-center gap-3 w-full px-3 py-2 text-left text-[14px] font-medium text-red-600 hover:bg-red-50 rounded-xl transition-all group"
                   >
-                    <div className="w-8 h-8 bg-red-100/50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors">
+                    <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors border border-red-100/20">
                       <LogOut size={16} className="text-red-500" />
                     </div>
                     Logout Account

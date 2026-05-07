@@ -63,12 +63,12 @@ const Navbar = () => {
             onMouseEnter={() => setActiveMenuId(category.id)}
             className="h-full flex items-center relative"
           >
-            <Link 
+            <Link
               to={`/categories/${category.slug}`}
               className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all duration-300 ease-in-out hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white focus:outline-none disabled:pointer-events-none disabled:opacity-50"
               onClick={(e) => {
                 if (category.products.length === 0 && category.id < 0) {
-                     handlePlaceholderClick(e);
+                  handlePlaceholderClick(e);
                 }
               }}
             >

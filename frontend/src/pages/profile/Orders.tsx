@@ -110,7 +110,7 @@ const Orders: React.FC = () => {
               <AlertCircle size={24} className="text-zinc-400" />
             </div>
             <div>
-              <h3 className="text-base font-black text-zinc-900 tracking-tight uppercase">Session Expired</h3>
+              <h3 className="text-base font-bold text-zinc-900 tracking-tight uppercase">Session Expired</h3>
               <p className="text-[13px] text-zinc-500 font-medium leading-relaxed mt-0.5">Your session has timed out. Please sign in again to view your order history.</p>
             </div>
           </div>
