@@ -5,15 +5,60 @@ import Footer from "../components/Footer";
 
 export default function Register() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <Navbar />
-      <main className="flex-grow flex w-full items-center justify-center p-6 md:p-10 bg-gray-50/50">
-        <div className="w-full max-w-sm">
-          <RegisterForm />
+      <main className="flex-grow flex w-full bg-white relative overflow-hidden">
+        {/* Left Side: Image/Branding (Visible on lg+) */}
+        <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-50 items-center justify-center p-12 overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+          
+          <div className="relative z-10 w-full max-w-xl animate-in fade-in slide-in-from-left-8 duration-1000">
+            <div className="mb-10">
+              <h2 className="text-4xl font-extrabold tracking-tight text-zinc-900 mb-4 leading-tight">
+                Partner with <span className="text-zinc-500">PrintifyX</span>
+              </h2>
+              <p className="text-lg text-zinc-500 font-medium max-w-md">
+                Create an account to manage your business printing orders, from banners to premium business cards.
+              </p>
+            </div>
+            
+            <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/20">
+               <img 
+                 src="/business-printing-graphic.png" 
+                 alt="Premium Business Printing" 
+                 className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+            </div>
+
+            <div className="mt-12 flex items-center gap-8">
+               <div className="flex flex-col">
+                 <span className="text-zinc-900 font-bold text-lg leading-tight">Premium Finish</span>
+                 <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Matte & Gloss</span>
+               </div>
+               <div className="w-px h-8 bg-zinc-200"></div>
+               <div className="flex flex-col">
+                 <span className="text-zinc-900 font-bold text-lg leading-tight">Bulk Discounts</span>
+                 <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Enterprise Ready</span>
+               </div>
+            </div>
+          </div>
+
+          <div className="absolute top-[-10%] right-[-10%] w-80 h-80 bg-zinc-200/50 rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-[-10%] left-[-10%] w-80 h-80 bg-zinc-100/50 rounded-full blur-[100px]"></div>
+        </div>
+
+        {/* Right Side: Form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 bg-white relative">
+          <div className="absolute inset-0 lg:hidden opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+          <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+            <RegisterForm />
+          </div>
         </div>
       </main>
       <Footer />
     </div>
   )
 }
+

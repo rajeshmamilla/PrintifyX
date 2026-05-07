@@ -149,7 +149,7 @@ const OrderDetails: React.FC = () => {
 
             <button
                 onClick={() => navigate('/profile/orders')}
-                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 font-bold text-sm transition-colors group"
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 font-bold text-sm transition-colors group cursor-pointer"
             >
                 <div className="p-2 bg-white rounded-lg border border-gray-100 group-hover:shadow-md transition-all">
                     <ChevronLeft size={16} />
@@ -203,7 +203,7 @@ const OrderDetails: React.FC = () => {
                                                         href={item.customization.sampleImageUrl} 
                                                         target="_blank" 
                                                         rel="noopener noreferrer"
-                                                        className="text-[10px] text-blue-600 hover:underline flex items-center gap-1 font-bold mb-1"
+                                                        className="text-[10px] text-blue-600 hover:underline flex items-center gap-1 font-bold mb-1 cursor-pointer"
                                                     >
                                                         <Printer size={10} /> View Sample Design
                                                     </a>
@@ -323,7 +323,7 @@ const OrderDetails: React.FC = () => {
                                     <button
                                         disabled={cancelling}
                                         onClick={handleCancelOrder}
-                                        className="flex items-center gap-1.5 px-3 py-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all text-xs font-semibold border border-transparent hover:border-red-100 disabled:opacity-50"
+                                        className="flex items-center gap-1.5 px-3 py-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all text-xs font-semibold border border-transparent hover:border-red-100 disabled:opacity-50 cursor-pointer"
                                         title="Cancel Order"
                                     >
                                         {cancelling ? <Loader2 className="animate-spin" size={12} /> : <XCircle size={12} />}

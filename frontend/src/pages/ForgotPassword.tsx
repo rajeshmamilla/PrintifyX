@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Mail, Lock, Key, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 // ── OTP Input ──────────────────────────────────────────────────────────────────
 function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) {
@@ -48,7 +48,7 @@ function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]
   };
 
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-2.5 justify-center">
       {value.map((digit, i) => (
         <input
           key={i}
@@ -61,10 +61,10 @@ function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={handlePaste}
           className={cn(
-            "w-11 h-12 text-center text-lg font-bold rounded-md border border-input bg-background",
-            "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
-            "transition-all",
-            digit ? "border-zinc-900 bg-zinc-50" : "border-gray-200"
+            "w-10 h-12 text-center text-lg font-bold rounded-xl border-2 bg-white transition-all outline-none",
+            digit 
+              ? "border-zinc-900 ring-2 ring-zinc-100" 
+              : "border-gray-100 focus:border-zinc-900 focus:ring-4 focus:ring-zinc-50"
           )}
         />
       ))}
@@ -119,7 +119,7 @@ const ForgotPassword = () => {
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setEmailLoading(true);
-    setResetError(""); // clear any previous errors
+    setResetError(""); 
     try {
       await sendForgotOtp(email);
       setStep("otp");
@@ -187,24 +187,28 @@ const ForgotPassword = () => {
 
   // ── Card Content by step ──
   const renderCard = () => {
-    // ── SUCCESS ──
     if (resetDone) {
       return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Password reset!</CardTitle>
-            <CardDescription>
-              Your password has been updated successfully.
+        <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
+          <CardHeader className="space-y-1 pb-4 pt-6 text-center">
+            <div className="flex items-center justify-center mb-1">
+               <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-100">
+                  <CheckCircle2 className="text-white w-5 h-5" />
+               </div>
+            </div>
+            <CardTitle className="text-xl font-bold tracking-tight text-gray-900">Success!</CardTitle>
+            <CardDescription className="text-gray-400 text-xs font-medium">
+              Your password has been updated.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-6">
-              <p className="text-sm text-muted-foreground text-center">
+          <CardContent className="pb-8 px-6">
+            <div className="flex flex-col gap-4">
+              <p className="text-xs text-gray-400 font-medium text-center">
                 You can now log in with your new password.
               </p>
               <Link
                 to="/login"
-                className="flex items-center justify-center w-full h-10 rounded-md font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 text-sm transition-colors"
+                className="flex items-center justify-center w-full h-10 rounded-lg font-bold bg-zinc-900 hover:bg-zinc-800 text-white shadow-lg shadow-zinc-100 transition-all active:scale-[0.98]"
               >
                 Back to Login
               </Link>
@@ -214,52 +218,63 @@ const ForgotPassword = () => {
       );
     }
 
-    // ── STEP 1: Email ──
     if (step === "email") {
       return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Forgot password?</CardTitle>
-            <CardDescription>
-              Enter your registered email and we'll send you a verification code.
+        <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
+          <CardHeader className="space-y-1 pb-4 pt-6 text-center">
+            <div className="flex items-center justify-center mb-1">
+               <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
+                  <Key className="text-white w-5 h-5" />
+               </div>
+            </div>
+            <CardTitle className="text-xl font-bold tracking-tight text-gray-900">Forgot Password</CardTitle>
+            <CardDescription className="text-gray-400 text-xs font-medium">
+              We'll send a code to your email
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-8 px-6">
             <form onSubmit={handleSendOtp}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="h-10 px-3 py-2 text-sm"
-                  />
+              <div className="flex flex-col gap-4">
+                <div className="grid gap-1.5">
+                  <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Email Address</Label>
+                  <div className="relative group">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="name@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="h-10 pl-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 placeholder:text-gray-400 text-sm font-medium"
+                    />
+                  </div>
                 </div>
-
                 <Button
                   type="submit"
                   disabled={emailLoading}
-                  className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm"
+                  className="w-full h-10 font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-lg shadow-zinc-100 transition-all active:scale-[0.98]"
                 >
-                  {emailLoading ? "Sending OTP..." : "Send OTP"}
+                  {emailLoading ? (
+                    <div className="flex items-center gap-2">
+                       <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                       <span className="text-sm">Sending...</span>
+                    </div>
+                  ) : <span className="text-sm">Send Reset Code</span>}
                 </Button>
-
                 {resetError && (
-                  <p className="text-sm text-red-500 font-medium text-center">{resetError}</p>
+                  <div className="bg-red-50 border border-red-100 rounded-lg p-2.5">
+                    <p className="text-[10px] text-red-600 font-bold text-center">{resetError}</p>
+                  </div>
                 )}
               </div>
-
-              <div className="mt-4 text-center text-sm">
+              <div className="mt-6 text-center text-sm">
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-zinc-900 font-medium underline underline-offset-4"
+                  className="inline-flex items-center gap-1.5 text-gray-400 hover:text-zinc-900 font-bold underline underline-offset-4 transition-colors"
                 >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  Back to Login
+                  <ArrowLeft className="w-4 h-4" />
+                  <span className="text-[13px]">Back to Login</span>
                 </Link>
               </div>
             </form>
@@ -268,62 +283,71 @@ const ForgotPassword = () => {
       );
     }
 
-    // ── STEP 2: OTP ──
     if (step === "otp") {
       return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Enter verification code</CardTitle>
-            <CardDescription>
-              We sent a 6-digit OTP to{" "}
-              <span className="font-semibold text-zinc-900">{email}</span>.{" "}
+        <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
+          <CardHeader className="space-y-1 pb-4 pt-6 text-center">
+            <div className="flex items-center justify-center mb-1">
+               <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
+                  <ShieldCheck className="text-white w-5 h-5" />
+               </div>
+            </div>
+            <CardTitle className="text-xl font-bold tracking-tight text-gray-900">Verify Code</CardTitle>
+            <CardDescription className="text-gray-400 text-xs font-medium">
+              Code sent to <span className="text-zinc-900 font-bold">{email}</span>.{" "}
               <button
                 type="button"
-                className="text-zinc-500 underline underline-offset-4 hover:text-zinc-900 text-sm"
+                className="text-zinc-400 font-bold hover:text-zinc-900 transition-colors"
                 onClick={() => { setStep("email"); setOtp(Array(6).fill("")); setOtpError(""); }}
               >
                 Change
               </button>
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-8 px-6">
             <form onSubmit={handleVerifyOtp}>
               <div className="flex flex-col gap-6">
-                <div className="grid gap-3">
-                  <Label className="text-center text-sm text-muted-foreground">
-                    Enter the 6-digit code
+                <div className="grid gap-2">
+                  <Label className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                    6-Digit Verification Code
                   </Label>
                   <OtpInput value={otp} onChange={setOtp} />
                 </div>
-
                 {otpError && (
-                  <p className="text-sm text-red-500 font-medium text-center">{otpError}</p>
+                  <div className="bg-red-50 border border-red-100 rounded-lg p-2.5">
+                    <p className="text-[10px] text-red-600 font-bold text-center">{otpError}</p>
+                  </div>
                 )}
-
-                <Button
-                  type="submit"
-                  disabled={otpLoading}
-                  className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm"
-                >
-                  {otpLoading ? "Verifying..." : "Verify OTP"}
-                </Button>
-
-                <p className="text-center text-sm text-muted-foreground">
-                  Didn't receive the code?{" "}
-                  <button
-                    type="button"
-                    disabled={resendDisabled}
-                    onClick={handleResendOtp}
-                    className={cn(
-                      "font-medium underline underline-offset-4",
-                      resendDisabled
-                        ? "text-gray-400 cursor-not-allowed no-underline"
-                        : "text-zinc-900 hover:text-zinc-700"
-                    )}
+                <div className="space-y-3">
+                  <Button
+                    type="submit"
+                    disabled={otpLoading}
+                    className="w-full h-10 font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-lg shadow-zinc-100 transition-all active:scale-[0.98]"
                   >
-                    Resend OTP {resendDisabled && `(${timer}s)`}
-                  </button>
-                </p>
+                    {otpLoading ? (
+                      <div className="flex items-center gap-2">
+                         <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                         <span className="text-sm">Verifying...</span>
+                      </div>
+                    ) : <span className="text-sm">Verify Code</span>}
+                  </Button>
+                  <p className="text-center text-xs font-medium text-gray-400">
+                    No code?{" "}
+                    <button
+                      type="button"
+                      disabled={resendDisabled}
+                      onClick={handleResendOtp}
+                      className={cn(
+                        "font-bold transition-colors",
+                        resendDisabled
+                          ? "text-gray-200 cursor-not-allowed"
+                          : "text-zinc-900 hover:underline"
+                      )}
+                    >
+                      Resend {resendDisabled && `(${timer}s)`}
+                    </button>
+                  </p>
+                </div>
               </div>
             </form>
           </CardContent>
@@ -331,75 +355,82 @@ const ForgotPassword = () => {
       );
     }
 
-    // ── STEP 3: New Password ──
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Set new password</CardTitle>
-          <CardDescription>
-            Choose a strong password for your account.
+      <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
+        <CardHeader className="space-y-1 pb-4 pt-6 text-center">
+          <div className="flex items-center justify-center mb-1">
+             <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
+                <Lock className="text-white w-5 h-5" />
+             </div>
+          </div>
+          <CardTitle className="text-xl font-bold tracking-tight text-gray-900">New Password</CardTitle>
+          <CardDescription className="text-gray-400 text-xs font-medium">
+            Set a strong password for your account
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-8 px-6">
           <form onSubmit={handleReset}>
-            <div className="flex flex-col gap-5">
-
-              <div className="grid gap-2">
-                <Label htmlFor="newPassword">New Password</Label>
-                <div className="relative">
+            <div className="flex flex-col gap-4">
+              <div className="grid gap-1.5">
+                <Label htmlFor="newPassword" title="Must be at least 8 characters" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">New Password</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
                   <Input
                     id="newPassword"
                     type={showNew ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
-                    className="h-10 px-3 py-2 text-sm pr-10"
+                    className="h-10 pl-10 pr-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 text-sm font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowNew((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-zinc-900 transition-colors"
                     tabIndex={-1}
                   >
-                    {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showNew ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">Must be at least 8 characters long.</p>
               </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
+              <div className="grid gap-1.5">
+                <Label htmlFor="confirmPassword" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Confirm Password</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
                   <Input
                     id="confirmPassword"
                     type={showConfirm ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="h-10 px-3 py-2 text-sm pr-10"
+                    className="h-10 pl-10 pr-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 text-sm font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirm((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-zinc-900 transition-colors"
                     tabIndex={-1}
                   >
-                    {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirm ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">Please confirm your password.</p>
               </div>
-
               {resetError && (
-                <p className="text-sm text-red-500 font-medium text-center">{resetError}</p>
+                <div className="bg-red-50 border border-red-100 rounded-lg p-2.5">
+                  <p className="text-[10px] text-red-600 font-bold text-center">{resetError}</p>
+                </div>
               )}
-
               <Button
                 type="submit"
                 disabled={resetLoading}
-                className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm"
+                className="w-full h-10 font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-lg shadow-zinc-100 transition-all active:scale-[0.98] mt-1"
               >
-                {resetLoading ? "Resetting..." : "Reset Password"}
+                {resetLoading ? (
+                  <div className="flex items-center gap-2">
+                     <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                     <span className="text-sm">Updating...</span>
+                  </div>
+                ) : <span className="text-sm">Reset Password</span>}
               </Button>
             </div>
           </form>
@@ -409,12 +440,56 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <Navbar />
-      <main className="flex-grow flex items-center justify-center p-6 md:p-10 bg-gray-50/50">
-        <div className="w-full max-w-sm">
-          {renderCard()}
+      <main className="flex-grow flex w-full bg-white relative overflow-hidden">
+        {/* Left Side: Image/Branding (Visible on lg+) */}
+        <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-50 items-center justify-center p-12 overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+          
+          <div className="relative z-10 w-full max-w-xl animate-in fade-in slide-in-from-left-8 duration-1000">
+            <div className="mb-10">
+              <h2 className="text-4xl font-extrabold tracking-tight text-zinc-900 mb-4 leading-tight">
+                Secure Your <span className="text-zinc-500">Business Profile</span>
+              </h2>
+              <p className="text-lg text-zinc-500 font-medium max-w-md">
+                Reset your password to keep your business orders and custom designs secure.
+              </p>
+            </div>
+            
+            <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/20">
+               <img 
+                 src="/business-printing-graphic.png" 
+                 alt="Premium Business Printing" 
+                 className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+            </div>
+
+            <div className="mt-12 flex items-center gap-8">
+               <div className="flex flex-col">
+                 <span className="text-zinc-900 font-bold text-lg leading-tight">Enterprise Security</span>
+                 <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Protected</span>
+               </div>
+               <div className="w-px h-8 bg-zinc-200"></div>
+               <div className="flex flex-col">
+                 <span className="text-zinc-900 font-bold text-lg leading-tight">Project Access</span>
+                 <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Always Sync</span>
+               </div>
+            </div>
+          </div>
+
+          <div className="absolute top-[-10%] left-[-10%] w-80 h-80 bg-zinc-200/50 rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-80 h-80 bg-zinc-100/50 rounded-full blur-[100px]"></div>
+        </div>
+
+        {/* Right Side: Form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 bg-white relative">
+          <div className="absolute inset-0 lg:hidden opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+          <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+            {renderCard()}
+          </div>
         </div>
       </main>
       <Footer />

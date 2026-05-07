@@ -128,7 +128,7 @@ const Orders: React.FC = () => {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="px-8 py-3 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-900 transition-all shadow-xl shadow-gray-100"
+            className="px-8 py-3 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-900 transition-all shadow-xl shadow-gray-100 cursor-pointer"
           >
             Browse Storefront
           </button>
@@ -181,7 +181,7 @@ const Orders: React.FC = () => {
                 <div className="flex items-center gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-gray-50">
                   <button
                     onClick={() => navigate(`/profile/orders/${order.id}`)}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-gray-900 transition-all shadow-lg shadow-gray-100"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-gray-900 transition-all shadow-lg shadow-gray-100 cursor-pointer"
                   >
                     Details
                     <ChevronRight size={14} />
