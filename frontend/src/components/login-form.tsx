@@ -61,14 +61,14 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-4", className)} {...props}>
       <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
-        <CardHeader className="space-y-1 pb-4 pt-6">
-          <div className="flex items-center justify-center mb-1">
-             <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
-                <LogIn className="text-white w-5 h-5" />
+        <CardHeader className="space-y-0.5 pb-2 pt-4">
+          <div className="flex items-center justify-center mb-0.5">
+             <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center shadow-lg shadow-zinc-200">
+                <LogIn className="text-white w-4 h-4" />
              </div>
           </div>
-          <CardTitle className="text-xl font-bold text-center tracking-tight text-gray-900">Welcome Back</CardTitle>
-          <CardDescription className="text-center text-gray-400 text-xs font-medium">
+          <CardTitle className="text-lg font-bold text-center tracking-tight text-gray-900 leading-tight">Welcome Back</CardTitle>
+          <CardDescription className="text-center text-gray-400 text-[11px] font-medium">
             Enter your credentials to access your account
           </CardDescription>
         </CardHeader>

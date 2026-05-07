@@ -13,44 +13,45 @@ const AdminHeader = () => {
     };
 
     return (
-        <header className="sticky top-0 z-10 flex h-20 items-center justify-between border-b border-gray-200 bg-white px-8">
-            <div className="flex items-center gap-4">
-                <SidebarTrigger className="shrink-0 -ml-4" />
-                {/* Search bar inside header */}
-                <div className="relative w-72 md:w-96">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+        <header className="sticky top-0 z-50 flex h-20 items-center justify-between border-b border-zinc-100 bg-white/80 backdrop-blur-md px-8">
+            <div className="flex items-center gap-6">
+                <SidebarTrigger className="shrink-0 -ml-4 text-zinc-400 hover:text-zinc-900 transition-colors" />
+                
+                {/* Modern Search bar */}
+                <div className="relative w-72 md:w-[400px] group">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 transition-colors">
                         <Search size={18} />
                     </span>
                     <input
                         type="text"
-                        placeholder="Search for orders, products..."
-                        className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all"
+                        placeholder="Search system nexus..."
+                        className="w-full bg-zinc-50 border border-zinc-100 rounded-2xl py-2.5 pl-12 pr-4 text-[13px] font-semibold text-zinc-900 placeholder:text-zinc-400 focus:bg-white focus:ring-4 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all outline-none"
                     />
                 </div>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
                 {/* Notifications */}
                 <AdminNotifications />
 
                 {/* Separator */}
-                <div className="h-8 w-[1px] bg-gray-200 mx-2"></div>
+                <div className="h-8 w-[1px] bg-zinc-100 mx-2"></div>
 
-                {/* Back to Site / Storefront */}
+                {/* Back to Site */}
                 <button
                     onClick={() => navigate("/")}
-                    className="text-sm font-medium text-gray-600 hover:text-orange-500"
+                    className="px-4 py-2 text-xs font-bold text-zinc-400 uppercase tracking-widest hover:text-zinc-900 transition-colors cursor-pointer"
                 >
                     View Storefront
                 </button>
 
-                {/* Logout */}
+                {/* Logout Button - Premium */}
                 <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-black bg-gray-50 px-4 py-2 rounded-lg transition-colors border border-gray-200"
+                    className="flex items-center gap-2.5 px-5 py-2.5 bg-zinc-900 text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-black transition-all shadow-lg shadow-zinc-900/10 active:scale-95 group cursor-pointer"
                 >
-                    <LogOut size={18} />
-                    <span>Logout</span>
+                    <LogOut size={16} className="text-zinc-400 group-hover:text-white transition-colors" />
+                    <span>System Logout</span>
                 </button>
             </div>
         </header>

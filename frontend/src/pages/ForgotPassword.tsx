@@ -1,11 +1,9 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { sendForgotOtp, verifyOtp, resetPassword } from "../services/api";
-import Header from "../components/Header";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Logo from "../assets/logo.png";
 import {
   Card,
   CardContent,
@@ -190,14 +188,14 @@ const ForgotPassword = () => {
     if (resetDone) {
       return (
         <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
-          <CardHeader className="space-y-1 pb-4 pt-6 text-center">
-            <div className="flex items-center justify-center mb-1">
-               <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-100">
-                  <CheckCircle2 className="text-white w-5 h-5" />
+          <CardHeader className="space-y-0.5 pb-2 pt-4 text-center">
+            <div className="flex items-center justify-center mb-0.5">
+               <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center shadow-lg shadow-green-100">
+                  <CheckCircle2 className="text-white w-4 h-4" />
                </div>
             </div>
-            <CardTitle className="text-xl font-bold tracking-tight text-gray-900">Success!</CardTitle>
-            <CardDescription className="text-gray-400 text-xs font-medium">
+            <CardTitle className="text-lg font-bold tracking-tight text-gray-900 leading-tight">Success!</CardTitle>
+            <CardDescription className="text-gray-400 text-[11px] font-medium">
               Your password has been updated.
             </CardDescription>
           </CardHeader>
@@ -221,14 +219,14 @@ const ForgotPassword = () => {
     if (step === "email") {
       return (
         <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
-          <CardHeader className="space-y-1 pb-4 pt-6 text-center">
-            <div className="flex items-center justify-center mb-1">
-               <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
-                  <Key className="text-white w-5 h-5" />
+          <CardHeader className="space-y-0.5 pb-2 pt-4 text-center">
+            <div className="flex items-center justify-center mb-0.5">
+               <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center shadow-lg shadow-zinc-200">
+                  <Key className="text-white w-4 h-4" />
                </div>
             </div>
-            <CardTitle className="text-xl font-bold tracking-tight text-gray-900">Forgot Password</CardTitle>
-            <CardDescription className="text-gray-400 text-xs font-medium">
+            <CardTitle className="text-lg font-bold tracking-tight text-gray-900 leading-tight">Forgot Password</CardTitle>
+            <CardDescription className="text-gray-400 text-[11px] font-medium">
               We'll send a code to your email
             </CardDescription>
           </CardHeader>
@@ -286,14 +284,14 @@ const ForgotPassword = () => {
     if (step === "otp") {
       return (
         <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
-          <CardHeader className="space-y-1 pb-4 pt-6 text-center">
-            <div className="flex items-center justify-center mb-1">
-               <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
-                  <ShieldCheck className="text-white w-5 h-5" />
+          <CardHeader className="space-y-0.5 pb-2 pt-4 text-center">
+            <div className="flex items-center justify-center mb-0.5">
+               <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center shadow-lg shadow-zinc-200">
+                  <ShieldCheck className="text-white w-4 h-4" />
                </div>
             </div>
-            <CardTitle className="text-xl font-bold tracking-tight text-gray-900">Verify Code</CardTitle>
-            <CardDescription className="text-gray-400 text-xs font-medium">
+            <CardTitle className="text-lg font-bold tracking-tight text-gray-900 leading-tight">Verify Code</CardTitle>
+            <CardDescription className="text-gray-400 text-[11px] font-medium">
               Code sent to <span className="text-zinc-900 font-bold">{email}</span>.{" "}
               <button
                 type="button"
@@ -357,14 +355,14 @@ const ForgotPassword = () => {
 
     return (
       <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
-        <CardHeader className="space-y-1 pb-4 pt-6 text-center">
-          <div className="flex items-center justify-center mb-1">
-             <div className="w-10 h-10 bg-zinc-900 rounded-xl flex items-center justify-center shadow-lg shadow-zinc-200">
-                <Lock className="text-white w-5 h-5" />
+        <CardHeader className="space-y-0.5 pb-2 pt-4 text-center">
+          <div className="flex items-center justify-center mb-0.5">
+             <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center shadow-lg shadow-zinc-200">
+                <Lock className="text-white w-4 h-4" />
              </div>
           </div>
-          <CardTitle className="text-xl font-bold tracking-tight text-gray-900">New Password</CardTitle>
-          <CardDescription className="text-gray-400 text-xs font-medium">
+          <CardTitle className="text-lg font-bold tracking-tight text-gray-900 leading-tight">New Password</CardTitle>
+          <CardDescription className="text-gray-400 text-[11px] font-medium">
             Set a strong password for your account
           </CardDescription>
         </CardHeader>
@@ -440,42 +438,40 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-      <Navbar />
+    <div className="h-screen flex flex-col bg-white overflow-hidden">
       <main className="flex-grow flex w-full bg-white relative overflow-hidden">
         {/* Left Side: Image/Branding (Visible on lg+) */}
-        <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-50 items-center justify-center p-12 overflow-hidden">
+        <div className="hidden lg:flex lg:w-1/2 relative bg-zinc-50 flex-col items-center justify-center p-16 overflow-hidden">
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
           
-          <div className="relative z-10 w-full max-w-xl animate-in fade-in slide-in-from-left-8 duration-1000">
-            <div className="mb-10">
-              <h2 className="text-4xl font-extrabold tracking-tight text-zinc-900 mb-4 leading-tight">
+          <div className="relative z-10 w-full max-lg animate-in fade-in slide-in-from-left-8 duration-1000">
+            <div className="mb-8">
+              <h2 className="text-3xl font-extrabold tracking-tight text-zinc-900 mb-4 leading-tight">
                 Secure Your <span className="text-zinc-500">Business Profile</span>
               </h2>
-              <p className="text-lg text-zinc-500 font-medium max-w-md">
+              <p className="text-base text-zinc-500 font-medium max-w-md">
                 Reset your password to keep your business orders and custom designs secure.
               </p>
             </div>
             
-            <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/20">
+            <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-white/20 max-h-[380px]">
                <img 
                  src="/business-printing-graphic.png" 
                  alt="Premium Business Printing" 
-                 className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
+                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
                />
-               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+               <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
             </div>
 
-            <div className="mt-12 flex items-center gap-8">
+            <div className="mt-8 flex items-center gap-8">
                <div className="flex flex-col">
-                 <span className="text-zinc-900 font-bold text-lg leading-tight">Enterprise Security</span>
-                 <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Protected</span>
+                 <span className="text-zinc-900 font-bold text-lg leading-tight">Secure Access</span>
+                 <span className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest">Protected Profile</span>
                </div>
-               <div className="w-px h-8 bg-zinc-200"></div>
+               <div className="w-px h-6 bg-zinc-200"></div>
                <div className="flex flex-col">
-                 <span className="text-zinc-900 font-bold text-lg leading-tight">Project Access</span>
-                 <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Always Sync</span>
+                 <span className="text-zinc-900 font-bold text-lg leading-tight">Cloud Sync</span>
+                 <span className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest">Design Backup</span>
                </div>
             </div>
           </div>
@@ -485,14 +481,26 @@ const ForgotPassword = () => {
         </div>
 
         {/* Right Side: Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 md:p-8 bg-white relative">
+        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 md:p-8 bg-white relative">
           <div className="absolute inset-0 lg:hidden opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-          <div className="w-full max-w-[400px] relative z-10 animate-in fade-in zoom-in-95 duration-700">
+          
+          <div className="w-full max-w-[400px] relative z-10 flex flex-col items-center animate-in fade-in zoom-in-95 duration-700">
+            {/* Logo above form */}
+            <Link to="/" className="mb-6 hover:opacity-80 transition-opacity">
+              <img src={Logo} alt="PrintifyX Logo" className="h-16 w-auto" />
+            </Link>
+            
             {renderCard()}
+
+            {/* Subtle Back to Home */}
+            <Link to="/" className="mt-8 text-xs font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase tracking-widest flex items-center gap-2">
+              <span className="w-4 h-px bg-zinc-200"></span>
+              Back to Home
+              <span className="w-4 h-px bg-zinc-200"></span>
+            </Link>
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

@@ -104,12 +104,22 @@ const Orders: React.FC = () => {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-red-700 flex items-center gap-4 animate-in slide-in-from-top-4 duration-300">
-          <AlertCircle size={24} />
-          <div>
-            <p className="font-bold tracking-tight">Sync Failure</p>
-            <p className="text-sm opacity-80">{error}</p>
+        <div className="bg-zinc-50 border border-zinc-100 rounded-[2rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 animate-in slide-in-from-top-4 duration-500 shadow-xl shadow-zinc-200/20">
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-zinc-100 shrink-0">
+              <AlertCircle size={24} className="text-zinc-400" />
+            </div>
+            <div>
+              <h3 className="text-base font-black text-zinc-900 tracking-tight uppercase">Session Expired</h3>
+              <p className="text-[13px] text-zinc-500 font-medium leading-relaxed mt-0.5">Your session has timed out. Please sign in again to view your order history.</p>
+            </div>
           </div>
+          <button
+            onClick={() => navigate("/login")}
+            className="w-full md:w-auto px-8 py-3.5 bg-zinc-900 text-white rounded-xl font-bold text-xs uppercase tracking-[0.15em] hover:bg-black transition-all shadow-xl shadow-zinc-900/10 cursor-pointer active:scale-95"
+          >
+            Sign In Now
+          </button>
         </div>
       )}
 

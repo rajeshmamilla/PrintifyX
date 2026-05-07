@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
@@ -35,6 +36,22 @@ const ProductCustomizerPage = () => {
     const [selectedFile, setSelectedFile] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleShareProduct = () => {
+        toast.promise<{ name: string }>(
+            () =>
+                new Promise((resolve, reject) =>
+                    navigator.clipboard.writeText(window.location.href)
+                        .then(() => setTimeout(() => resolve({ name: productData?.name || "Product" }), 1000))
+                        .catch(reject)
+                ),
+            {
+                loading: "Copying share link...",
+                success: (data) => `${data.name} link copied to clipboard!`,
+                error: "Failed to copy link to clipboard",
+            }
+        );
+    };
 
     useEffect(() => {
         const fetchProductData = async () => {
@@ -279,8 +296,11 @@ const ProductCustomizerPage = () => {
                         {/* Options and Uploads Section */}
                         <div className="bg-white border rounded-lg p-4 shadow-sm">
                             <div className="flex justify-between items-center mb-2 border-b pb-2">
-                                <h2 className="text-lg font-bold text-gray-900">Customize & Upload</h2>
-                                <button className="text-blue-600 text-sm hover:underline flex items-center">
+                                <h2 className="text-lg font-bold text-gray-900">Upload Sample</h2>
+                                <button 
+                                    onClick={handleShareProduct}
+                                    className="text-blue-600 text-sm hover:underline flex items-center cursor-pointer active:scale-95 transition-transform"
+                                >
                                     <span className="mr-1">Share Product</span>
                                 </button>
                             </div>

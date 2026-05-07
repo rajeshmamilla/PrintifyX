@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Loader2, Package, CreditCard, AlertCircle, Box, Truck, XCircle, CheckCircle2, Printer } from 'lucide-react';
+import { ChevronLeft, Loader2, Package, CreditCard, AlertCircle, Box, Truck, XCircle, CheckCircle2, Printer, MapPin, Phone, Mail, Calendar } from 'lucide-react';
 import { fetchWithAuth } from "../../services/apiClient";
+import { toast } from "sonner";
 
 // Import images
 import plasticBusinessCardsImg from "../../assets/products/plastic business cards.png";
@@ -22,7 +23,6 @@ const OrderDetails: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [cancelling, setCancelling] = useState(false);
     const [fetchedAddress, setFetchedAddress] = useState<any>(null);
-    const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     const userId = localStorage.getItem('userId');
     const isUserValid = userId && userId !== "undefined" && userId !== "null";
@@ -76,13 +76,10 @@ const OrderDetails: React.FC = () => {
             });
 
             if (!res.ok) throw new Error("Failed to cancel order");
-
-            setNotification({ message: "Order cancelled successfully", type: "success" });
+            toast.success("Order cancelled successfully");
             fetchOrderDetails();
-            setTimeout(() => setNotification(null), 3000);
         } catch (err: any) {
-            setNotification({ message: err.message, type: "error" });
-            setTimeout(() => setNotification(null), 3000);
+            toast.error(err.message || "Failed to cancel order");
         } finally {
             setCancelling(false);
         }
@@ -90,17 +87,17 @@ const OrderDetails: React.FC = () => {
 
     const getStatusSteps = (status: string) => {
         const stages = [
-            { key: 'PAID', name: 'Payment Received', icon: <CreditCard size={18} /> },
-            { key: 'PROCESSING', name: 'Printing', icon: <Printer size={18} /> },
-            { key: 'SHIPPED', name: 'Shipped', icon: <Truck size={18} /> },
-            { key: 'DELIVERED', name: 'Delivered', icon: <Package size={18} /> },
+            { key: 'PAID', name: 'Payment Verified', icon: <CreditCard size={16} /> },
+            { key: 'PROCESSING', name: 'In Production', icon: <Printer size={16} /> },
+            { key: 'SHIPPED', name: 'Dispatched', icon: <Truck size={16} /> },
+            { key: 'DELIVERED', name: 'Delivered', icon: <CheckCircle2 size={16} /> },
         ];
 
         const statusOrder = ['CREATED', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
         const currentIndex = statusOrder.indexOf(status);
 
         if (status === 'CANCELLED') {
-            return [{ name: 'Order Cancelled', status: 'active', date: 'N/A', icon: <XCircle size={18} className="text-red-500" /> }];
+            return [{ name: 'Order Cancelled', status: 'active', date: 'Cancelled', icon: <XCircle size={16} className="text-red-500" /> }];
         }
 
         return stages.map((stage) => {
@@ -110,231 +107,280 @@ const OrderDetails: React.FC = () => {
             if (stageOrder < currentIndex) {
                 stepStatus = 'completed';
             } else if (stageOrder === currentIndex) {
-                if (stage.key === 'DELIVERED') {
-                    stepStatus = 'active';
-                } else {
-                    stepStatus = 'completed';
-                }
-            } else if (stageOrder === currentIndex + 1 || (status === 'CREATED' && stage.key === 'PAID')) {
                 stepStatus = 'active';
             }
 
             return {
                 ...stage,
                 status: stepStatus,
-                date: stepStatus === 'completed' ? 'Done' : 'Pending'
+                date: stepStatus === 'completed' ? 'Verified' : stepStatus === 'active' ? 'In Progress' : 'Upcoming'
             };
         });
     };
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center py-20">
-                <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
-                <p className="font-bold text-gray-500 uppercase tracking-wider text-xs">Loading order details...</p>
+            <div className="flex flex-col items-center justify-center py-32 animate-in fade-in duration-700">
+                <div className="relative">
+                    <Loader2 className="animate-spin text-zinc-900 mb-6" size={48} strokeWidth={1.5} />
+                    <div className="absolute inset-0 blur-xl bg-zinc-400/20 animate-pulse"></div>
+                </div>
+                <p className="font-bold text-zinc-400 uppercase tracking-[0.2em] text-[10px]">Syncing Order Data</p>
             </div>
         );
     }
 
     if (!order) return null;
 
+    const formattedDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    }) : 'N/A';
+
     return (
-        <div className="space-y-8 animate-in fade-in duration-500 relative">
-            {notification && (
-                <div className={`absolute top-0 right-0 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-right-8 duration-300 ${notification.type === 'success' ? 'bg-green-50 border-green-100 text-green-800' : 'bg-red-50 border-red-100 text-red-800'}`}>
-                    {notification.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
-                    <p className="font-bold text-sm tracking-tight">{notification.message}</p>
-                </div>
-            )}
-
-            <button
-                onClick={() => navigate('/profile/orders')}
-                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 font-bold text-sm transition-colors group cursor-pointer"
-            >
-                <div className="p-2 bg-white rounded-lg border border-gray-100 group-hover:shadow-md transition-all">
-                    <ChevronLeft size={16} />
-                </div>
-                Back to Orders
-            </button>
-
-            {error && (
-                <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-red-700 flex items-center gap-4 animate-in slide-in-from-top-4 duration-300">
-                    <AlertCircle size={24} />
+        <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Header Section - More Compact */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-zinc-100">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => navigate('/profile/orders')}
+                        className="p-2 bg-white rounded-lg border border-zinc-100 hover:shadow-md transition-all group cursor-pointer"
+                        title="Back to History"
+                    >
+                        <ChevronLeft size={16} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                    </button>
                     <div>
-                        <p className="font-bold tracking-tight">Access Failure</p>
-                        <p className="text-sm opacity-80">{error}</p>
+                        <div className="flex items-center gap-2 mb-0.5">
+                            <h1 className="text-xl font-black tracking-tight text-zinc-900">Order Details</h1>
+                            <span className="px-2 py-0.5 bg-zinc-900 text-white rounded-full text-[9px] font-bold tracking-widest uppercase">
+                                #{order.orderNumber}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-3 text-zinc-400">
+                            <div className="flex items-center gap-1">
+                                <Calendar size={12} />
+                                <span className="text-[10px] font-semibold">{formattedDate}</span>
+                            </div>
+                            <div className="w-1 h-1 bg-zinc-200 rounded-full"></div>
+                            <div className="flex items-center gap-1">
+                                <Package size={12} />
+                                <span className="text-[10px] font-semibold">{order.items?.length || 0} Items</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            )}
 
-            {!order && !loading && !error && (
-                <div className="bg-white rounded-[2rem] p-16 flex flex-col items-center text-center border border-gray-100">
-                    <AlertCircle size={48} className="text-gray-200 mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Order not found</h3>
-                    <p className="text-gray-500 font-medium max-w-xs mb-8">This order might not belong to your account or has been removed.</p>
-                </div>
-            )}
+                {/* Cancel Action - More Compact */}
+                {(order.status === "CREATED" || order.status === "PENDING" || order.status === "PAID") && (
+                    <button
+                        disabled={cancelling}
+                        onClick={handleCancelOrder}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all text-[10px] font-bold uppercase tracking-widest border border-red-100 disabled:opacity-50 cursor-pointer shadow-sm"
+                    >
+                        {cancelling ? <Loader2 className="animate-spin" size={12} /> : <XCircle size={12} />}
+                        {cancelling ? 'Syncing...' : 'Cancel Order'}
+                    </button>
+                )}
+            </div>
 
-            {order && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Main Content (Merged Layout) */}
-                    <div className="lg:col-span-2">
-                        {/* Master Wrap Card */}
-                        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full">
-                            
-                            {/* Order Contents Section */}
-                            <div className="p-8 pb-6 border-b border-gray-100">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h1 className="text-2xl font-semibold text-gray-900">Order Contents</h1>
-                                    <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold font-mono">#{order.orderNumber}</span>
-                                </div>
-                                <div className="space-y-4">
-                                    {order.items?.map((item: any) => {
-                                        const prodImg = getProductImage(item.productName);
-                                        return (
-                                        <div key={item.id} className="flex gap-4 p-4 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-white transition-colors group">
-                                            <div className="h-16 w-16 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-gray-100 overflow-hidden text-gray-200 p-1 group-hover:shadow-md transition-shadow">
-                                                {prodImg ? <img src={prodImg} alt={item.productName} className="object-contain w-full h-full drop-shadow-sm" /> : <Package size={28} strokeWidth={1} />}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Side: Items & Address (Column 1-8) */}
+                <div className="lg:col-span-8 space-y-6">
+                    {/* Items Section */}
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 bg-zinc-100 rounded flex items-center justify-center">
+                                <Package size={12} className="text-zinc-600" />
+                            </div>
+                            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">Items Ordered</h2>
+                        </div>
+                        
+                        <div className="space-y-3">
+                            {order.items?.map((item: any) => {
+                                const prodImg = getProductImage(item.productName);
+                                return (
+                                    <div key={item.id} className="group relative bg-white border border-zinc-100 rounded-2xl p-4 hover:shadow-lg hover:shadow-zinc-200/30 transition-all duration-300">
+                                        <div className="flex gap-4">
+                                            {/* Thumbnail - Compact */}
+                                            <div className="relative h-20 w-20 bg-zinc-50 rounded-xl flex items-center justify-center shrink-0 border border-zinc-100 overflow-hidden p-2 group-hover:scale-105 transition-transform duration-500">
+                                                {prodImg ? 
+                                                    <img src={prodImg} alt={item.productName} className="object-contain w-full h-full drop-shadow-md" /> : 
+                                                    <Box size={24} strokeWidth={1} className="text-zinc-300" />
+                                                }
+                                                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/5 to-transparent"></div>
                                             </div>
-                                            <div className="flex-1 flex flex-col justify-center">
-                                                <h4 className="font-semibold text-gray-900 text-sm mb-1">{item.productName}</h4>
-                                                {item.customization?.sampleImageUrl && (
-                                                    <a 
-                                                        href={item.customization.sampleImageUrl} 
-                                                        target="_blank" 
-                                                        rel="noopener noreferrer"
-                                                        className="text-[10px] text-blue-600 hover:underline flex items-center gap-1 font-bold mb-1 cursor-pointer"
-                                                    >
-                                                        <Printer size={10} /> View Sample Design
-                                                    </a>
-                                                )}
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Qty</span>
-                                                        <span className="text-xs font-semibold text-gray-900">{item.quantity} Units</span>
+
+                                            {/* Info */}
+                                            <div className="flex-1 flex flex-col py-0.5">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className="font-bold text-zinc-900 text-sm mb-1 group-hover:text-blue-600 transition-colors">{item.productName}</h4>
+                                                        {item.customization?.sampleImageUrl && (
+                                                            <a 
+                                                                href={item.customization.sampleImageUrl} 
+                                                                target="_blank" 
+                                                                rel="noopener noreferrer"
+                                                                className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-[8px] font-bold uppercase tracking-wider hover:bg-blue-100 transition-colors"
+                                                            >
+                                                                <Printer size={8} /> View Design
+                                                            </a>
+                                                        )}
                                                     </div>
-                                                    <div className="w-px h-6 bg-gray-200"></div>
+                                                    <p className="text-base font-black text-zinc-900">₹{item.totalPrice.toLocaleString()}</p>
+                                                </div>
+
+                                                <div className="mt-auto flex items-center gap-4">
                                                     <div className="flex flex-col">
-                                                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Unit Price</span>
-                                                        <span className="text-xs font-semibold text-gray-900">₹{item.unitPrice.toLocaleString()}</span>
+                                                        <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-widest">Qty</span>
+                                                        <span className="text-[11px] font-bold text-zinc-900">{item.quantity} Units</span>
+                                                    </div>
+                                                    <div className="w-px h-5 bg-zinc-100"></div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-widest">Unit Cost</span>
+                                                        <span className="text-[11px] font-bold text-zinc-900">₹{item.unitPrice.toLocaleString()}</span>
+                                                    </div>
+                                                    <div className="ml-auto">
+                                                        <div className="px-2 py-0.5 bg-zinc-50 border border-zinc-100 rounded text-[8px] font-bold uppercase tracking-widest text-zinc-400">
+                                                            Standard Finish
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div className="text-right flex flex-col justify-center items-end gap-1">
-                                                <div className="inline-flex px-2 py-0.5 bg-green-50 text-green-700 text-[9px] font-bold uppercase tracking-wider rounded border border-green-100">
-                                                    Standard
-                                                </div>
-                                                <p className="text-lg font-bold text-blue-600">₹{item.totalPrice.toLocaleString()}</p>
                                             </div>
                                         </div>
-                                    )})}
-                                </div>
-                            </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
 
-                            {/* Shipping section aligned nicely */}
-                            <div className="p-8 pt-6 bg-gray-50/50 flex flex-col flex-1">
-                                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                    <CreditCard size={16} className="text-orange-500" />
-                                    Shipping & Contact Details
-                                </h3>
-                                
-                                <div className="grid md:grid-cols-2 gap-6 bg-white p-6 rounded-xl border border-gray-100 shadow-sm h-full">
+                    {/* Shipping & Contact Grid - Compact */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="bg-white border border-zinc-100 rounded-2xl p-6 space-y-4">
+                            <div className="flex items-center gap-2">
+                                <MapPin size={14} className="text-orange-500" />
+                                <h3 className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-400">Delivery Information</h3>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-xs font-black text-zinc-900">{order.shippingName || order.customerName}</p>
+                                <p className="text-[11px] text-zinc-500 font-medium leading-relaxed">
                                     {(() => {
                                         const hasOrderAddress = order.shippingAddressLine1;
-                                        return (
-                                        <>
-                                            <div>
-                                                <p className="text-sm font-bold text-gray-900 mb-1">{order.shippingName || order.customerName}</p>
-                                                <p className="text-xs text-gray-500 font-medium mb-1">{order.customerEmail}</p>
-                                                <p className="text-xs text-gray-500 font-medium">{order.customerPhone}</p>
-                                            </div>
-                                            
-                                            {(hasOrderAddress || fetchedAddress) && (
-                                                <div className="md:border-l md:border-gray-100 md:pl-6">
-                                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Delivery Address</p>
-                                                    <p className="text-xs text-gray-600 font-medium leading-relaxed">
-                                                        {hasOrderAddress ? (
-                                                            <>
-                                                                {order.shippingAddressLine1} {order.shippingAddressLine2}<br/>
-                                                                {order.shippingCity}, {order.shippingState} {order.shippingPincode}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                {fetchedAddress.addressLine1} {fetchedAddress.addressLine2}<br/>
-                                                                {fetchedAddress.city}, {fetchedAddress.state} {fetchedAddress.pincode}
-                                                            </>
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </>
-                                        );
+                                        if (hasOrderAddress) {
+                                            return (
+                                                <>
+                                                    {order.shippingAddressLine1} {order.shippingAddressLine2}, {order.shippingCity}, {order.shippingState} {order.shippingPincode}
+                                                </>
+                                            );
+                                        } else if (fetchedAddress) {
+                                            return (
+                                                <>
+                                                    {fetchedAddress.addressLine1} {fetchedAddress.addressLine2}, {fetchedAddress.city}, {fetchedAddress.state} {fetchedAddress.pincode}
+                                                </>
+                                            );
+                                        }
+                                        return "No address specified";
                                     })()}
-                                </div>
+                                </p>
                             </div>
-                            
-                            {/* Total Summary Row anchored at bottom of block */}
-                            <div className="bg-gray-900 p-6 flex flex-row items-center justify-between text-white">
-                                <span className="font-bold uppercase tracking-wider text-sm opacity-80">Total Bill Amount</span>
-                                <div className="text-right">
-                                    <p className="text-3xl font-semibold">₹{order.totalAmount.toLocaleString()}</p>
-                                    <p className="text-[10px] text-gray-400 italic mt-0.5 font-bold uppercase tracking-wider">GST Included</p>
-                                </div>
-                            </div>
-
                         </div>
-                    </div>
 
-                    {/* Status Tracking Sidebar */}
-                    <div className="space-y-6">
-                        <div className="bg-blue-50 rounded-[2rem] p-8 border border-blue-200 shadow-sm relative overflow-hidden">
-                            <h3 className="text-xl font-bold text-blue-900 uppercase tracking-wider mb-8 flex items-center gap-2">
-                                <Box size={24} className="text-blue-600" />
-                                Status
-                            </h3>
-                            <div className="relative">
-                                {/* Vertical line */}
-                                <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-blue-200 z-0" />
-                                <div className="space-y-8 relative z-10">
-                                    {getStatusSteps(order.status).map((step) => (
-                                        <div key={step.name} className="flex items-start gap-4">
-                                            <div className={`p-2 rounded-full border-4 border-blue-50 shadow-sm flex items-center justify-center shrink-0 ${
-                                                step.status === 'completed' ? 'bg-green-500 text-white border-green-100' :
-                                                step.status === 'active' ? 'bg-blue-500 text-white animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.5)] border-blue-100' :
-                                                'bg-white text-blue-200 border-blue-100'
-                                            }`}>
-                                                {step.icon}
-                                            </div>
-                                            <div className="flex-grow pt-1">
-                                                <div className="flex justify-between items-center">
-                                                    <h4 className={`text-sm font-bold ${
-                                                        step.status === 'pending' ? 'text-blue-300' : 'text-blue-900'
-                                                    }`}>{step.name}</h4>
-                                                </div>
-                                                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mt-0.5">{step.date}</p>
-                                            </div>
-                                        </div>
-                                    ))}
+                        <div className="bg-white border border-zinc-100 rounded-2xl p-6 space-y-4">
+                            <div className="flex items-center gap-2">
+                                <Mail size={14} className="text-blue-500" />
+                                <h3 className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-400">Contact Details</h3>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <Mail size={12} className="text-zinc-400" />
+                                    <p className="text-[11px] text-zinc-900 font-bold tracking-tight">{order.customerEmail}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Phone size={12} className="text-zinc-400" />
+                                    <p className="text-[11px] text-zinc-900 font-bold tracking-tight">{order.customerPhone}</p>
                                 </div>
                             </div>
-
-                            {(order.status === "CREATED" || order.status === "PENDING" || order.status === "PAID") && (
-                                <div className="mt-6 pt-4 border-t border-blue-200 flex justify-end">
-                                    <button
-                                        disabled={cancelling}
-                                        onClick={handleCancelOrder}
-                                        className="flex items-center gap-1.5 px-3 py-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all text-xs font-semibold border border-transparent hover:border-red-100 disabled:opacity-50 cursor-pointer"
-                                        title="Cancel Order"
-                                    >
-                                        {cancelling ? <Loader2 className="animate-spin" size={12} /> : <XCircle size={12} />}
-                                        {cancelling ? 'Cancelling...' : 'Cancel Order'}
-                                    </button>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
-            )}
+
+                {/* Right Side: Tracking & Total (Column 9-12) */}
+                <div className="lg:col-span-4 space-y-6">
+                    {/* Status Tracker Card - Compact */}
+                    <div className="bg-white border border-zinc-100 rounded-[2rem] p-8 shadow-xl shadow-zinc-200/20 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
+                            <Box size={80} strokeWidth={1} />
+                        </div>
+
+                        <h3 className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-8 flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                            Track shipment
+                        </h3>
+
+                        <div className="relative">
+                            <div className="absolute left-[13px] top-4 bottom-4 w-[1.5px] bg-zinc-100 z-0">
+                                <div 
+                                    className="w-full bg-zinc-900 transition-all duration-1000 ease-in-out" 
+                                    style={{ height: `${Math.max(0, (getStatusSteps(order.status).filter(s => s.status === 'completed').length / 3) * 100)}%` }}
+                                ></div>
+                            </div>
+
+                            <div className="space-y-6 relative z-10">
+                                {getStatusSteps(order.status).map((step, idx) => (
+                                    <div key={idx} className="flex items-start gap-4">
+                                        <div className={`w-7 h-7 rounded-full shadow-md flex items-center justify-center shrink-0 transition-all duration-500 ${
+                                            step.status === 'completed' ? 'bg-zinc-900 text-white ring-4 ring-zinc-50' :
+                                            step.status === 'active' ? 'bg-blue-600 text-white animate-pulse ring-4 ring-blue-50' :
+                                            'bg-white text-zinc-300 border border-zinc-100'
+                                        }`}>
+                                            {React.cloneElement(step.icon as React.ReactElement, { size: 12 })}
+                                        </div>
+                                        <div className="flex-grow">
+                                            <h4 className={`text-[10px] font-black uppercase tracking-widest ${
+                                                step.status === 'pending' ? 'text-zinc-300' : 'text-zinc-900'
+                                            }`}>{step.name}</h4>
+                                            <p className={`text-[9px] font-bold tracking-tight mt-0.5 ${
+                                                step.status === 'completed' ? 'text-green-600' : 
+                                                step.status === 'active' ? 'text-blue-500' : 'text-zinc-400'
+                                            }`}>{step.date}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Total Summary Card - Compact */}
+                    <div className="bg-zinc-900 rounded-[2rem] p-8 text-white shadow-2xl shadow-zinc-900/30 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                            <CreditCard size={100} strokeWidth={1} />
+                        </div>
+                        
+                        <div className="relative z-10 space-y-5">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+                                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-400">Final Invoice</span>
+                            </div>
+
+                            <div>
+                                <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5">Grand Total</p>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-3xl font-black tracking-tighter">₹{order.totalAmount.toLocaleString()}</span>
+                                    <span className="text-[10px] font-bold text-zinc-500">INR</span>
+                                </div>
+                            </div>
+
+                            <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                                <div className="flex flex-col">
+                                    <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Taxation</span>
+                                    <span className="text-[9px] font-bold text-zinc-300 tracking-tight">GST Included (18%)</span>
+                                </div>
+                                <CheckCircle2 className="text-green-400" size={16} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
