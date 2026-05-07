@@ -50,9 +50,9 @@ const Home = () => {
 
         {/* TRENDING PRODUCTS SECTION */}
         <section id="trending" className="bg-white py-24">
-          <div className="mx-auto max-w-[1200px] px-8">
+          <div className="mx-auto max-w-[1200px] px-4 md:px-8">
             <div className="mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Trending Now</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">Trending Now</h2>
               <p className="text-gray-500 mt-2 font-medium italic">Hand-picked bestsellers ready for your design.</p>
             </div>
 
@@ -115,8 +115,8 @@ const Home = () => {
                     ))
                   )}
                 </CarouselContent>
-                <CarouselPrevious className="-left-12 h-12 w-12 border-none bg-white shadow-xl hover:bg-orange-500 hover:text-white transition-all" />
-                <CarouselNext className="-right-12 h-12 w-12 border-none bg-white shadow-xl hover:bg-orange-500 hover:text-white transition-all" />
+                <CarouselPrevious className="hidden md:flex -left-12 h-12 w-12 border-none bg-white shadow-xl hover:bg-orange-500 hover:text-white transition-all" />
+                <CarouselNext className="hidden md:flex -right-12 h-12 w-12 border-none bg-white shadow-xl hover:bg-orange-500 hover:text-white transition-all" />
               </Carousel>
             </div>
           </div>

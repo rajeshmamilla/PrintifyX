@@ -52,23 +52,23 @@ const Navbar = () => {
 
   return (
     <nav
-      className="relative bg-[#2b2b2b] h-[58px]"
+      className="relative bg-[#2b2b2b] h-[58px] hidden md:block"
       onMouseLeave={() => setActiveMenuId(null)}
     >
       {/* NAV ITEMS */}
-      <ul className="flex h-full items-center justify-center gap-2 text-white">
+      <ul className="flex h-full items-center md:justify-center gap-1 md:gap-2 text-white px-4 md:px-0 min-w-max md:min-w-0">
         {categoriesToRender.map((category) => (
           <li
             key={category.id}
             onMouseEnter={() => setActiveMenuId(category.id)}
             className="h-full flex items-center relative"
           >
-            <Link 
+            <Link
               to={`/categories/${category.slug}`}
               className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-base font-medium transition-all duration-300 ease-in-out hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white focus:outline-none disabled:pointer-events-none disabled:opacity-50"
               onClick={(e) => {
                 if (category.products.length === 0 && category.id < 0) {
-                     handlePlaceholderClick(e);
+                  handlePlaceholderClick(e);
                 }
               }}
             >

@@ -16,7 +16,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-[420px] w-full overflow-hidden">
+    <section className="relative h-[calc(100vh-160px)] w-full overflow-hidden">
       {/* BACKGROUND IMAGES */}
       <div className="absolute inset-0">
         {images.map((img, index) => (
@@ -37,18 +37,18 @@ const Hero = () => {
       </div>
 
       {/* CONTENT */}
-      <div className="relative z-10 flex min-h-[520px] flex-col items-center justify-center px-6 text-center">
-        <h2 className="mb-2 text-[36px] font-bold text-black">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+        <h2 className="mb-4 text-[36px] md:text-[56px] font-bold text-black leading-tight max-w-4xl">
           High Quality Printing Services
         </h2>
 
-        <p className="text-[18px] text-gray-700">
+        <p className="text-[20px] md:text-[24px] text-gray-700 max-w-2xl">
           Business cards, banners, posters & more
         </p>
 
         <a
           href="#trending"
-          className="mt-10 rounded border border-black px-8 py-3 text-black font-bold transition-all duration-400 hover:bg-black hover:text-white inline-block uppercase tracking-wider text-sm"
+          className="mt-12 rounded border-2 border-black px-12 py-4 text-black font-bold transition-all duration-400 hover:bg-black hover:text-white inline-block uppercase tracking-widest text-sm"
         >
           Order Now
         </a>

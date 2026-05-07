@@ -13,3 +13,17 @@ body {
   font-family: 'Inter', sans-serif;
   color: #111827;
 }
+
+/* Global cursor fix for all interactive elements */
+button, 
+a, 
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}

@@ -25,6 +25,8 @@ const PaymentPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [cartTotal, setCartTotal] = useState<number>(0);
     const [selectedMethod, setSelectedMethod] = useState<string>('upi');
+    const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+    const [showAddressList, setShowAddressList] = useState(false);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     const [formData, setFormData] = useState<AddressFormData>({
@@ -58,6 +60,7 @@ const PaymentPage: React.FC = () => {
                 const res = await fetchWithAuth('/addresses');
                 if (res.ok) {
                     const addresses = await res.json();
+                    setSavedAddresses(addresses);
                     if (addresses.length > 0) {
                         const defaultAddr = addresses.find((a: any) => a.isDefault) || addresses[0];
                         setFormData({
@@ -146,10 +149,53 @@ const PaymentPage: React.FC = () => {
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* LEFT: Address Form */}
                     <div className="w-full lg:w-2/3 bg-white p-10 rounded-2xl border border-gray-100 shadow-sm">
-                        <h2 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-3">
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 text-white text-xs">1</span>
-                            Shipping Address
-                        </h2>
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-3">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 text-white text-xs">1</span>
+                                Shipping Address
+                            </h2>
+                            {savedAddresses.length > 0 && (
+                                <button 
+                                    type="button"
+                                    onClick={() => setShowAddressList(!showAddressList)}
+                                    className="text-[10px] font-black text-orange-500 uppercase tracking-widest hover:underline flex items-center gap-1"
+                                >
+                                    <MapPin size={12} /> {showAddressList ? "Hide Saved" : "Select Saved Address"}
+                                </button>
+                            )}
+                        </div>
+
+                        {showAddressList && savedAddresses.length > 0 && (
+                            <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Your Saved Addresses</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {savedAddresses.map((addr) => (
+                                        <div 
+                                            key={addr.id}
+                                            onClick={() => {
+                                                setFormData({
+                                                    name: addr.name || '',
+                                                    phone: addr.phone || '',
+                                                    addressLine1: addr.addressLine1 || '',
+                                                    addressLine2: addr.addressLine2 || '',
+                                                    city: addr.city || '',
+                                                    state: addr.state || '',
+                                                    pincode: addr.pincode || ''
+                                                });
+                                                setShowAddressList(false);
+                                                setNotification({ message: "Address applied!", type: "success" });
+                                                setTimeout(() => setNotification(null), 2000);
+                                            }}
+                                            className="p-3 bg-white border border-gray-200 rounded-lg cursor-pointer hover:border-orange-500 hover:shadow-md transition-all group"
+                                        >
+                                            <p className="text-xs font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{addr.name}</p>
+                                            <p className="text-[10px] text-gray-500 mt-1 line-clamp-1">{addr.addressLine1}, {addr.city}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <form onSubmit={handleAddressSubmit} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                                 <div className="space-y-2">
