@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Plus, ToggleLeft, ToggleRight, Loader2, Filter, Edit, Trash2, Package, Layers, ExternalLink } from "lucide-react";
+import { Plus, ToggleLeft, ToggleRight, Loader2, Filter, Edit, Trash2, Package, Layers } from "lucide-react";
 import { fetchWithAuth } from "../../services/apiClient";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { checkHealth } from "../services/apiClient";
-import { Loader2, Server, ShieldCheck, Zap } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const BackendContext = createContext<{ isReady: boolean }>({ isReady: false });
 

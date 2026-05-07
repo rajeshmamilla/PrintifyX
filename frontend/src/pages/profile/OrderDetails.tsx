@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Loader2, Package, CreditCard, AlertCircle, Box, Truck, XCircle, CheckCircle2, Printer, MapPin, Phone, Mail, Calendar } from 'lucide-react';
+import { ChevronLeft, Loader2, Package, CreditCard, Box, Truck, XCircle, CheckCircle2, Printer, MapPin, Phone, Mail, Calendar } from 'lucide-react';
 import { fetchWithAuth } from "../../services/apiClient";
 import { toast } from "sonner";
 
@@ -20,7 +20,6 @@ const OrderDetails: React.FC = () => {
     const navigate = useNavigate();
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [cancelling, setCancelling] = useState(false);
     const [fetchedAddress, setFetchedAddress] = useState<any>(null);
 
@@ -59,7 +58,6 @@ const OrderDetails: React.FC = () => {
             }
         } catch (err: any) {
             console.error(err);
-            setError(err.message || 'Failed to fetch order details');
         } finally {
             setLoading(false);
         }
@@ -333,7 +331,7 @@ const OrderDetails: React.FC = () => {
                                             step.status === 'active' ? 'bg-blue-600 text-white animate-pulse ring-4 ring-blue-50' :
                                             'bg-white text-zinc-300 border border-zinc-100'
                                         }`}>
-                                            {React.cloneElement(step.icon as React.ReactElement, { size: 12 })}
+                                            {React.cloneElement(step.icon as React.ReactElement<any>, { size: 12 })}
                                         </div>
                                         <div className="flex-grow">
                                             <h4 className={`text-[10px] font-black uppercase tracking-widest ${

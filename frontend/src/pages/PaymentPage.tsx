@@ -28,7 +28,6 @@ const PaymentPage: React.FC = () => {
     const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
     const [showAddressList, setShowAddressList] = useState(false);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-    const [isFetchingAddresses, setIsFetchingAddresses] = useState(false);
 
     const [formData, setFormData] = useState<AddressFormData>({
         name: '',
@@ -58,7 +57,6 @@ const PaymentPage: React.FC = () => {
                 }
 
                 // Fetch Saved Addresses for Auto-fill
-                setIsFetchingAddresses(true);
                 const res = await fetchWithAuth('/addresses');
                 if (res.ok) {
                     const addresses = await res.json();
@@ -76,7 +74,6 @@ const PaymentPage: React.FC = () => {
                         });
                     }
                 }
-                setIsFetchingAddresses(false);
             } catch (err) {
                 console.error("Failed to fetch data:", err);
             }
