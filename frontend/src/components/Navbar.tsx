@@ -52,11 +52,11 @@ const Navbar = () => {
 
   return (
     <nav
-      className="relative bg-[#2b2b2b] h-[58px]"
+      className="relative bg-[#2b2b2b] h-[58px] hidden md:block"
       onMouseLeave={() => setActiveMenuId(null)}
     >
       {/* NAV ITEMS */}
-      <ul className="flex h-full items-center justify-center gap-2 text-white">
+      <ul className="flex h-full items-center md:justify-center gap-1 md:gap-2 text-white px-4 md:px-0 min-w-max md:min-w-0">
         {categoriesToRender.map((category) => (
           <li
             key={category.id}

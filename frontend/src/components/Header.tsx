@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { cartService } from "../services/cart.service";
-import { Search, Phone, User, ShoppingCart, X } from "lucide-react";
+import { Search, Phone, User, ShoppingCart, X, Menu } from "lucide-react";
 
 // Hardcoded product list for frontend-only search
 const PRODUCTS = [
@@ -100,6 +100,24 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<typeof PRODUCTS>([]);
   const [showResults, setShowResults] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navCategories, setNavCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchNavData = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const response = await fetch(`${baseUrl}/categories/with-products`);
+        if (response.ok) {
+          const data = await response.json();
+          setNavCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching navbar categories:", error);
+      }
+    };
+    fetchNavData();
+  }, []);
 
   useEffect(() => {
     // Handle clicking outside to close search results
@@ -209,15 +227,23 @@ const Header = () => {
   };
 
   return (
-    <header className="flex items-center gap-10 bg-white px-[100px] py-[38px] border-b border-gray-200">
+    <header className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 md:gap-10 bg-white px-4 md:px-[100px] py-4 md:py-[38px] border-b border-gray-200 sticky top-0 z-[500]">
+      {/* Mobile Menu Toggle */}
+      <button 
+        className="md:hidden p-2 text-gray-700 hover:text-orange-500 transition-colors"
+        onClick={() => setIsMobileMenuOpen(true)}
+      >
+        <Menu size={24} />
+      </button>
+
       {/* Logo */}
-      <Link to="/" className="cursor-pointer">
-        <h1 className="text-[30px] font-bold">PrintifyX</h1>
+      <Link to="/" className="cursor-pointer shrink-0">
+        <h1 className="text-2xl md:text-[30px] font-bold">PrintifyX</h1>
       </Link>
 
       {/* Search */}
-      <div className="relative flex flex-1 justify-center group" ref={searchRef}>
-        <div className="relative w-1/2">
+      <div className="relative flex order-3 md:order-2 w-full md:flex-1 justify-center group" ref={searchRef}>
+        <div className="relative w-full md:w-1/2">
           <input
             ref={inputRef}
             value={searchQuery}
@@ -298,10 +324,10 @@ const Header = () => {
       </div>
 
       {/* Header actions */}
-      <div className="flex items-center gap-8">
-        <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
+      <div className="flex items-center gap-4 md:gap-8 order-2 md:order-3 ml-auto md:ml-0">
+        <div className="flex items-center gap-2 text-sm md:text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
           <Phone size={20} />
-          <span>+91 994 879 1267</span>
+          <span className="hidden lg:inline">+91 994 879 1267</span>
         </div>
 
         {isLoggedIn ? (
@@ -372,7 +398,7 @@ const Header = () => {
         {!isAdmin && (
           <div
             onClick={() => navigate(isLoggedIn ? "/cart" : "/login")}
-            className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors relative"
+            className="flex items-center gap-2 text-sm md:text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors relative"
           >
             <div className="relative">
               <ShoppingCart size={20} />
@@ -382,9 +408,82 @@ const Header = () => {
                 </span>
               )}
             </div>
-            <span>Cart</span>
+            <span className="hidden sm:inline">Cart</span>
           </div>
         )}
+      </div>
+
+      {/* Mobile Navigation Drawer */}
+      <div 
+        className={`fixed inset-0 bg-black/50 z-[1000] transition-opacity duration-300 md:hidden ${
+          isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        <div 
+          className={`absolute left-0 top-0 h-full w-[280px] bg-white shadow-2xl transition-transform duration-300 transform ${
+            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-6 border-b border-gray-100">
+            <h2 className="text-xl font-bold">Menu</h2>
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          <nav className="p-6">
+            <ul className="space-y-4">
+              {navCategories.length > 0 ? (
+                navCategories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      to={`/categories/${category.slug}`}
+                      className="block text-lg font-bold text-gray-900 hover:text-orange-500 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {category.name}
+                    </Link>
+                    {category.products && category.products.length > 0 && (
+                      <ul className="mt-2 ml-4 space-y-2 border-l-2 border-gray-50 pl-4">
+                        {category.products.slice(0, 3).map((product: any) => (
+                          <li key={product.id}>
+                            <Link
+                              to={`/products/${product.slug}`}
+                              className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {product.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))
+              ) : (
+                ["Business Cards", "Flyers", "Banners", "Posters", "Stickers"].map((cat) => (
+                  <li key={cat}>
+                    <span className="block text-lg font-bold text-gray-400 cursor-not-allowed">
+                      {cat}
+                    </span>
+                  </li>
+                ))
+              )}
+            </ul>
+
+            <div className="mt-10 pt-10 border-t border-gray-100 space-y-6">
+              <div className="flex items-center gap-3 text-gray-600">
+                <Phone size={20} className="text-orange-500" />
+                <span className="font-bold text-sm">+91 994 879 1267</span>
+              </div>
+            </div>
+          </nav>
+        </div>
       </div>
     </header>
   );

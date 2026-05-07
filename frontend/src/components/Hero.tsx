@@ -37,8 +37,8 @@ const Hero = () => {
       </div>
 
       {/* CONTENT */}
-      <div className="relative z-10 flex min-h-[520px] flex-col items-center justify-center px-6 text-center">
-        <h2 className="mb-2 text-[36px] font-bold text-black">
+      <div className="relative z-10 flex min-h-[420px] md:min-h-[520px] flex-col items-center justify-center px-6 text-center">
+        <h2 className="mb-2 text-[28px] md:text-[36px] font-bold text-black leading-tight">
           High Quality Printing Services
         </h2>
 
