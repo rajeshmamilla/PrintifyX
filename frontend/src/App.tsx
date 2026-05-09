@@ -15,6 +15,7 @@ import Orders from "./pages/profile/Orders";
 import OrderDetails from "./pages/profile/OrderDetails";
 import Addresses from "./pages/profile/Addresses";
 import Logout from "./pages/profile/Logout";
+import Payments from "./pages/profile/Payments";
 import PaymentPage from "./pages/PaymentPage";
 import TrackOrderPage from "./pages/TrackOrderPage";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -49,6 +50,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:orderId" element={<OrderDetails />} />
           <Route path="addresses" element={<Addresses />} />
+          <Route path="payments" element={<Payments />} />
           <Route path="logout" element={<Logout />} />
         </Route>
 

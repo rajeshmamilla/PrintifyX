@@ -146,7 +146,7 @@ const Addresses: React.FC = () => {
         <div className="space-y-8 animate-in fade-in duration-500">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">Saved Addresses</h1>
+                    <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">Addresses</h1>
                     <p className="text-gray-500 font-medium italic mt-1 text-sm">Manage your shipping destinations for faster checkout.</p>
                 </div>
                 {!isAdding && (

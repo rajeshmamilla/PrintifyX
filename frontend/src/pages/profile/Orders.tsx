@@ -78,109 +78,127 @@ const Orders: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="animate-spin text-orange-500 mb-4" size={40} />
-        <p className="font-bold text-gray-500 uppercase tracking-wider text-xs">
-          Retrieving your orders...
+      <div className="flex flex-col items-center justify-center py-32 animate-in fade-in duration-700">
+        <div className="relative">
+          <Loader2 className="animate-spin text-zinc-900 mb-6" size={56} strokeWidth={1.5} />
+          <div className="absolute inset-0 blur-xl bg-zinc-400/20 animate-pulse"></div>
+        </div>
+        <p className="font-black text-zinc-400 uppercase tracking-[0.2em] text-xs">
+          Retrieving History
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">
-          My Orders
-        </h1>
-        <div className="px-4 py-2 bg-white rounded-xl border border-gray-100 shadow-sm">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider leading-none">
-            Total History
-          </p>
-          <p className="text-lg font-semibold text-gray-900 leading-none mt-1">
-            {orders.length}
-          </p>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-200">
+        <div>
+          <h1 className="text-3xl font-black text-zinc-900 tracking-tight mb-2">
+            Order History
+          </h1>
+          <p className="text-sm text-zinc-500 font-bold italic">Track and manage your recent purchases</p>
+        </div>
+        <div className="px-6 py-3 bg-white rounded-2xl border border-zinc-200 shadow-sm flex items-center gap-4">
+          <div>
+            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest leading-none mb-1">
+              Total Orders
+            </p>
+            <p className="text-2xl font-black text-zinc-900 leading-none">
+              {orders.length}
+            </p>
+          </div>
+          <div className="w-10 h-10 bg-zinc-900 text-white rounded-xl flex items-center justify-center shadow-lg">
+            <ShoppingBag size={20} />
+          </div>
         </div>
       </div>
 
       {error && (
-        <div className="bg-zinc-50 border border-zinc-100 rounded-[2rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 animate-in slide-in-from-top-4 duration-500 shadow-xl shadow-zinc-200/20">
+        <div className="bg-red-50 border border-red-100 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 animate-in slide-in-from-top-4 duration-500 shadow-xl shadow-red-100/20">
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-zinc-100 shrink-0">
-              <AlertCircle size={24} className="text-zinc-400" />
+            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-red-100 shrink-0">
+              <AlertCircle size={28} className="text-red-500" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-zinc-900 tracking-tight uppercase">Session Expired</h3>
-              <p className="text-[13px] text-zinc-500 font-medium leading-relaxed mt-0.5">Your session has timed out. Please sign in again to view your order history.</p>
+              <h3 className="text-lg font-black text-red-900 tracking-tight uppercase">Session Missing</h3>
+              <p className="text-sm text-red-700/70 font-bold leading-relaxed mt-1">Please sign in again to view your personalized order history.</p>
             </div>
           </div>
           <button
             onClick={() => navigate("/login")}
-            className="w-full md:w-auto px-8 py-3.5 bg-zinc-900 text-white rounded-xl font-bold text-xs uppercase tracking-[0.15em] hover:bg-black transition-all shadow-xl shadow-zinc-900/10 cursor-pointer active:scale-95"
+            className="w-full md:w-auto px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-xl shadow-red-200 cursor-pointer active:scale-95"
           >
-            Sign In Now
+            Authenticate
           </button>
         </div>
       )}
 
-
-
       {orders.length === 0 ? (
-        <div className="bg-white rounded-xl p-16 flex flex-col items-center text-center border border-gray-100">
-          <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-6">
-            <ShoppingBag size={40} />
+        <div className="bg-white rounded-[2.5rem] p-20 flex flex-col items-center text-center border border-zinc-200 shadow-sm">
+          <div className="h-24 w-24 bg-zinc-50 rounded-3xl flex items-center justify-center text-zinc-200 mb-8 shadow-inner">
+            <ShoppingBag size={48} strokeWidth={1} />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            No orders yet
+          <h3 className="text-2xl font-black text-zinc-900 mb-3 tracking-tight">
+            No orders found
           </h3>
-          <p className="text-gray-500 font-medium max-w-xs mb-8">
-            Check out our latest products and place your first order.
+          <p className="text-zinc-500 font-bold max-w-sm mb-10 text-base leading-relaxed">
+            Your history is empty. Start exploring our premium product catalog to place your first order!
           </p>
           <button
             onClick={() => navigate("/")}
-            className="px-8 py-3 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-900 transition-all shadow-xl shadow-gray-100 cursor-pointer"
+            className="px-10 py-4 bg-zinc-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-black transition-all shadow-2xl shadow-zinc-200 cursor-pointer active:scale-95"
           >
-            Browse Storefront
+            Explore Catalog
           </button>
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {orders.map((order, index) => (
             <div
               key={order.id}
-              className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative"
+              className="bg-white rounded-[2rem] p-8 border border-zinc-200 shadow-sm hover:shadow-2xl hover:shadow-zinc-200/50 transition-all duration-500 group overflow-hidden relative"
             >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-                <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 font-semibold text-xs shrink-0 group-hover:bg-orange-50 group-hover:text-orange-500 transition-colors">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
+                <div className="flex items-center gap-6">
+                  <div className="h-16 w-16 bg-zinc-50 rounded-[1.25rem] flex items-center justify-center text-zinc-400 font-black text-lg shrink-0 group-hover:bg-zinc-900 group-hover:text-white transition-all duration-500 shadow-inner">
                     #{orders.length - index}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-900 tracking-tight">
-                      {order.orderNumber}
-                    </p>
-                    <p className="text-xs text-gray-400 font-bold mt-0.5">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-lg font-black text-zinc-900 tracking-tight">
+                        {order.orderNumber}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <p className="text-xs text-zinc-400 font-black uppercase tracking-widest">
+                        {new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </p>
+                      <div className="w-1.5 h-1.5 bg-zinc-200 rounded-full"></div>
+                      <p className="text-xs text-zinc-400 font-black uppercase tracking-widest">
+                        {order.itemsCount || 1} Products
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-1 gap-4 md:gap-1 text-right">
-                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider md:hidden text-left">
-                    Total Amount
-                  </p>
-                  <p className="text-lg font-semibold text-gray-900">
-                    ₹{order.totalAmount.toLocaleString()}
-                  </p>
+                <div className="flex flex-col md:items-end gap-3">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xs font-black text-zinc-400 uppercase tracking-widest">Amount</span>
+                    <p className="text-2xl font-black text-zinc-900 tracking-tighter">
+                      ₹{order.totalAmount.toLocaleString()}
+                    </p>
+                  </div>
 
                   <div
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase md:justify-self-end w-fit ${order.status === "SHIPPED"
-                      ? "bg-gray-900 text-white"
+                    className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-[10px] font-black tracking-[0.15em] uppercase shadow-sm ${
+                      order.status === "SHIPPED" || order.status === "DELIVERED"
+                      ? "bg-green-50 text-green-600 border border-green-100"
                       : order.status === "CANCELLED"
-                        ? "bg-red-50 text-red-700 border border-red-100"
-                        : order.status === "PAID"
-                          ? "bg-blue-50 text-blue-700 border border-blue-100"
-                          : "bg-gray-100 text-gray-700 border border-gray-200"
+                        ? "bg-red-50 text-red-600 border border-red-100"
+                        : order.status === "PAID" || order.status === "PROCESSING"
+                          ? "bg-blue-50 text-blue-600 border border-blue-100"
+                          : "bg-zinc-50 text-zinc-500 border border-zinc-100"
                       }`}
                   >
                     {getStatusIcon(order.status)}
@@ -188,21 +206,19 @@ const Orders: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-gray-50">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={() => navigate(`/profile/orders/${order.id}`)}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-xl text-xs font-semibold uppercase tracking-wider hover:bg-gray-900 transition-all shadow-lg shadow-gray-100 cursor-pointer"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-4 bg-zinc-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-zinc-200 cursor-pointer active:scale-95 group/btn"
                   >
-                    Details
-                    <ChevronRight size={14} />
+                    Manage
+                    <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
                   </button>
-
-
                 </div>
               </div>
 
               {/* Decorative background number */}
-              <div className="absolute -right-4 -bottom-8 text-9xl font-semibold text-gray-50/50 pointer-events-none group-hover:text-orange-50/30 transition-colors italic">
+              <div className="absolute -right-6 -bottom-10 text-[10rem] font-black text-zinc-50/50 pointer-events-none group-hover:text-zinc-100 transition-all duration-700 italic select-none">
                 {orders.length - index}
               </div>
             </div>
