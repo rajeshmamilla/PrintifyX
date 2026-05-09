@@ -432,7 +432,3 @@ const OrderDetails: React.FC = () => {
 };
 
 export default OrderDetails;
-    );
-};
-
-export default OrderDetails;

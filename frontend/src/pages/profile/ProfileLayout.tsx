@@ -33,11 +33,6 @@ const ProfileLayout: React.FC = () => {
     }
   }, [token, role, navigate]);
 
-  const menuItems = [
-    { name: "My Orders", path: "/profile/orders", icon: ShoppingBag },
-    { name: "Saved Addresses", path: "/profile/addresses", icon: MapPin },
-    { name: "Logout", path: "/profile/logout", icon: LogOut },
-  ];
 
   if (!token) return null;
 
@@ -137,7 +132,7 @@ const ProfileLayout: React.FC = () => {
                   <div className="pt-2 border-t border-gray-100">
                     <NavLink
                       to="/profile/logout"
-                      className={({ isActive }) =>
+                      className={() =>
                         `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm text-red-500 hover:bg-red-50`
                       }
                     >
