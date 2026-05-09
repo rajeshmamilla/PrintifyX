@@ -54,6 +54,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = UriComponentsBuilder.fromUriString(frontendUrl + "/oauth2/redirect")
                 .queryParam("token", token)
+                .queryParam("userId", userId)
                 .queryParam("name", name)
                 .queryParam("email", email)
                 .queryParam("picture", picture)
