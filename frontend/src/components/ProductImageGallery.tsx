@@ -12,7 +12,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({ image, alt })
                 <img
                     src={image}
                     alt={alt}
-                    className="max-w-full max-h-full object-contain"
+                    className="max-w-full max-h-full object-contain transition-transform duration-700 ease-in-out hover:scale-125 cursor-zoom-in"
                 />
                 {/* Extensible: Navigation arrows for slider could go here */}
             </div>

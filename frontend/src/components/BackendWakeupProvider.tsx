@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { checkHealth } from "../services/apiClient";
-import { Loader2, Server, ShieldCheck, Zap } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const BackendContext = createContext<{ isReady: boolean }>({ isReady: false });
 
@@ -33,53 +33,52 @@ export const BackendWakeupProvider: React.FC<{ children: React.ReactNode }> = ({
 
   if (!isReady) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-slate-950 overflow-hidden">
-        {/* Background Gradients */}
-        <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 -right-4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-700" />
+      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white overflow-hidden">
+        {/* Decorative Gradients */}
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-zinc-100/50 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-zinc-50/50 rounded-full blur-[120px]" />
         
-        <div className="relative flex flex-col items-center max-w-md px-6 text-center">
-          {/* Animated Icon Container */}
-          <div className="relative mb-8">
-            <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl scale-150 animate-pulse" />
-            <div className="relative bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-2xl shadow-2xl shadow-blue-500/40">
-              <Server className="w-12 h-12 text-white animate-bounce" />
+        <div className="relative flex flex-col items-center max-w-lg px-8 text-center animate-in fade-in zoom-in-95 duration-1000">
+          {/* 3D Image Graphic */}
+          <div className="relative w-full max-w-[320px] mb-10 group">
+            <div className="absolute inset-0 bg-zinc-200/20 blur-3xl rounded-full scale-110 group-hover:scale-125 transition-transform duration-1000" />
+            <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-white/20">
+              <img 
+                src="/business-printing-graphic.png" 
+                alt="System Preparing" 
+                className="w-full h-auto object-cover transform animate-pulse duration-[3000ms]"
+              />
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Preparing Your Experience
-          </h1>
-          
-          <div className="flex items-center gap-2 mb-6 text-blue-600 font-semibold text-lg">
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span>Waking up our servers...</span>
-          </div>
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-4xl font-black text-zinc-900 mb-3 tracking-tighter">
+                Printify<span className="text-zinc-400">X</span>
+              </h1>
+              <div className="h-1 w-12 bg-zinc-900 mx-auto rounded-full mb-6"></div>
+              <p className="text-xl font-bold text-zinc-800">
+                Waking up our servers...
+              </p>
+            </div>
 
-          <div className="space-y-4 text-slate-600 dark:text-slate-400">
-            <p className="leading-relaxed">
-              Our eco-friendly servers take a quick nap when not in use. 
-              We're spinning them up now just for you.
+            <p className="text-zinc-500 font-medium leading-relaxed max-w-sm mx-auto">
+              Our cloud resources are spinning up to provide you with a premium printing experience.
             </p>
-            
-            <div className="grid grid-cols-3 gap-4 pt-6">
-              <div className="flex flex-col items-center gap-2 opacity-50">
-                <Zap className="w-5 h-5" />
-                <span className="text-xs">Fast Access</span>
-              </div>
-              <div className="flex flex-col items-center gap-2 opacity-50">
-                <ShieldCheck className="w-5 h-5" />
-                <span className="text-xs">Secure Connection</span>
-              </div>
-              <div className="flex flex-col items-center gap-2 opacity-100 text-blue-500">
-                <Server className="w-5 h-5" />
-                <span className="text-xs font-bold">Spinning Up</span>
-              </div>
-            </div>
-          </div>
 
-          <div className="mt-12 text-sm text-slate-400">
-            {isRetrying ? "This usually takes 60-90 seconds on first load." : "Establishing connection..."}
+            {/* Connection Status */}
+            <div className="flex flex-col items-center gap-4 pt-4">
+              <div className="flex items-center gap-3 px-5 py-2.5 bg-zinc-50 rounded-full border border-zinc-100">
+                <Loader2 className="w-4 h-4 animate-spin text-zinc-900" />
+                <span className="text-[13px] font-bold text-zinc-600 uppercase tracking-widest">
+                  {isRetrying ? "Establishing Secure Link" : "Initial Connection"}
+                </span>
+              </div>
+              
+              <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-[0.2em]">
+                {isRetrying ? "This usually takes 60-90 seconds on first load" : "Preparing Workspace"}
+              </p>
+            </div>
           </div>
         </div>
       </div>

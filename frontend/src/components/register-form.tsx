@@ -9,15 +9,10 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser, sendRegisterOtp, verifyOtp } from "../services/api";
-import { AlertCircle, Eye, EyeOff } from "lucide-react";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+import { Eye, EyeOff, User, Mail, Lock, ShieldCheck, ArrowRight } from "lucide-react";
 
 // ── OTP Input Component ────────────────────────────────────────────────────────
 function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) {
@@ -50,7 +45,7 @@ function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]
   };
 
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-2.5 justify-center">
       {value.map((digit, i) => (
         <input
           key={i}
@@ -63,10 +58,10 @@ function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={handlePaste}
           className={cn(
-            "w-11 h-12 text-center text-lg font-bold rounded-md border border-input bg-background",
-            "focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent",
-            "transition-all",
-            digit ? "border-zinc-900 bg-zinc-50" : "border-gray-200"
+            "w-10 h-12 text-center text-lg font-bold rounded-xl border-2 bg-white transition-all outline-none",
+            digit 
+              ? "border-zinc-900 ring-2 ring-zinc-100" 
+              : "border-gray-100 focus:border-zinc-900 focus:ring-4 focus:ring-zinc-50"
           )}
         />
       ))}
@@ -74,7 +69,7 @@ function OtpInput({ value, onChange }: { value: string[]; onChange: (v: string[]
   );
 }
 
-// ── Register Form ──────────────────────────────────────────────────────────────
+// ── Register Form Component ───────────────────────────────────────────────────
 export function RegisterForm({
   className,
   ...props
@@ -100,7 +95,7 @@ export function RegisterForm({
   const [timer, setTimer] = useState(60);
 
   // Countdown timer for resend
-  useState(() => {
+  useEffect(() => {
     let interval: any;
     if (step === "otp" && resendDisabled) {
       interval = setInterval(() => {
@@ -115,21 +110,11 @@ export function RegisterForm({
       }, 1000);
     }
     return () => clearInterval(interval);
-  });
+  }, [step, resendDisabled]);
 
   const startTimer = () => {
     setResendDisabled(true);
     setTimer(60);
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          setResendDisabled(false);
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   // ── Step 1: submit registration ──
@@ -170,12 +155,8 @@ export function RegisterForm({
     
     setOtpLoading(true);
     try {
-      // 1. Verify OTP first
       await verifyOtp(email, code, "REGISTRATION");
-      
-      // 2. If verified, proceed with actual registration
       await registerUser(email, password);
-      
       navigate("/login");
     } catch (err: any) {
       setOtpError(err.message || "Verification failed. Please try again.");
@@ -198,60 +179,70 @@ export function RegisterForm({
   // ── OTP step UI ──
   if (step === "otp") {
     return (
-      <div className={cn("flex flex-col gap-6", className)} {...props}>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Verify your email</CardTitle>
-            <CardDescription>
-              We've sent a 6-digit OTP to{" "}
-              <span className="font-semibold text-zinc-900">{email}</span>.{" "}
+      <div className={cn("flex flex-col gap-4", className)} {...props}>
+        <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
+          <CardHeader className="space-y-0.5 pb-2 pt-4 text-center">
+            <div className="flex items-center justify-center mb-0.5">
+               <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center shadow-lg shadow-zinc-200">
+                  <ShieldCheck className="text-white w-4 h-4" />
+               </div>
+            </div>
+            <CardTitle className="text-lg font-bold tracking-tight text-gray-900 leading-tight">Verify Email</CardTitle>
+            <CardDescription className="text-gray-400 text-[11px] font-medium px-4">
+              Code sent to <span className="text-zinc-900 font-bold">{email}</span>.{" "}
               <button
                 type="button"
-                className="text-zinc-500 underline underline-offset-4 hover:text-zinc-900 text-sm"
+                className="text-zinc-400 font-bold hover:text-zinc-900 transition-colors"
                 onClick={() => { setStep("form"); setOtp(Array(6).fill("")); setOtpError(""); }}
               >
                 Change
               </button>
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pb-8 px-6">
             <form onSubmit={handleVerifyOtp}>
               <div className="flex flex-col gap-6">
-                <div className="grid gap-3">
-                  <Label className="text-center text-sm text-muted-foreground">
-                    Enter the 6-digit code
+                <div className="grid gap-2">
+                  <Label className="text-center text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                    6-Digit Verification Code
                   </Label>
                   <OtpInput value={otp} onChange={setOtp} />
                 </div>
-
                 {otpError && (
-                  <p className="text-sm text-red-500 font-medium text-center">{otpError}</p>
+                  <div className="bg-red-50 border border-red-100 rounded-lg p-2.5">
+                    <p className="text-[10px] text-red-600 font-bold text-center">{otpError}</p>
+                  </div>
                 )}
-
-                <Button
-                  type="submit"
-                  disabled={otpLoading}
-                  className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm border border-transparent"
-                >
-                  {otpLoading ? "Verifying..." : "Verify OTP"}
-                </Button>
-
-                <p className="text-center text-sm text-muted-foreground">
-                  Didn't receive the code?{" "}
-                  <button
-                    type="button"
-                    disabled={resendDisabled}
-                    onClick={handleResendOtp}
-                    className={cn(
-                      "font-medium underline underline-offset-4",
-                      resendDisabled
-                        ? "text-gray-400 cursor-not-allowed no-underline"
-                        : "text-zinc-900 hover:text-zinc-700"
-                    )}
+                <div className="space-y-3">
+                  <Button
+                    type="submit"
+                    disabled={otpLoading}
+                    className="w-full h-10 font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-lg shadow-zinc-100 transition-all active:scale-[0.98]"
                   >
-                    Resend OTP {resendDisabled && `(${timer}s)`}
-                  </button>
-                </p>
+                    {otpLoading ? (
+                      <div className="flex items-center gap-2">
+                         <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                         <span className="text-sm">Verifying...</span>
+                      </div>
+                    ) : <span className="text-sm">Verify & Register</span>}
+                  </Button>
+                  <p className="text-center text-xs font-medium text-gray-400">
+                    No code?{" "}
+                    <button
+                      type="button"
+                      disabled={resendDisabled}
+                      onClick={handleResendOtp}
+                      className={cn(
+                        "font-bold transition-colors",
+                        resendDisabled
+                          ? "text-gray-200 cursor-not-allowed"
+                          : "text-zinc-900 hover:underline"
+                      )}
+                    >
+                      Resend {resendDisabled && `(${timer}s)`}
+                    </button>
+                  </p>
+                </div>
               </div>
             </form>
           </CardContent>
@@ -262,136 +253,163 @@ export function RegisterForm({
 
   // ── Registration form UI ──
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Create an account</CardTitle>
-          <CardDescription>
-            Enter your information below to create your account
+    <div className={cn("flex flex-col gap-4", className)} {...props}>
+      <Card className="border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-100">
+        <CardHeader className="space-y-0.5 pb-2 pt-4">
+          <CardTitle className="text-lg font-bold text-center tracking-tight text-gray-900 leading-tight">Create Account</CardTitle>
+          <CardDescription className="text-center text-gray-400 text-[11px] font-medium">
+            Join PrintifyX for a premium experience
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-8 px-6">
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-5">
-
-              {/* Full Name */}
-              <div className="grid gap-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  type="text"
-                  placeholder="John Doe"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  className="h-10 px-3 py-2 text-sm"
-                />
+            <div className="flex flex-col gap-4">
+              <div className="grid gap-1.5">
+                <Label htmlFor="fullName" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Full Name</Label>
+                <div className="relative group">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
+                  <Input
+                    id="fullName"
+                    type="text"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    className="h-10 pl-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 placeholder:text-gray-400 text-sm font-medium"
+                  />
+                </div>
               </div>
-
-              {/* Email */}
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-10 px-3 py-2 text-sm"
-                />
-                <p className="text-xs text-muted-foreground">
-                  We'll use this to contact you. We will not share your email with anyone else.
-                </p>
+              <div className="grid gap-1.5">
+                <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Email Address</Label>
+                <div className="relative group">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="h-10 pl-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 placeholder:text-gray-400 text-sm font-medium"
+                  />
+                </div>
               </div>
-
-              {/* Password */}
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
+              <div className="grid gap-1.5">
+                <Label htmlFor="password" title="Must be at least 8 characters" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Password</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="h-10 px-3 py-2 text-sm pr-10"
+                    className="h-10 pl-10 pr-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 text-sm font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-zinc-900 transition-colors"
                     tabIndex={-1}
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Must be at least 8 characters long.
-                </p>
               </div>
-
-              {/* Confirm Password */}
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <div className="relative">
+              <div className="grid gap-1.5">
+                <Label htmlFor="confirmPassword" className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Confirm Password</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-zinc-900 transition-colors" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="h-10 px-3 py-2 text-sm pr-10"
+                    className="h-10 pl-10 pr-10 bg-gray-50/50 border-gray-200 focus:bg-white transition-all rounded-lg border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-zinc-900 text-sm font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-zinc-900 transition-colors"
                     tabIndex={-1}
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Please confirm your password.
-                </p>
               </div>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-10 font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-50 shadow-sm border border-transparent"
-              >
-                {loading ? "Creating account..." : "Create Account"}
-              </Button>
+              {error && (
+                <div className="bg-red-50 border border-red-100 rounded-lg p-2.5 animate-in fade-in slide-in-from-top-1">
+                  <p className="text-[10px] text-red-600 font-bold text-center">{error}</p>
+                </div>
+              )}
 
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full h-10 font-medium"
-                onClick={() => {
-                  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api";
-                  // Remove /api from the end because oauth2/authorization is a root endpoint
-                  const oauthUrl = baseUrl.replace(/\/api$/, "") + "/oauth2/authorization/google";
-                  window.location.href = oauthUrl;
-                }}
-              >
-                Sign up with Google
-              </Button>
+              <div className="space-y-3 pt-1">
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-10 font-bold bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg shadow-lg shadow-zinc-100 transition-all active:scale-[0.98]"
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                       <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                       <span className="text-sm">Processing...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">Create Account</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  )}
+                </Button>
+
+                <div className="relative py-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-100"></span>
+                  </div>
+                  <div className="relative flex justify-center text-[10px] uppercase">
+                    <span className="bg-white px-3 text-gray-300 font-bold tracking-widest">Or</span>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-10 font-bold border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                  onClick={() => {
+                    const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081/api";
+                    const oauthUrl = baseUrl.replace(/\/api$/, "") + "/oauth2/authorization/google";
+                    window.location.href = oauthUrl;
+                  }}
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                    <path
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      fill="#EA4335"
+                    />
+                  </svg>
+                  <span className="text-sm">Google</span>
+                </Button>
+              </div>
             </div>
 
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link to="/login" className="underline underline-offset-4 hover:text-zinc-900 font-medium">
-                Sign in
+            <div className="mt-6 text-center text-[13px]">
+              <span className="text-gray-400 font-medium">Already have an account?</span>{" "}
+              <Link to="/login" className="text-zinc-900 font-bold hover:underline underline-offset-4 transition-all">
+                Sign In
               </Link>
             </div>
           </form>

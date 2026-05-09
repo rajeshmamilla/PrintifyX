@@ -26,6 +26,9 @@ public class Category {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
+    @Column(nullable = false)
+    private Boolean trending = false;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
@@ -16,7 +17,7 @@ import standardBusinessCardsImg from "../assets/products/standard business cards
 const ProductCustomizerPage = () => {
     const navigate = useNavigate();
     const { productId } = useParams<{ productId: string }>(); // productId is the slug
-    
+
     const [productData, setProductData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,13 +37,29 @@ const ProductCustomizerPage = () => {
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const handleShareProduct = () => {
+        toast.promise<{ name: string }>(
+            () =>
+                new Promise((resolve, reject) =>
+                    navigator.clipboard.writeText(window.location.href)
+                        .then(() => setTimeout(() => resolve({ name: productData?.name || "Product" }), 1000))
+                        .catch(reject)
+                ),
+            {
+                loading: "Copying share link...",
+                success: (data) => `${data.name} link copied to clipboard!`,
+                error: "Failed to copy link to clipboard",
+            }
+        );
+    };
+
     useEffect(() => {
         const fetchProductData = async () => {
             try {
                 setLoading(true);
                 const baseUrl = import.meta.env.VITE_API_BASE_URL;
                 const response = await fetch(`${baseUrl}/products/slug/${productId}`);
-                
+
                 if (!response.ok) {
                     if (response.status === 404) {
                         setError("Product not found");
@@ -51,10 +68,10 @@ const ProductCustomizerPage = () => {
                     }
                     return;
                 }
-                
+
                 const data = await response.json();
                 setProductData(data);
-                
+
                 // Initialize selections from variants
                 const groups: Record<string, string[]> = {};
                 data.variants.forEach((v: any) => {
@@ -76,7 +93,7 @@ const ProductCustomizerPage = () => {
                     initialSelections[key] = groups[key][0];
                 });
                 setSelections(initialSelections);
-                
+
             } catch (err) {
                 console.error("Error fetching product:", err);
                 setError("An error occurred while fetching product data");
@@ -95,7 +112,7 @@ const ProductCustomizerPage = () => {
         const storedName = localStorage.getItem("businessName") || localStorage.getItem("name") || localStorage.getItem("firstName") || "";
         const storedAddress = localStorage.getItem("address") || "";
         const storedPhone = localStorage.getItem("phone") || localStorage.getItem("contactNumber") || "";
-        
+
         setCardDetails(prev => ({
             ...prev,
             email: prev.email || storedEmail,
@@ -145,7 +162,7 @@ const ProductCustomizerPage = () => {
         let total = productData.basePrice || 0;
         const qty = parseInt(selections["Quantity"] || "100");
         total *= qty;
-        
+
         if (selections["Printing Sides"] === "Double Sided") {
             total += 200;
         }
@@ -279,8 +296,11 @@ const ProductCustomizerPage = () => {
                         {/* Options and Uploads Section */}
                         <div className="bg-white border rounded-lg p-4 shadow-sm">
                             <div className="flex justify-between items-center mb-2 border-b pb-2">
-                                <h2 className="text-lg font-bold text-gray-900">Customize & Upload</h2>
-                                <button className="text-blue-600 text-sm hover:underline flex items-center">
+                                <h2 className="text-lg font-bold text-gray-900">Upload Sample</h2>
+                                <button 
+                                    onClick={handleShareProduct}
+                                    className="text-blue-600 text-sm hover:underline flex items-center cursor-pointer active:scale-95 transition-transform"
+                                >
                                     <span className="mr-1">Share Product</span>
                                 </button>
                             </div>
@@ -338,22 +358,22 @@ const ProductCustomizerPage = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center border border-gray-300 bg-white rounded-md overflow-hidden shadow-sm">
-                                    <button 
+                                    <button
                                         className="w-12 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 border-r border-gray-300 transition-colors text-lg font-medium"
                                         onClick={() => {
                                             const current = parseInt(selections["Quantity"] || "100");
                                             if (current > 100) handleOptionChange("Quantity", (current - 100).toString());
                                         }}
                                     >-</button>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         className="w-20 h-10 text-center text-base font-medium outline-none text-gray-800"
                                         value={selections["Quantity"] || "100"}
                                         onChange={(e) => handleOptionChange("Quantity", e.target.value)}
                                         min="100"
                                         step="100"
                                     />
-                                    <button 
+                                    <button
                                         className="w-12 h-10 flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 border-l border-gray-300 transition-colors text-lg font-medium"
                                         onClick={() => {
                                             const current = parseInt(selections["Quantity"] || "100");
@@ -450,7 +470,7 @@ const ProductCustomizerPage = () => {
                                         />
                                     </div>
                                     <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-semibold text-gray-700">Additional Instructions</label>
+                                        <label className="text-sm font-semibold text-gray-700">Other Product Printing Instructions (if Different Product)</label>
                                         <textarea
                                             value={cardDetails.instructions}
                                             onChange={(e) => setCardDetails({ ...cardDetails, instructions: e.target.value })}

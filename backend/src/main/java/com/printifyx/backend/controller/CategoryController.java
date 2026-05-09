@@ -27,6 +27,11 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAllActiveCategories());
     }
 
+    @GetMapping("/trending")
+    public ResponseEntity<List<CategoryDto>> getTrendingCategories() {
+        return ResponseEntity.ok(categoryService.getTrendingCategories());
+    }
+
     @GetMapping("/with-products")
     public ResponseEntity<List<CategoryWithProductsDto>> getCategoriesWithProducts() {
         return ResponseEntity.ok(categoryService.getCategoriesWithProducts());

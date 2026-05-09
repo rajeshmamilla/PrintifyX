@@ -22,10 +22,12 @@ import BrowseDesignPage from "./pages/BrowseDesignPage";
 import CreateDesignPage from "./pages/CreateDesignPage";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <TooltipProvider>
+      <Toaster position="top-center" richColors />
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />

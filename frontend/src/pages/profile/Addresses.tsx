@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Plus, Trash2, CheckCircle2, Loader2, AlertCircle, Home, Phone, User } from 'lucide-react';
+import { MapPin, Plus, Trash2, CheckCircle2, Loader2, AlertCircle, Home, Phone, User, Pencil } from 'lucide-react';
 import { fetchWithAuth } from "../../services/apiClient";
 
 interface Address {
@@ -18,6 +18,8 @@ const Addresses: React.FC = () => {
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
     const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     // Form state
@@ -57,6 +59,22 @@ const Addresses: React.FC = () => {
         }
     };
 
+    const handleEditClick = (address: Address) => {
+        setFormData({ ...address });
+        setEditingId(address.id || null);
+        setIsEditing(true);
+        setIsAdding(true); // Open the form
+        // Scroll to form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleCancel = () => {
+        setIsAdding(false);
+        setIsEditing(false);
+        setEditingId(null);
+        setFormData({ name: '', phone: '', addressLine1: '', addressLine2: '', city: '', state: '', pincode: '', isDefault: false });
+    };
+
     const handleSaveAddress = async (e: React.FormEvent) => {
         e.preventDefault();
         
@@ -77,16 +95,18 @@ const Addresses: React.FC = () => {
         }
 
         try {
-            const res = await fetchWithAuth('/addresses', {
-                method: 'POST',
+            const url = isEditing ? `/addresses/${editingId}` : '/addresses';
+            const method = isEditing ? 'PUT' : 'POST';
+
+            const res = await fetchWithAuth(url, {
+                method: method,
                 body: JSON.stringify(formData)
             });
 
-            if (!res.ok) throw new Error('Failed to save address');
+            if (!res.ok) throw new Error(`Failed to ${isEditing ? 'update' : 'save'} address`);
 
-            setNotification({ message: 'Address saved successfully', type: 'success' });
-            setIsAdding(false);
-            setFormData({ name: '', phone: '', addressLine1: '', addressLine2: '', city: '', state: '', pincode: '', isDefault: false });
+            setNotification({ message: `Address ${isEditing ? 'updated' : 'saved'} successfully`, type: 'success' });
+            handleCancel();
             fetchAddresses();
             setTimeout(() => setNotification(null), 3000);
         } catch (err: any) {
@@ -131,7 +151,7 @@ const Addresses: React.FC = () => {
                 </div>
                 {!isAdding && (
                     <button
-                        onClick={() => setIsAdding(true)}
+                        onClick={() => { setIsAdding(true); setIsEditing(false); }}
                         className="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-2xl font-semibold text-xs uppercase tracking-wider hover:bg-orange-600 transition-all shadow-xl shadow-orange-100"
                     >
                         <Plus size={18} />
@@ -151,8 +171,8 @@ const Addresses: React.FC = () => {
             {isAdding && (
                 <div className="bg-white rounded-[2rem] p-8 border-2 border-orange-500/20 shadow-xl animate-in zoom-in duration-300">
                     <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                        <MapPin size={24} className="text-orange-500" />
-                        New Shipping Address
+                        {isEditing ? <Pencil size={24} className="text-orange-500" /> : <MapPin size={24} className="text-orange-500" />}
+                        {isEditing ? 'Update Shipping Address' : 'New Shipping Address'}
                     </h2>
                     <form onSubmit={handleSaveAddress} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -244,7 +264,7 @@ const Addresses: React.FC = () => {
                         <div className="flex justify-end gap-3 pt-6">
                             <button
                                 type="button"
-                                onClick={() => setIsAdding(false)}
+                                onClick={handleCancel}
                                 className="px-8 py-3 bg-gray-100 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-200 transition-all"
                             >
                                 Cancel
@@ -253,7 +273,7 @@ const Addresses: React.FC = () => {
                                 type="submit"
                                 className="px-10 py-3 bg-gray-900 text-white rounded-2xl font-semibold text-sm hover:bg-black transition-all shadow-xl"
                             >
-                                Create Address
+                                {isEditing ? 'Update Address' : 'Create Address'}
                             </button>
                         </div>
                     </form>
@@ -304,7 +324,14 @@ const Addresses: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                        <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 flex gap-2">
+                            <button
+                                onClick={() => handleEditClick(addr)}
+                                className="p-3 bg-gray-100 text-gray-600 rounded-2xl hover:bg-gray-900 hover:text-white transition-all shadow-lg"
+                                title="Edit Address"
+                            >
+                                <Pencil size={20} />
+                            </button>
                             <button
                                 onClick={() => addr.id && handleDeleteAddress(addr.id)}
                                 className="p-3 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-lg"

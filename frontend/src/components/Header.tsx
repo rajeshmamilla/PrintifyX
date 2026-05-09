@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect } from "react";
 import { cartService } from "../services/cart.service";
-import { Search, Phone, User, ShoppingCart, X } from "lucide-react";
+import { Search, Phone, User, ShoppingCart, X, Menu, LayoutDashboard, LogOut } from "lucide-react";
+import Logo from "../assets/logo.png";
 
 // Hardcoded product list for frontend-only search
 const PRODUCTS = [
@@ -100,6 +101,24 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<typeof PRODUCTS>([]);
   const [showResults, setShowResults] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navCategories, setNavCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchNavData = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
+        const response = await fetch(`${baseUrl}/categories/with-products`);
+        if (response.ok) {
+          const data = await response.json();
+          setNavCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching navbar categories:", error);
+      }
+    };
+    fetchNavData();
+  }, []);
 
   useEffect(() => {
     // Handle clicking outside to close search results
@@ -209,40 +228,50 @@ const Header = () => {
   };
 
   return (
-    <header className="flex items-center gap-10 bg-white px-[100px] py-[38px] border-b border-gray-200">
+    <header className="flex flex-wrap md:flex-nowrap items-center justify-between gap-4 md:gap-10 bg-white px-4 md:px-[100px] py-2 md:py-3 border-b border-gray-200 sticky top-0 z-[500]">
+      {/* Mobile Menu Toggle */}
+      <button
+        className="md:hidden p-2 text-gray-700 hover:text-orange-500 transition-colors"
+        onClick={() => setIsMobileMenuOpen(true)}
+      >
+        <Menu size={24} />
+      </button>
+
       {/* Logo */}
-      <Link to="/" className="cursor-pointer">
-        <h1 className="text-[30px] font-bold">PrintifyX</h1>
+      <Link to="/" className="cursor-pointer shrink-0">
+        <img src={Logo} alt="PrintifyX Logo" className="h-18 md:h-28 w-auto object-contain" />
       </Link>
 
       {/* Search */}
-      <div className="relative flex flex-1 justify-center group" ref={searchRef}>
-        <div className="relative w-1/2">
+      <div className="relative flex order-3 md:order-2 w-full md:flex-1 justify-center" ref={searchRef}>
+        <div className="relative w-full md:w-3/5 group">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+            <Search
+              size={18}
+              className="text-zinc-400 group-focus-within:text-zinc-900 transition-colors duration-300"
+            />
+          </div>
           <input
             ref={inputRef}
             value={searchQuery}
             onChange={onInputChange}
             onKeyDown={handleKeyDown}
             onFocus={() => { if (filteredProducts.length > 0) setShowResults(true); }}
-            placeholder="What are you looking to print today?"
-            className="w-full rounded-lg border border-gray-300 px-5 py-3 pr-12 focus:outline-none focus:ring-1 focus:ring-gray-900 transition-shadow duration-200 focus:shadow-sm"
+            placeholder="Search for custom products..."
+            className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl pl-12 pr-12 py-3 text-[14px] font-medium text-zinc-900 placeholder:text-zinc-400 focus:bg-white focus:ring-4 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all duration-300 outline-none shadow-sm"
           />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
             {searchQuery && (
-              <X
-                size={16}
-                className="cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
+              <button
                 onClick={clearSearch}
-              />
+                className="p-1.5 bg-zinc-100 hover:bg-zinc-200 rounded-full transition-all group/btn active:scale-90"
+              >
+                <X
+                  size={14}
+                  className="text-zinc-500 group-hover/btn:text-zinc-900 transition-colors"
+                />
+              </button>
             )}
-            <Search
-              size={20}
-              className="cursor-pointer opacity-60 hover:opacity-100 transition-all active:scale-95"
-              onClick={() => {
-                inputRef.current?.focus();
-                handleSearch(searchQuery);
-              }}
-            />
           </div>
 
           {/* Google-style Results Dropdown */}
@@ -298,62 +327,76 @@ const Header = () => {
       </div>
 
       {/* Header actions */}
-      <div className="flex items-center gap-8">
-        <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
+      <div className="flex items-center gap-4 md:gap-8 order-2 md:order-3 ml-auto md:ml-0">
+        <div className="flex items-center gap-2 text-sm md:text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
           <Phone size={20} />
-          <span>+91 994 879 1267</span>
+          <span className="hidden lg:inline">+91 994 XXX XXXX</span>
         </div>
 
         {isLoggedIn ? (
           <div
-            className="relative pb-2"
+            className="relative"
             onMouseEnter={() => setShowMenu(true)}
             onMouseLeave={() => setShowMenu(false)}
           >
-            <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors">
+            <div className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors py-2">
               {userName && (
-                <span className="text-sm font-medium">{userName}</span>
+                <span className="text-sm font-semibold text-zinc-600">{userName}</span>
               )}
               {localStorage.getItem("picture") ? (
-                <img 
-                  src={localStorage.getItem("picture") || ""} 
-                  alt={userName} 
+                <img
+                  src={localStorage.getItem("picture") || ""}
+                  alt={userName}
                   className="w-8 h-8 rounded-full border border-gray-200"
                 />
               ) : (
-                <User size={20} />
+                <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500">
+                  <User size={18} />
+                </div>
               )}
             </div>
 
             {showMenu && (
-              <div className="absolute left-0 top-full w-48 rounded-lg bg-white py-4 shadow-2xl ring-1 ring-black ring-opacity-5 z-[200]">
-                {isAdmin ? (
-                  <button
-                    className="block w-full px-6 py-2 text-left text-[16px] text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => {
-                      setShowMenu(false);
-                      navigate("/admin/dashboard");
-                    }}
-                  >
-                    Admin Dashboard
-                  </button>
-                ) : (
-                  <button
-                    className="block w-full px-6 py-2 text-left text-[16px] text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => {
-                      setShowMenu(false);
-                      navigate("/profile");
-                    }}
-                  >
-                    My Profile
-                  </button>
-                )}
-                <div className="px-6 mt-4">
+              <div className="absolute right-0 top-full w-56 rounded-2xl bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-zinc-100 z-[200] animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="space-y-0.5">
+                  {isAdmin ? (
+                    <button
+                      className="flex items-center gap-3 w-full px-3 py-2 text-left text-[14px] font-medium text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all group"
+                      onClick={() => {
+                        setShowMenu(false);
+                        navigate("/admin/dashboard");
+                      }}
+                    >
+                      <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors border border-zinc-100/50">
+                        <LayoutDashboard size={16} className="text-zinc-500" />
+                      </div>
+                      Admin Dashboard
+                    </button>
+                  ) : (
+                    <button
+                      className="flex items-center gap-3 w-full px-3 py-2 text-left text-[14px] font-medium text-zinc-700 hover:bg-zinc-50 rounded-xl transition-all group"
+                      onClick={() => {
+                        setShowMenu(false);
+                        navigate("/profile");
+                      }}
+                    >
+                      <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors border border-zinc-100/50">
+                        <User size={16} className="text-zinc-500" />
+                      </div>
+                      My Profile
+                    </button>
+                  )}
+
+                  <div className="h-px bg-zinc-50 my-1.5 mx-2"></div>
+
                   <button
                     onClick={handleLogout}
-                    className="w-full rounded-lg bg-white border border-gray-200 py-3 text-[16px] font-bold text-gray-900 transition-all hover:bg-gray-50 active:scale-95"
+                    className="flex items-center gap-3 w-full px-3 py-2 text-left text-[14px] font-medium text-red-600 hover:bg-red-50 rounded-xl transition-all group"
                   >
-                    Logout
+                    <div className="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center group-hover:bg-white transition-colors border border-red-100/20">
+                      <LogOut size={16} className="text-red-500" />
+                    </div>
+                    Logout Account
                   </button>
                 </div>
               </div>
@@ -372,7 +415,7 @@ const Header = () => {
         {!isAdmin && (
           <div
             onClick={() => navigate(isLoggedIn ? "/cart" : "/login")}
-            className="flex items-center gap-2 text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors relative"
+            className="flex items-center gap-2 text-sm md:text-[16px] font-medium text-gray-700 cursor-pointer hover:text-orange-500 transition-colors relative"
           >
             <div className="relative">
               <ShoppingCart size={20} />
@@ -382,9 +425,80 @@ const Header = () => {
                 </span>
               )}
             </div>
-            <span>Cart</span>
+            <span className="hidden sm:inline">Cart</span>
           </div>
         )}
+      </div>
+
+      {/* Mobile Navigation Drawer */}
+      <div
+        className={`fixed inset-0 bg-black/50 z-[1000] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      >
+        <div
+          className={`absolute left-0 top-0 h-full w-[280px] bg-white shadow-2xl transition-transform duration-300 transform ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-6 border-b border-gray-100">
+            <h2 className="text-xl font-bold">Menu</h2>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          <nav className="p-6">
+            <ul className="space-y-4">
+              {navCategories.length > 0 ? (
+                navCategories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      to={`/categories/${category.slug}`}
+                      className="block text-lg font-bold text-gray-900 hover:text-orange-500 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {category.name}
+                    </Link>
+                    {category.products && category.products.length > 0 && (
+                      <ul className="mt-2 ml-4 space-y-2 border-l-2 border-gray-50 pl-4">
+                        {category.products.slice(0, 3).map((product: any) => (
+                          <li key={product.id}>
+                            <Link
+                              to={`/products/${product.slug}`}
+                              className="text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                              onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                              {product.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))
+              ) : (
+                ["Business Cards", "Flyers", "Banners", "Posters", "Stickers"].map((cat) => (
+                  <li key={cat}>
+                    <span className="block text-lg font-bold text-gray-400 cursor-not-allowed">
+                      {cat}
+                    </span>
+                  </li>
+                ))
+              )}
+            </ul>
+
+            <div className="mt-10 pt-10 border-t border-gray-100 space-y-6">
+              <div className="flex items-center gap-3 text-gray-600">
+                <Phone size={20} className="text-orange-500" />
+                <span className="font-bold text-sm">+91 994 879 1267</span>
+              </div>
+            </div>
+          </nav>
+        </div>
       </div>
     </header>
   );

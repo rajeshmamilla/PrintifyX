@@ -34,6 +34,12 @@ public class OrderService {
         order.setCustomerName(request.getCustomerName());
         order.setCustomerEmail(request.getCustomerEmail());
         order.setCustomerPhone(request.getCustomerPhone());
+        order.setShippingName(request.getShippingName());
+        order.setShippingAddressLine1(request.getShippingAddressLine1());
+        order.setShippingAddressLine2(request.getShippingAddressLine2());
+        order.setShippingCity(request.getShippingCity());
+        order.setShippingState(request.getShippingState());
+        order.setShippingPincode(request.getShippingPincode());
         order.setTotalAmount(request.getTotalAmount());
         order.setStatus(request.getStatus() != null ? request.getStatus() : "CREATED");
         order.setUserId(request.getUserId());
