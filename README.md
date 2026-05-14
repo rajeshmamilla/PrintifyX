@@ -103,6 +103,8 @@ The project uses a normalized relational schema designed for e-commerce scalabil
 ## 📸 Current Visuals
 
 ![Landing Page](image-1.png)
+![Trending Products](image-16.png)
+![Search Results Page](image-17.png)
 ![Product Customization page (size reduced)](image-2.png)
 ![Cart Page](image-14.png)
 ![Payment Page](image-15.png)
