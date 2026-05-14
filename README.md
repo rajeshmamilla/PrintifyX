@@ -1,42 +1,116 @@
-# PrintifyX
+# PrintifyX: Enterprise-Grade Custom Printing E-Commerce Ecosystem
 
-A full-stack enterprise-grade e-commerce platform featuring an interactive product customizer, structured cart management, and end-to-end order lifecycle workflows.
+PrintifyX is a high-performance, full-stack e-commerce platform architected to handle the complex requirements of custom printing services. It features a dynamic product catalog, real-time order lifecycle tracking, and a robust administrative suite for product orchestration.
 
-## Key Features
+## 🚀 Live Demo & Repository
+- **Live Site**: [Insert Your Vercel Link Here]
+- **GitHub Repository**: [Insert Your GitHub Link Here]
 
-- **End-to-End E-commerce Workflow**: Facilitates seamless product discovery, cart management, and checkout experiences.
-- **Interactive Product Customizer**: A responsive React front-end featuring a dynamic product customizer that allows users to configure design options before adding items to their cart.
-- **Robust API Architecture**: Powered by 26 RESTful APIs using Spring Boot, focusing on optimized payloads and secured via robust HTTP authentication patterns.
-- **Complex Data Management**: Relational PostgreSQL database proactively managed via Flyway migrations to confidently handle schema evolution and strict entity mapping.
-- **Role-Based Dashboards**: Segregated React (TypeScript) interfaces providing dynamic product/category orchestration for administrators and detailed, persistent order tracking for users.  
-- **Payment & Lifecycle Integration**: Integrated simulated real-time online payment solutions (Razorpay/UPI) and structured, multi-stage true order tracking mechanisms.
+---
 
-## Technology Stack
+## 🛠️ Key Architectural Highlights
 
-### Frontend
-- **React (TypeScript)**
-- **Vite**
-- **Tailwind CSS**
-- **Lucide Icons**
-- **ShadCN**
+### 1. Dynamic Content Orchestration
+The platform is built on a "Server-Driven" philosophy. The storefront is entirely dynamic—any changes made in the Admin Dashboard (new products, updated pricing, category shifts) are reflected instantly across the frontend without requiring code changes or redeployments.
+
+### 2. Advanced Identity & Security
+Implemented a multi-mode authentication engine using **Spring Security**.
+- **Social Login**: Seamless Google OAuth2 integration with automatic account linking.
+- **Secure Sessions**: Stateless JWT-based authentication for scalable session management.
+- **Account Recovery**: OTP-based email verification system for secure password resets.
+
+### 3. Production Infrastructure & Resilience
+The system is optimized for real-world production challenges:
+- **Zero Latency (Health Monitoring)**: Implemented custom health-check endpoints and external monitoring (UptimeRobot) to eliminate cold-start delays on serverless/free-tier hosting.
+- **Cross-Origin Security**: Configured granular CORS preflight policies to secure communication between Vercel (Frontend) and Render (Backend).
+- **Database Evolution**: Managed 23+ versioned **Flyway** migrations to ensure zero-downtime schema updates in the production PostgreSQL environment.
+
+---
+
+## 💻 Technology Stack
+
+### Backend (The Core)
+- **Java / Spring Boot**: High-performance RESTful API architecture.
+- **Spring Security (OAuth2/JWT)**: Enterprise-grade security and identity management.
+- **PostgreSQL**: Robust relational data storage.
+- **Flyway**: Database schema versioning and migrations.
+- **Cloudinary**: Cloud-based asset management for product imagery.
+- **Docker**: Containerized deployment environments for consistent execution.
+
+### Frontend (The Experience)
+- **React (TypeScript)**: Type-safe, component-driven UI architecture.
+- **Vite**: Ultra-fast build tool and development server.
+- **Tailwind CSS**: Modern utility-first styling for responsive design.
+- **Lucide-React**: Premium iconography system.
+- **Sonner**: Asynchronous, non-disruptive notification engine for real-time feedback.
+
+---
+
+## 📂 Project Structure & Workflow
+
+### Database Schema Design
+The project uses a normalized relational schema designed for e-commerce scalability:
+- **User Management**: Unified table for OAuth2 and local credentials with role-based flags.
+- **Product Engine**: Decoupled Category and Product entities with dynamic attribute support.
+- **Order Lifecycle**: Multi-table structure tracking `Orders` -> `OrderItems` -> `Customizations`, ensuring data integrity across complex custom orders.
+
+### Development Workflow
+1. **Frontend**: Component-based architecture with a centralized `cart.service` and `apiClient` for consistent state management.
+2. **Backend**: Controller-Service-Repository pattern ensuring clean separation of concerns and testability.
+3. **CI/CD**: Automatic deployments via GitHub hooks to Vercel (Frontend) and Render (Backend), with environment variables secured at the platform level.
+
+---
+
+## ✨ Core Features
+
+- **Interactive Customizer**: Configurable product design interface with dynamic metadata handling.
+- **Role-Based Portals**:
+  - **User Dashboard**: Personalized order history, real-time shipment tracking, and address management.
+  - **Admin Dashboard**: Full-fleet product management, category orchestration, and system-wide order oversight.
+- **Intelligent Discovery**: Refined search logic with character-cluster highlighting and popularity-based "Trending Products" engine.
+- **Fluid Checkout**: Structured cart management and multi-method simulated payment integration (UPI/Card/Razorpay).
+
+---
+
+## 📸 Recommended Screenshots
+
+*To make your portfolio stand out, I recommend adding the following 7 screenshots:*
+
+1.  **Main Landing Page**: Hero section showing the premium branding.
+2.  **Product Customizer**: Show the specific UI where users select design options.
+3.  **User Profile Dashboard**: Highlights the "User Dashboard" and order list.
+4.  **Admin Product Fleet**: Shows the "Admin Dashboard" with the product table and toggle switches.
+5.  **Live Order Tracker**: The visual stepper showing order progress (Paid -> Printing -> Shipped).
+6.  **Mobile Responsive View**: A side-by-side of the site on desktop and mobile.
+7.  **Google Login Screen**: Proves the "Advanced Identity Management" implementation.
+
+---
+
+## ⚙️ Local Setup
 
 ### Backend
-- **Java / Spring Boot**
-- **PostgreSQL**
-- **Flyway** (Database Migrations)
-- **Spring Web / Spring Data JPA**
+1. Clone the repo and navigate to `/backend`.
+2. Configure your `application.properties` with PostgreSQL and Cloudinary credentials.
+3. Run `./mvnw spring-boot:run`.
 
-## Screenshots
+### Frontend
+1. Navigate to `/frontend`.
+2. Create a `.env` file with `VITE_API_BASE_URL`.
+3. Run `npm install` followed by `npm run dev`.
 
-<img width="1919" height="970" alt="image" src="https://github.com/user-attachments/assets/11dbc99b-d50c-466c-94aa-e22882c8817c" />
-<img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/a93a74aa-617d-4f91-9c8c-120a10d0de22" />
-<img width="1919" height="871" alt="image" src="https://github.com/user-attachments/assets/e15701e7-e71c-44df-ace5-91d9ea1262a5" />
-<img width="1919" height="964" alt="image" src="https://github.com/user-attachments/assets/e3ee601f-617a-428d-9fc7-ee1589620628" />
-<img width="1916" height="919" alt="image" src="https://github.com/user-attachments/assets/7e973f0b-100d-4aea-b114-8ef4e534100d" />
-<img width="1919" height="889" alt="image" src="https://github.com/user-attachments/assets/f478a17e-76ae-4a6c-ab77-c814611d9f0b" />
-<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/112fe76f-3521-4b99-ba93-334f9aba6d3b" />
-<img width="1919" height="964" alt="image" src="https://github.com/user-attachments/assets/a223d2ce-a07c-427c-b68a-3afe9bf8be1d" />
-<img width="1919" height="975" alt="image" src="https://github.com/user-attachments/assets/0f3f0b53-6a50-457b-9b37-2defbefcbb61" />
-<img width="1919" height="968" alt="image" src="https://github.com/user-attachments/assets/c9fe92b1-7c1a-4ffc-81d9-3d08f98c8c7b" />
-<img width="1919" height="962" alt="image" src="https://github.com/user-attachments/assets/05f1b71e-80c2-4f11-96ca-97606799ce18" />
+---
 
+## 📸 Current Visuals
+
+![Landing Page](image-1.png)
+![Product Customization page (size reduced)](image-2.png)
+![User Dashboard](image-3.png)
+![Admin Dashboard -1](image-4.png)
+![Admin Dashboard -2](image-5.png)
+![Admin Dashboard -3](image-6.png)
+![Live Order Tracker](image-7.png)
+![Order Tracking page (size reduced)](image-8.png)
+![Mobile view](image-9.png)
+![Login Page](image-10.png)
+![Register Page](image-12.png)
+![Continue With Google](image-13.png)
