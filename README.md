@@ -3,8 +3,8 @@
 PrintifyX is a high-performance, full-stack e-commerce platform architected to handle the complex requirements of custom printing services. It features a dynamic product catalog, real-time order lifecycle tracking, and a robust administrative suite for product orchestration.
 
 ## 🚀 Live Demo & Repository
-- **Live Site**: [Insert Your Vercel Link Here]
-- **GitHub Repository**: [Insert Your GitHub Link Here]
+- **Live Site**: [https://printify-x.vercel.app/]
+- **GitHub Repository**: [https://github.com/rajeshmamilla/PrintifyX]
 
 ---
 
@@ -104,6 +104,8 @@ The project uses a normalized relational schema designed for e-commerce scalabil
 
 ![Landing Page](image-1.png)
 ![Product Customization page (size reduced)](image-2.png)
+![Cart Page](image-14.png)
+![Payment Page](image-15.png)
 ![User Dashboard](image-3.png)
 ![Admin Dashboard -1](image-4.png)
 ![Admin Dashboard -2](image-5.png)
