@@ -27,13 +27,16 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final com.printifyx.backend.service.CustomOAuth2UserService oauth2UserService;
     private final OAuth2AuthenticationSuccessHandler oauth2SuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oauth2FailureHandler;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, 
                           com.printifyx.backend.service.CustomOAuth2UserService oauth2UserService,
-                          OAuth2AuthenticationSuccessHandler oauth2SuccessHandler) {
+                          OAuth2AuthenticationSuccessHandler oauth2SuccessHandler,
+                          OAuth2AuthenticationFailureHandler oauth2FailureHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.oauth2UserService = oauth2UserService;
         this.oauth2SuccessHandler = oauth2SuccessHandler;
+        this.oauth2FailureHandler = oauth2FailureHandler;
     }
 
     @Bean
@@ -52,6 +55,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
                         .successHandler(oauth2SuccessHandler)
+                        .failureHandler(oauth2FailureHandler)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -65,8 +69,8 @@ public class SecurityConfig {
     }
 
 
-    @org.springframework.beans.factory.annotation.Value("${ALLOWED_ORIGIN:http://localhost:5173}")
-    private String allowedOrigin;
+    @org.springframework.beans.factory.annotation.Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
@@ -78,7 +82,7 @@ public class SecurityConfig {
             "http://localhost:5174",
             "https://*.vercel.app",
             "https://printify-x.vercel.app",
-            allowedOrigin
+            frontendUrl
         ));
         config.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return new com.printifyx.backend.config.UserPrincipal(
                 user.getEmail(),
-                user.getPassword(),
+                user.getPassword() != null ? user.getPassword() : "OAUTH2_USER",
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole())),
                 user.getId()
         );
