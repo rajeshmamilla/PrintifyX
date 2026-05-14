@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Plus, Trash2, CheckCircle2, Loader2, AlertCircle, Home, Phone, User, Pencil } from 'lucide-react';
+import { MapPin, Plus, Trash2, Loader2, Pencil, Home, Phone, User } from 'lucide-react';
 import { fetchWithAuth } from "../../services/apiClient";
 import { toast } from "sonner";
 

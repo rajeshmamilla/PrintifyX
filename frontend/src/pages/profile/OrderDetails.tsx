@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Loader2, Package, CreditCard, Box, Truck, XCircle, CheckCircle2, Printer, MapPin, Phone, Mail, Calendar } from 'lucide-react';
+import { ChevronLeft, Loader2, Package, CreditCard, Box, Truck, XCircle, CheckCircle2, Printer, Calendar, MapPin, Mail } from 'lucide-react';
 import { fetchWithAuth } from "../../services/apiClient";
 import { toast } from "sonner";
 
@@ -21,7 +21,6 @@ const OrderDetails: React.FC = () => {
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [cancelling, setCancelling] = useState(false);
-    const [fetchedAddress, setFetchedAddress] = useState<any>(null);
 
     const userId = localStorage.getItem('userId');
     const isUserValid = userId && userId !== "undefined" && userId !== "null";
@@ -48,14 +47,6 @@ const OrderDetails: React.FC = () => {
             }
 
             setOrder(data);
-
-            const addrRes = await fetchWithAuth(`/addresses`);
-            if (addrRes.ok) {
-                const addrs = await addrRes.json();
-                if (addrs && addrs.length > 0) {
-                   setFetchedAddress(addrs.find((a:any) => a.isDefault) || addrs[0]);
-                }
-            }
         } catch (err: any) {
             console.error(err);
         } finally {

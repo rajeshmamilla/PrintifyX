@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { cartService } from "../services/cart.service";
 import { Search, Phone, User, ShoppingCart, X, Menu, LayoutDashboard, LogOut } from "lucide-react";
 import Logo from "../assets/logo.png";
+import { toast } from "sonner";
 
 // Hardcoded product list for frontend-only search
 const PRODUCTS = [

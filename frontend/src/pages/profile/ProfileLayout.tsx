@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { ShoppingBag, MapPin, LogOut, User, CreditCard, Settings } from "lucide-react";
+import { ShoppingBag, MapPin, LogOut, User, CreditCard } from "lucide-react";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 
