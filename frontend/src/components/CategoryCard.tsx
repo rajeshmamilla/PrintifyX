@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 type CategoryCardProps = {
   title: string;
@@ -37,7 +38,7 @@ const CategoryCard = ({ title, image, link }: CategoryCardProps) => {
   return (
     <div
       className={className}
-      onClick={() => alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!")}
+      onClick={() => toast.info("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!")}
     >
       {CardContent}
     </div>

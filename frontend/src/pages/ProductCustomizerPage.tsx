@@ -189,31 +189,39 @@ const ProductCustomizerPage = () => {
         }
 
         if (!cardDetails.businessName.trim() || !cardDetails.address.trim()) {
-            alert("Please fill in the required fields: Business Name and Address.");
+            toast.error("Please fill in the required fields: Business Name and Address.");
             return;
         }
 
-        try {
-            const quantity = parseInt(selections["Quantity"] || "100");
-            const totalPrice = calculatePrice();
-            const unitPrice = totalPrice / quantity;
+        const quantity = parseInt(selections["Quantity"] || "100");
+        const totalPrice = calculatePrice();
+        const unitPrice = totalPrice / quantity;
 
-            await cartService.addItem({
-                productId: productData.id,
-                productName: productData.name,
-                unitPrice: unitPrice,
-                quantity: quantity,
-                totalPrice: totalPrice,
-                customization: selections,
-                cardDetails: cardDetails
+        const addItemPromise = cartService.addItem({
+            productId: productData.id,
+            productName: productData.name,
+            unitPrice: unitPrice,
+            quantity: quantity,
+            totalPrice: totalPrice,
+            customization: selections,
+            cardDetails: cardDetails
+        });
+
+        if (showAlert) {
+            toast.promise(addItemPromise, {
+                loading: 'Adding to cart...',
+                success: 'Successfully added to your cart!',
+                error: 'Failed to add item to cart'
             });
+        }
 
+        try {
+            await addItemPromise;
             // Dispatch event to update header
             window.dispatchEvent(new Event("cartUpdated"));
-            if (showAlert) alert("Added to cart!");
         } catch (error) {
             console.error("Error adding to cart:", error);
-            alert("Failed to add to cart");
+            if (!showAlert) toast.error("Failed to add to cart");
         }
     };
 
@@ -230,8 +238,7 @@ const ProductCustomizerPage = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        try {
-            setIsUploading(true);
+        const uploadPromise = async () => {
             const formData = new FormData();
             formData.append("file", file);
 
@@ -250,9 +257,19 @@ const ProductCustomizerPage = () => {
                 ...prev,
                 sampleImageUrl: imageUrl
             }));
+        };
+
+        toast.promise(uploadPromise(), {
+            loading: 'Uploading your artwork...',
+            success: 'Artwork uploaded successfully!',
+            error: 'Failed to upload artwork'
+        });
+
+        try {
+            setIsUploading(true);
+            await uploadPromise();
         } catch (error) {
             console.error("Error uploading file:", error);
-            alert("Failed to upload image. Please try again.");
         } finally {
             setIsUploading(false);
         }

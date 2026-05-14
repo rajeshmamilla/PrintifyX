@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { cartService } from "../services/cart.service";
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const CartPage = () => {
       window.dispatchEvent(new Event("cartUpdated"));
     } catch (err) {
       console.error(err);
-      alert("Failed to update quantity");
+      toast.error("Failed to update quantity");
     }
   };
 
@@ -55,7 +56,7 @@ const CartPage = () => {
       window.dispatchEvent(new Event("cartUpdated"));
     } catch (err) {
       console.error(err);
-      alert("Failed to remove item");
+      toast.error("Failed to remove item");
     }
   };
 

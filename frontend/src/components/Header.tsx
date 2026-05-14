@@ -295,7 +295,7 @@ const Header = () => {
                         setShowResults(false);
                         setSearchQuery("");
                       } else {
-                        alert("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!");
+                        toast.info("This category is currently under development. Please explore our BUSINESS CARDS selection in the meantime!");
                       }
                     }}
                     className="px-5 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer transition-colors group"

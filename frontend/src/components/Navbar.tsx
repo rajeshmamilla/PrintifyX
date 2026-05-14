@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 interface ProductSummary {
   id: number;
@@ -45,7 +46,7 @@ const Navbar = () => {
 
   const handlePlaceholderClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert("This category selection is currently limited. Please explore our available products!");
+    toast.info("This category selection is currently limited. Please explore our available products!");
   };
 
   const categoriesToRender = navCategories.length > 0 ? navCategories : fallbackCategories.map((c, i) => ({ ...c, id: -(i + 1), products: [] }));

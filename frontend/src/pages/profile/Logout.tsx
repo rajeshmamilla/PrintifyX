@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const Logout = () => {
     const navigate = useNavigate();
@@ -8,12 +9,9 @@ const Logout = () => {
         // Clear all auth data
         localStorage.removeItem('token');
         localStorage.removeItem('role');
-
-        // Clear cart if needed (this logic is handled by cart.service in some projects but here we stick to simple)
         localStorage.removeItem('cart');
 
-        // Redirect to login after a tiny delay for visual feedback if needed, 
-        // but immediate is cleaner for logout.
+        toast.success("Successfully logged out");
         navigate('/login');
     }, [navigate]);
 

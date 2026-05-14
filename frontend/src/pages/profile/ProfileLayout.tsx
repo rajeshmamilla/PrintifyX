@@ -60,73 +60,47 @@ const ProfileLayout: React.FC = () => {
                 </div>
               </div>
 
-              {/* Sidebar Sections */}
+              {/* Sidebar Links - Simplified */}
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-                <nav className="p-3">
-                  {/* Purchases Section */}
-                  <div className="mb-4">
-                    <p className="px-4 py-2 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Purchases</p>
-                    <NavLink
-                      to="/profile/orders"
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
-                          ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
-                          : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                        }`
-                      }
-                    >
-                      <ShoppingBag size={18} />
-                      My Orders
-                    </NavLink>
-                  </div>
+                <nav className="p-3 space-y-1">
+                  <NavLink
+                    to="/profile/orders"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
+                        ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
+                        : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                      }`
+                    }
+                  >
+                    <ShoppingBag size={18} />
+                    My Orders
+                  </NavLink>
 
-                  {/* Payment Methods Section */}
-                  <div className="mb-4">
-                    <p className="px-4 py-2 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Payment Methods</p>
-                    <NavLink
-                      to="/profile/payments"
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
-                          ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
-                          : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                        }`
-                      }
-                    >
-                      <CreditCard size={18} />
-                      Cards & Accounts
-                    </NavLink>
-                  </div>
+                  <NavLink
+                    to="/profile/payments"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
+                        ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
+                        : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                      }`
+                    }
+                  >
+                    <CreditCard size={18} />
+                    Cards & Accounts
+                  </NavLink>
 
-                  {/* Account Settings Section */}
-                  <div className="mb-4">
-                    <p className="px-4 py-2 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Account Settings</p>
-                    <div className="space-y-1">
-                      <NavLink
-                        to="/profile/addresses"
-                        className={({ isActive }) =>
-                          `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
-                            ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
-                            : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                          }`
-                        }
-                      >
-                        <MapPin size={18} />
-                        Saved Addresses
-                      </NavLink>
-                      <NavLink
-                        to="/profile/settings"
-                        className={({ isActive }) =>
-                          `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
-                            ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
-                            : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                          }`
-                        }
-                      >
-                        <Settings size={18} />
-                        Account Details
-                      </NavLink>
-                    </div>
-                  </div>
+                  <NavLink
+                    to="/profile/addresses"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${isActive
+                        ? "bg-gray-900 text-white shadow-lg shadow-gray-200"
+                        : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                      }`
+                    }
+                  >
+                    <MapPin size={18} />
+                    Saved Addresses
+                  </NavLink>
 
                   {/* Danger Zone */}
                   <div className="pt-2 border-t border-gray-100">

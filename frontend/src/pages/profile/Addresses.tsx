@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Plus, Trash2, CheckCircle2, Loader2, AlertCircle, Home, Phone, User, Pencil } from 'lucide-react';
 import { fetchWithAuth } from "../../services/apiClient";
+import { toast } from "sonner";
 
 interface Address {
     id?: number;
@@ -20,7 +21,6 @@ const Addresses: React.FC = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
-    const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
     // Form state
     const [formData, setFormData] = useState<Address>({
@@ -83,14 +83,12 @@ const Addresses: React.FC = () => {
         const pincodeRegex = /^[0-9]{6}$/;
         
         if (!phoneRegex.test(formData.phone)) {
-            setNotification({ message: 'Please enter a valid 10-digit phone number', type: 'error' });
-            setTimeout(() => setNotification(null), 3000);
+            toast.error('Please enter a valid 10-digit phone number');
             return;
         }
         
         if (!pincodeRegex.test(formData.pincode)) {
-            setNotification({ message: 'Please enter a valid 6-digit pincode', type: 'error' });
-            setTimeout(() => setNotification(null), 3000);
+            toast.error('Please enter a valid 6-digit pincode');
             return;
         }
 
@@ -105,13 +103,11 @@ const Addresses: React.FC = () => {
 
             if (!res.ok) throw new Error(`Failed to ${isEditing ? 'update' : 'save'} address`);
 
-            setNotification({ message: `Address ${isEditing ? 'updated' : 'saved'} successfully`, type: 'success' });
+            toast.success(`Address ${isEditing ? 'updated' : 'saved'} successfully`);
             handleCancel();
             fetchAddresses();
-            setTimeout(() => setNotification(null), 3000);
         } catch (err: any) {
-            setNotification({ message: err.message, type: 'error' });
-            setTimeout(() => setNotification(null), 3000);
+            toast.error(err.message);
         }
     };
 
@@ -124,12 +120,10 @@ const Addresses: React.FC = () => {
 
             if (!res.ok) throw new Error('Failed to delete address');
 
-            setNotification({ message: 'Address removed', type: 'success' });
+            toast.success('Address removed');
             fetchAddresses();
-            setTimeout(() => setNotification(null), 3000);
         } catch (err: any) {
-            setNotification({ message: err.message, type: 'error' });
-            setTimeout(() => setNotification(null), 3000);
+            toast.error(err.message);
         }
     };
 
@@ -160,13 +154,6 @@ const Addresses: React.FC = () => {
                 )}
             </div>
 
-            {notification && (
-                <div className={`fixed top-24 right-8 z-[2000] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-right-8 duration-300 ${notification.type === 'success' ? 'bg-green-50 border-green-100 text-green-800' : 'bg-red-50 border-red-100 text-red-800'
-                    }`}>
-                    {notification.type === 'success' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
-                    <p className="font-bold text-sm tracking-tight">{notification.message}</p>
-                </div>
-            )}
 
             {isAdding && (
                 <div className="bg-white rounded-[2rem] p-8 border-2 border-orange-500/20 shadow-xl animate-in zoom-in duration-300">
